@@ -1,0 +1,37 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="container" style="margin-top: 20px;">
+	<form class="form-search">
+	    <input type="text" name="keyword" value="{{keyword}}" class="input-medium search-query">
+	    <button type="submit" class="btn">{%trans '搜索'%}</button>
+	</form>
+	<br/>
+	<table class="table table-bordered table-striped table-hover">
+	<thead><tr class="info"><th>{%trans '员工编号'%}</th><th>{%trans '员工姓名'%}</th><th>{%trans '性别'%}</th><th>{%trans '员工民族'%}</th><th>{%trans '手机'%}</th><th>{%trans '选择'%}</th></tr></thead>
+	<tbody>
+		{%for user in users%}
+		<tr tag="{{user.pk}}"><td>{{user.employee_id|default:_('未填写')}}</td><td>{{user.username}}</td><td>{{user.get_sex_display}}</td><td>{{user.get_nation_display}}</td><td>{{user.tel|default:_('未填写')}}</td><td><i class="icon icon-ok"></i></td></tr>
+		{%endfor%}
+	</tbody>
+</table>
+</div>
+
+
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('.icon-ok','.table').click(function(){
+		var $tr=$(this).parent().parent();
+		$('#s_user',parent.document).val($tr.find('td').eq(1).text());
+		$('#charger',parent.document).val($tr.attr('tag'));
+		parent.layer.close(index);
+	});
+});
+</script>
+{%endblock%}

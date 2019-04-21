@@ -1,0 +1,98 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '基本信息'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			<form class="form-horizontal" action="" id="UpLoadForm" method="POST" >{%csrf_token%}									
+				<div class="widget-box">
+					<div class="widget-title">
+						<span class="icon"><i class="icon-th-list"></i></span>
+						<h5>{%trans '编辑公告'%}</h5>
+						<div class="widget-title-option">
+							<a class="btn btn-primary" href="{%url 'org_announce' org.pk%}">{%trans '返回至公告列表'%}</a>
+						</div>
+					</div>
+					<div class="widget-content">
+							<div class="row-fluid">
+								<div class="control-group {%if form.content.errors%}error{%endif%}">
+									<label class="control-label" for="{{form.content.auto_id}}">{{form.content.label}}</label>
+									<div class="controls">
+									{{form.content}}
+									<p class="help-block">{%trans '不超过200字'%}</p>
+									<p class="help-block">{{form.content.errors}}</p>
+									</div>						
+								</div>
+							</div>
+							
+							
+							<div class="row-fluid">
+								<div class="control-group {%if form.expired_date.errors%}error{%endif%}">
+									<label class="control-label" for="{{form.expired_date.auto_id}}">{{form.expired_date.label}}</label>
+									<div class="controls">
+									{{form.expired_date}}
+									<p class="help-block">{{form.expired_date.errors}}</p>
+									</div>						
+								</div>
+							</div>
+							
+							
+							<div class="row-fluid">
+								<div class="control-group {%if form.status.errors%}error{%endif%}">
+									<label class="control-label" for="{{form.status.auto_id}}">{{form.status.label}}</label>
+									<div class="controls">
+									{{form.status}}
+									<p class="help-block">{{form.status.errors}}</p>
+									</div>						
+								</div>
+							</div>
+							
+							<div class="row-fluid">
+								<div class="control-group {%if form.announce_type.errors%}error{%endif%}">
+									<label class="control-label" for="{{form.announce_type.auto_id}}">{{form.announce_type.label}}</label>
+									<div class="controls">
+									{{form.announce_type}}
+									<p class="help-block">{{form.announce_type.errors}}</p>
+									</div>						
+								</div>
+							</div>
+					
+					</div>
+				</div>
+				
+				<div class="form-actions no-margin">
+						<button type="submit" class="btn btn-primary">{%trans '确定'%}</button>
+						<button type="reset" class="btn btn-warning">{%trans '重置'%}</button>
+				</div>
+			</form>
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	
+	
+</div>
+
+
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script>
+$(document).ready(function(){
+	$('#tab-settings').addClass('active');
+	$('#li_announce').addClass('current');
+});
+</script>
+{%endblock%}

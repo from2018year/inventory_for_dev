@@ -1,0 +1,137 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '客户名片'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'add_customer' org.uid%}" class="btn btn-primary">{%trans '新增客户'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="row-fluid">
+					{%if customers%}
+					{%for customer in customers%}
+            			{%ifchanged customer.customer_type%}
+            			
+            			{%if forloop.first%}
+            			<h3>{{customer.get_customer_type_display|default:_('未分组')}}</h3>
+            			<ul class="thumbnails">
+            			{%else%}
+            			</ul>
+            			<h3>{{customer.get_customer_type_display|default:_('未分组')}}</h3>
+            			<ul class="thumbnails">
+            			{%endif%}
+            			{%endifchanged%}
+            			
+         				<li id="s{{customer.pk}}" class="span4">
+							<div class="thumbnail">
+								
+								<div class="options">
+            						<a href="{%url 'mod_customer' org.pk customer.pk%}" title="{%trans '编辑'%}"><i class="icon icon-pencil"></i></a>
+            						<a href="javascript:void(0)" tag="{{customer.pk}}" class="del_customer" tag_name="{{customer}}" title="{%trans '删除'%}"><i class="icon icon-remove"></i></a>
+            					</div>
+            					
+	            				<h4 class="text-center">{{customer}}</h4>
+	            				<p class="text-center"><i class="icon icon-user"></i> <strong>{{customer.contact|default:_('未填写联系人')}} <i class="icon icon-headphones"></i> {{customer.phone|default:_('未填写电话')}}</strong></p>
+	            				<p class="text-center">{{customer.remark|default:_('未填写备注')}}</p>
+	            				{%if customer.address%}
+	            				<p>
+		            				<address>
+		                        	<strong>{%trans '地址'%}</strong>
+		                                {{customer.address|default:_('未填写地址信息')}}
+		                            </address>
+	                            </p>
+	                            {%endif%}
+	            			</div>
+						</li>
+	            		
+	            		{%if forloop.counter and forloop.counter|divisibleby:'3'%}
+	            		</ul>
+            			<ul class="thumbnails">
+	            		{%endif%}
+	            		
+	            		{%if forloop.last%}
+	            		</ul>
+	            		{%endif%}
+            		{%endfor%}
+					{%else%}
+					<div class="alert alert-info">{%trans '还没有客户'%}，<a href="{%url 'add_customer' org.uid%}">{%trans '立即创建'%}</a></div>
+					{%endif%}
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include "parts/info_left_nav.html"%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block rel%}
+<style>
+.thumbnail {
+	position: relative;
+}
+.thumbnail .options {
+	position:absolute;
+	top:2px;
+	right:3px;
+	display: none;
+}
+.thumbnail:hover .options {
+	display: block;
+}
+.thumbnail:hover:hover, .thumbnail:hover:focus {
+    border-color: #08C;
+}
+</style>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_kh').addClass('current');	
+	$('#tab-setting').addClass('active');
+
+	$('.del_customer').click(function(){
+		if(!confirm("{%trans '确定要删除'%}"+$(this).attr('tag_name')+"{%trans '，如果客户已有单据，将禁止删除？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'customer_delete' org.pk %}",
+			type:'POST',
+			data:{'del_customer_id':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					$('#s'+text).remove();
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+});
+</script>
+{%endblock%}

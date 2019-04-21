@@ -1,0 +1,55 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block body%}
+<form class="form-search form-horizontal form-min-horizontal"  style="margin-top: 20px;">
+	<div class="row-fluid" >
+		<div class="inline-span6">
+			
+				<label class="control-label" for="{{form.category.auto_id}}">{{form.category.label}}</label>
+				<div class="controls">
+					{{form.category}}
+				</div>
+			
+		</div>
+		<div class="inline-span6">
+			<div class="control-group {%if form.warehouse.errors%}error{%endif%}">
+				<label class="control-label" for="{{form.warehouse.auto_id}}">{{form.warehouse.label}}</label>
+				<div class="controls">
+					{{form.warehouse}}
+				</div>
+			</div>
+		</div>
+	</div>	
+	<div class="row-fluid" >   
+	 	<div class="inline-span6">
+			<div class="control-group {%if form.keyword.errors%}error{%endif%}">
+				<label class="control-label" for="{{form.keyword.auto_id}}">{{form.keyword.label}}</label>
+				<div class="controls">
+					{{form.keyword}}
+				</div>
+			</div>
+		</div>
+		<div class="inline-span6">
+			<input type="hidden" name="department_id" value="{{department_id|default:''}}" />
+			<input type="hidden" name="warehouse_id" value="{{warehouse_id|default:''}}" />
+			
+	   		<button type="submit" class="btn btn-primary" style="margin-left:20px;">{%trans '搜索'%}</button>
+	   	</div>
+	</div>
+	
+
+{%include page_template%}
+</form>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/endless_pagination/js/endless-pagination.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+});
+</script>
+{%endblock%}

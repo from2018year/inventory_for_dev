@@ -1,0 +1,48 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{{invoice.invoice_code}}{%trans '自动出库日志'%}{%endblock%}
+
+{%block body%}
+<div class="container" style="margin-top:20px;">
+	{%for his in hises%}
+	<div class="bs-docs-example">
+		{%for seq in his.seqs.all%}
+	 	{%for setp in seq.steps.all%}
+	 	<p>{{setp.remark|safe}}</p>
+	 	{%endfor%}
+	 	{%endfor%}
+	 
+	</div>
+	<pre class="prettyprint linenums ">
+		{%trans '于'%}{{his.created_time|date:'Y-m-d H:i:s'}}{%trans '接受到收银数据'%},{%trans '原始数据为'%}{{his.raw_str}}
+	</pre>
+	{%endfor%}
+	
+</div>
+{%endblock%}
+
+{%block rel%}
+<style>
+.bs-docs-example {
+    position: relative;
+    margin: 15px 0;
+    padding: 39px 19px 14px;
+    *padding-top: 19px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.bs-docs-example::after {content: "{%trans '与收银同步扣减日志'%}";position: absolute;top: -1px;left: -1px;padding: 3px 7px;font-size: 12px;font-weight: bold;background-color: #f5f5f5;border: 1px solid #ddd;color: #9da0a4;-webkit-border-radius: 4px 0 4px 0;-moz-border-radius: 4px 0 4px 0;border-radius: 4px 0 4px 0;}
+.bs-docs-example + .prettyprint {
+	position: relative;
+    margin-top: -20px;
+    padding-top: 15px;
+}
+.prettyprint::after {content: "{%trans '原始数据'%}";position: absolute;top: -1px;left: -1px;padding: 3px 7px;font-size: 12px;font-weight: bold;background-color: #f5f5f5;border: 1px solid #ddd;color: #9da0a4;-webkit-border-radius: 4px 0 4px 0;-moz-border-radius: 4px 0 4px 0;border-radius: 4px 0 4px 0;}
+</style>
+{%endblock%}

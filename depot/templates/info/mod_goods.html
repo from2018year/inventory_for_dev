@@ -1,0 +1,446 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="container" style="margin-top: 20px;">
+	<div id="lresult" class="lresult"></div>
+	<form class="form-horizontal form-min-horizontal" method="post" action="" enctype="multipart/form-data">{%csrf_token%}
+		<ul class="nav nav-tabs">
+			<li class="active"><a data-toggle="tab" href="#base">{%trans '基本资料'%}</a></li>
+			<li><a data-toggle="tab" href="#more">{%trans '更多资料'%}</a></li>
+		</ul>
+		<div class="tab-content">
+			<div id="base" class="tab-pane fade active in">
+				<div class="row-fluid">
+					<div class="span6">
+						<div class="control-group {%if form.non_field_errors or form.name.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.name.auto_id}}">{%if form.name.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.name.label}}</label>
+							<div class="controls">
+							{{form.name}}
+							<p class="help-block">{{form.name.help_text}}</p>
+							<p class="help-block">{{form.name.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					
+					<div class="span6">
+						<div class="control-group {%if form.abbreviation.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.abbreviation.auto_id}}">{%if form.abbreviation.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.abbreviation.label}}</label>
+							<div class="controls">
+							{{form.abbreviation}}
+							<p class="help-block">{{form.abbreviation.help_text}}</p>
+							<p class="help-block">{{form.abbreviation.errors}}</p>
+							</div>						
+						</div>
+					</div>
+				</div>
+				
+				<div class="row-fluid">
+					<div class="span6">
+						<div class="control-group {%if form.code.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.code.auto_id}}">{%if form.code.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.code.label}}</label>
+							<div class="controls">
+							{{form.code}}max
+							<p class="help-block">{{form.code.help_text}}</p>
+							<p class="help-block">{{form.code.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					
+					<div class="span6">
+						<div class="control-group {%if form.category.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.category.auto_id}}">{%if form.category.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.category.label}}</label>
+							<div class="controls">
+							{{form.category}}
+							<p class="help-block">{{form.category.help_text}}</p>
+							<p class="help-block">{{form.category.errors}}</p>
+							</div>						
+						</div>
+					</div>
+				</div>
+				
+				<div class="row-fluid">
+					<div class="span6">
+						<div class="control-group {%if form.unit.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.unit.auto_id}}">{%if form.unit.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.unit.label}}</label>
+							<div class="controls">
+							
+							<div class="wrapper">
+								{{form.unit}}
+								<input class="unitbox" id="unitbox" name="unitbox" type="text" autocomplete="off" value="{{form.instance.unit.unit|default:''}}" style="margin-top:-55px;width:188px"/>
+							</div>
+							<p class="help-block">{{form.unit.help_text}}</p>
+							<p class="help-block">{{form.unit.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					
+					<div class="span6 {%if INDUSTRY != "retail"%}hide{%endif%}">
+						<div class="control-group {%if form.item_type.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.item_type.auto_id}}">{%if form.item_type.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.item_type.label}}</label>
+							<div class="controls">
+							{{form.item_type}}
+							<p class="help-block">{{form.item_type.help_text}}</p>
+							<p class="help-block">{{form.item_type.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					
+					
+					<div class="span6 hide">
+						<div class="control-group {%if form.standard.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.standard.auto_id}}">{%if form.standard.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.standard.label}}</label>
+							<div class="controls">
+							{{form.standard}}
+							<p class="help-block">{{form.standard.help_text}}</p>
+							<p class="help-block">{{form.standard.errors}}</p>
+							</div>						
+						</div>
+					</div>
+				</div>
+				
+				<!--div class="row-fluid">
+					<div class="span6">
+						<div class="control-group {%if form.is_batchs.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.is_batchs.auto_id}}">{%if form.is_batchs.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.is_batchs.label}}</label>
+							<div class="controls">
+							{{form.is_batchs}}
+							<p class="help-block">{{form.is_batchs.help_text}}</p>
+							<p class="help-block">{{form.is_batchs.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					
+					<div class="span6">
+						<div class="control-group {%if form.is_sn.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.is_sn.auto_id}}">{%if form.is_sn.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.is_sn.label}}</label>
+							<div class="controls">
+							{{form.is_sn}}
+							<p class="help-block">{{form.is_sn.help_text}}</p>
+							<p class="help-block">{{form.is_sn.errors}}</p>
+							</div>						
+						</div>
+					</div>
+				</div-->
+				
+				<div class="row-fluid">
+					<div class="span6">
+						<div class="control-group {%if form.price_ori.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.price_ori.auto_id}}">{%if form.price_ori.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.price_ori.label}}</label>
+							<div class="controls">
+							{{form.price_ori}}
+							<p class="help-block">{{form.price_ori.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					
+					<div class="span6">
+						<div class="control-group {%if form.sale_price_ori.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.sale_price_ori.auto_id}}">{%if form.sale_price_ori.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.sale_price_ori.label}}</label>
+							<div class="controls">
+							{{form.sale_price_ori}}
+							<p class="help-block">{{form.sale_price_ori.errors}}</p>
+							</div>						
+						</div>
+					</div>
+				</div>
+				
+				<!--div class="row-fluid">
+					<div class="span6">
+						<div class="control-group {%if form.chengben_type.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.chengben_type.auto_id}}">{%if form.chengben_type.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.chengben_type.label}}</label>
+							<div class="controls">
+							{{form.chengben_type}}
+							<p class="help-block">{{form.chengben_type.help_text}}</p>
+							<p class="help-block">{{form.chengben_type.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					<div class="span6">
+						<div class="control-group {%if form.warning_day.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.warning_day.auto_id}}">{%if form.warning_day.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.warning_day.label}}</label>
+							<div class="controls">
+							{{form.warning_day}}
+							<p class="help-block">{{form.warning_day.help_text}}</p>
+							<p class="help-block">{{form.warning_day.errors}}</p>
+							</div>						
+						</div>
+					</div>
+				
+				</div-->
+				
+				<!--div class="row-fluid">
+					<div class="span6">
+						<div class="control-group {%if form.customer_price_life.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.customer_price_life.auto_id}}">{%if form.customer_price_life.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.customer_price_life.label}}</label>
+							<div class="controls">
+							{{form.customer_price_life}}
+							<p class="help-block">{{form.customer_price_life.help_text}}</p>
+							<p class="help-block">{{form.customer_price_life.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					
+					<div class="span6">
+						<div class="control-group {%if form.customer_price_life_type.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.customer_price_life_type.auto_id}}">{%if form.customer_price_life_type.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.customer_price_life_type.label}}</label>
+							<div class="controls">
+							{{form.customer_price_life_type}}
+							<p class="help-block">{{form.customer_price_life_type.help_text}}</p>
+							<p class="help-block">{{form.customer_price_life_type.errors}}</p>
+							</div>						
+						</div>
+					</div>
+				</div-->
+				
+			</div>
+			<div id="more" class="tab-pane fade">
+				<div class="row-fluid">
+					<div class="span6">
+						<!--div class="row-fluid">
+							<div class="control-group {%if form.brand.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.brand.auto_id}}">{%if form.brand.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.brand.label}}</label>
+								<div class="controls">
+								{{form.brand}}
+								<p class="help-block">{{form.brand.help_text}}</p>
+								<p class="help-block">{{form.brand.errors}}</p>
+								</div>						
+							</div>
+						</div-->
+						
+						<div class="row-fluid">
+							<div class="control-group {%if form.status.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.status.auto_id}}">{{form.status.label}}</label>
+								<div class="controls">
+								{{form.status}}
+								<p class="help-block">{{form.status.help_text}}</p>
+								<p class="help-block">{{form.status.errors}}</p>
+								</div>						
+							</div>
+						</div>
+						
+						<div class="row-fluid">
+							<div class="control-group {%if form.min_warning.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.min_warning.auto_id}}">{%if form.min_warning.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.min_warning.label}}</label>
+								<div class="controls">
+								{{form.min_warning}}
+								<p class="help-block">{{form.min_warning.help_text}}</p>
+								<p class="help-block">{{form.min_warning.errors}}</p>
+								</div>						
+							</div>
+						</div>
+						
+						<div class="row-fluid">
+							<div class="control-group {%if form.max_warning.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.max_warning.auto_id}}">{%if form.max_warning.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.max_warning.label}}</label>
+								<div class="controls">
+								{{form.max_warning}}
+								<p class="help-block">{{form.max_warning.help_text}}</p>
+								<p class="help-block">{{form.max_warning.errors}}</p>
+								</div>						
+							</div>
+						</div>
+						
+						<!--div class="row-fluid">
+							<div class="control-group {%if form.batch_range.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.batch_range.auto_id}}">{%if form.batch_range.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.batch_range.label}}</label>
+								<div class="controls">
+								{{form.batch_range}}
+								<p class="help-block">{{form.batch_range.help_text}}</p>
+								<p class="help-block">{{form.batch_range.errors}}</p>
+								</div>						
+							</div>
+						</div-->
+						
+					</div>
+					<div class="span6">
+						<div class="control-group small-control-group {%if form.cover.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.cover.auto_id}}">{{form.cover.label}}</label>
+							<div class="controls">
+								{{form.cover}}
+								<p class="help-block">{{form.cover.help_text}}</p>
+								<p class="help-block">{{form.cover.errors}}</p>
+							</div>					
+						</div>
+						<div style="position: relative;">
+							<div style="position: absolute;left:80px;">
+							{%if form.instance.cover%}
+							<img id="img_pre" width="100" height="100" src="{{form.instance.cover.thumb_big_url}}" />
+							{%else%}
+							<img id="img_pre" src="/static/images/img.jpg" />
+							{%endif%}
+							</div>
+						</div>
+					</div>
+				</div>
+				
+
+				
+				<!--div class="row-fluid">
+					<div class="span6">
+						<div class="control-group {%if form.shelf_life.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.shelf_life.auto_id}}">{%if form.shelf_life.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.shelf_life.label}}</label>
+							<div class="controls">
+							{{form.shelf_life}}
+							<p class="help-block">{{form.shelf_life.help_text}}</p>
+							<p class="help-block">{{form.shelf_life.errors}}</p>
+							</div>						
+						</div>
+					</div>
+					
+					<div class="span6">
+						<div class="control-group {%if form.shelf_life_type.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.shelf_life_type.auto_id}}">{%if form.shelf_life_type.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.shelf_life_type.label}}</label>
+							<div class="controls">
+							{{form.shelf_life_type}}
+							<p class="help-block">{{form.shelf_life_type.help_text}}</p>
+							<p class="help-block">{{form.shelf_life_type.errors}}</p>
+							</div>						
+						</div>
+					</div>
+				</div-->
+				
+				<div class="row-fluid">
+					
+						<div class="control-group {%if form.remark.errors%}error{%endif%}">
+							<label class="control-label" for="{{form.remark.auto_id}}">{%if form.remark.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.remark.label}}</label>
+							<div class="controls">
+							{{form.remark}}
+							<p class="help-block">{{form.remark.help_text}}</p>
+							<p class="help-block">{{form.remark.errors}}</p>
+							</div>						
+						</div>
+					
+				</div>
+			</div>
+		</div>
+		
+		
+		
+		
+		<div class="form-actions">
+			<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+			{%if not form.instance.pk and not callback%}
+			<input type="hidden" value="0" id="next" name="next" />
+			<input type="submit" onclick="$('#next').val(1)"  class="btn btn-primary" value="{%trans '确定并新增'%}"/>
+			{%endif%}
+			<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" />
+			
+			
+		</div>
+	</form>
+	
+</div>
+
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/common/jquery.form.js" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	{%if success%}
+	{%if callback%}
+		parent.add_good_success({{goods|safe}});
+		parent.layer.close(index);
+	{%else%}
+	if($('#main-wrap',parent.document).size()){
+		$('#main-wrap',parent.document).load(parent.request_url,function(){
+			parent.layer.close(index);
+		});
+	}else{
+		parent.location.href="{%url 'wupin' org.id%}"+"?category_id={{form.category.value}}";
+	}
+	{%endif%}
+	{%endif%}
+
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+	
+	$("#{{form.unit.auto_id}}").change(function(){         
+        $("#unitbox").val($("#{{form.unit.auto_id}} option:selected").text());
+        if(!$(this).val()){
+        	$("#unitbox").val('');
+        }
+    });
+	
+	$('#{{form.cover.auto_id}}').change(function(){
+		if ($("#{{form.cover.auto_id}}").val() == ""){
+			return;
+		}
+
+		$('.form-horizontal').ajaxSubmit({
+			url:"{%url 'prepic'%}?width=100&height=100",
+			success: function (html, status){
+				$('#img_pre').attr("src","/site_media/"+html+"?"+Math.random());
+			}
+		});
+
+	});
+
+	strChineseFirstPY=null;
+	oMultiDiff=null;
+
+	$.getJSON('/static/js/pinyin.js',function(json){
+		strChineseFirstPY=json['strChineseFirstPY'];
+		oMultiDiff=json['oMultiDiff'][0];
+	});
+
+
+	$('#{{form.name.auto_id}}').focus(function(){
+		$('#lresult').hide();
+	}).blur(function(){
+		var str=$('#{{form.name.auto_id}}').val().trim();
+		var arrRslt=makePy(str);
+		$('#lresult').html("<div>" + arrRslt.join("</div><div>") +
+				"</div><div align='center'></div>").
+				css({'top':($('#{{form.abbreviation.auto_id}}').offset().top+30),'left':$('#{{form.abbreviation.auto_id}}').offset().left});
+
+		divs=$('#lresult div');
+		for(var i=0;i<divs.length;i++){
+			divs[i].className = i%2 ? "divShuang" : "divDan";
+			if(i>1){
+				$('#lresult').css({'display':'block'});
+			}
+		}
+		$('#{{form.abbreviation.auto_id}}').val(divs.eq(0).text());
+	});;
+	
+	$('#{{form.abbreviation.auto_id}}').click(function(){
+		if($('#lresult').is(":visible")){
+			$('#lresult').hide();
+			return;
+		}
+		var str=$('#{{form.name.auto_id}}').val().trim();
+		if(str=="") return;
+
+		var arrRslt=makePy(str);
+		$('#lresult').html("<div>" + arrRslt.join("</div><div>") +
+				"</div><div align='center'></div>").
+				css({'top':($(this).offset().top+30),'left':$(this).offset().left});
+
+		divs=$('#lresult div');
+		for(var i=0;i<divs.length;i++){
+			divs[i].className = i%2 ? "divShuang" : "divDan";
+			if(i>1){
+				$('#lresult').css({'display':'block'});
+			}
+		}
+		
+	}).blur(function(){$('#lresult').hide();});
+
+	$('#lresult').on('click','div',function(){
+		$('#{{form.abbreviation.auto_id}}').val($(this).text());
+		$('#lresult').hide();
+	});
+
+	$('#{{form.code.auto_id}}').keydown(function(e){
+        if(e.which===13){
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{%endblock%}

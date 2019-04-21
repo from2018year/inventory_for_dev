@@ -1,0 +1,16 @@
+{% load i18n %}
+{%load url from future%}
+
+	<div style="float:right;">
+		<form action="{%url 'setlang'%}" id="language_form">{% csrf_token %}
+			<!--input name="next" type="hidden" value="/next/page/"-->
+			<select name="language" onchange="document.getElementById('language_form').submit()">
+				{%for lang in LANGUAGES%}
+				<option value="{{lang.0}}" {%if LANGUAGE_CODE = lang.0%} selected="selected" {%endif%}>{{lang.1}}</option>
+				{%endfor%}
+			</select>
+		</form>
+	</div>
+	<div style="clear: both;"></div>
+	
+	

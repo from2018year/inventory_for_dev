@@ -1,0 +1,129 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '领料部门列表'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'add_department' org.uid%}" class="btn btn-primary">{%trans '新增领料部门'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="row-fluid">
+
+					{%for department in departments%}
+            			
+            			{%if forloop.first%}
+            			<ul class="thumbnails">
+            			{%endif%}
+            			
+         				<li id="s{{department.pk}}" class="span4">
+							<div class="thumbnail">
+								<div class="options">
+            						<a href="{%url 'mod_department' org.uid department.pk%}" title="{%trans '编辑'%}"><i class="icon icon-pencil"></i></a>
+            						<a href="javascript:void(0)" tag="{{department.pk}}" class="del_department" tag_name="{{department}}" title="{%trans '删除'%}"><i class="icon icon-remove"></i></a>
+            					</div>
+	            				<h4 class="text-center">{{department}}</h4>
+	            				<p class="text-center"><i class="icon icon-user"></i> <strong>{{department.contact|default:_('未填写联系人')}} <i class="icon icon-headphones"></i> {{department.phone|default:_('未填写电话')}}</strong></p>
+	            				<p class="text-center">{{department.remark|default:_('未填写备注')}}</p>
+	            				{%if department.address%}
+	            				<p>
+		            				<address>
+		                        	<strong>{%trans '地址'%}</strong>
+		                                {{department.address|default:_('未填写地址信息')}}
+		                            </address>
+	                            </p>
+	                            {%endif%}
+	            			</div>
+						</li>
+	            		
+	            		{%if forloop.counter and forloop.counter|divisibleby:'3'%}
+	            		</ul>
+            			<ul class="thumbnails">
+	            		{%endif%}
+	            		
+	            		{%if forloop.last%}
+	            		</ul>
+	            		{%endif%}
+	            	{%empty%}
+	            	<div class="alert alert-info">{%trans '还没有部门'%}，<a href="{%url 'add_department' org.uid%}">{%trans '立即创建'%}</a></div>
+            		{%endfor%}
+					
+					</div>
+					
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include "parts/info_left_nav.html"%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block rel%}
+<style>
+.thumbnail {
+	position: relative;
+}
+.thumbnail .options {
+	position:absolute;
+	top:2px;
+	right:3px;
+	display: none;
+}
+.thumbnail:hover .options {
+	display: block;
+}
+.thumbnail:hover:hover, .thumbnail:hover:focus {
+    border-color: #08C;
+}
+</style>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_bm').addClass('current');	
+	$('#tab-setting').addClass('active');
+
+	$('.del_department').click(function(){
+		if(!confirm("{%trans '确定要删除'%}"+$(this).attr('tag_name')+"{%trans '，如果部门已有单据，将禁止删除？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'department_delete' org.pk %}",
+			type:'POST',
+			data:{'del_department_id':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					$('#s'+text).remove();
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+});
+</script>
+{%endblock%}

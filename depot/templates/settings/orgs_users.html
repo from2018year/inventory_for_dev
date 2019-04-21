@@ -1,0 +1,166 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '员工管理'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'org_user_new' org.uid%}" class="btn btn-primary">{%trans '创建用户'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<form class="form-horizontal" action="" method="post">{%csrf_token%}
+								{{userFormSet.management_form}}
+								<table class="table table-condensed">
+									<thead>
+										<tr><th width="150px">{%trans '操作'%}</th>{%for m in levels%}<th width="150px">{{m.name}}</th>{%endfor%}<td></td></tr>
+									</thead>
+									<tbody>
+										{%for form in userFormSet%}
+										<tr align="center" {%if not form.instance.is_active%}class="gray"{%endif%}>
+											<td id="t_{{form.instance.pk}}" tag="{{form.username.value}}">
+											{{form.id}}<input type="hidden" name="{{form.username.html_name}}" value="{{form.username.value}}" />
+												<div class="btn-group">
+													<a class="btn btn-primary" href="{%url 'org_user_modify' org.id form.instance.pk%}"><i class="icon-user {%if form.instance.is_active%}icon-white{%endif%}"></i> {{form.username.value}}</a>
+													<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+													<ul class="dropdown-menu">
+														<li><a class="layer" width="650px" height="350px" href="{%url 'org_user_modify_pwd' org.pk form.instance.pk%}" title="{%trans '修改密码'%}"><i class="icon-pencil"></i> {%trans '修改密码'%}</a></li>
+														{%if form.instance.is_active%}
+														<li><a href="javascript:void(0)" onclick="deny_login('{{form.instance.pk}}')"><i class="icon-ban-circle"></i> {%trans '禁止登陆'%}</a></li>
+														<li class="hide"><a href="javascript:void(0)" onclick="allow_login('{{form.instance.pk}}')"><i class="icon-ok-circle"></i> {%trans '允许登陆'%}</a></li>
+														{%else%}
+														<li class="hide"><a href="javascript:void(0)" onclick="deny_login('{{form.instance.pk}}')"><i class="icon-ban-circle"></i> {%trans '禁止登陆'%}</a></li>
+														<li><a href="javascript:void(0)" onclick="allow_login('{{form.instance.pk}}')"><i class="icon-ok-circle"></i> {%trans '允许登陆'%}</a></li>
+														{%endif%}
+														<li><a href="javascript:void(0)" onclick="delete_login('{{form.instance.pk}}')"><i class="icon-trash"></i> {%trans '删除用户'%}</a></li>
+													</ul>
+												</div>
+											</td>
+											
+											{%for m in levels%}
+											<td><input type="checkbox" id="{{form.user_levels.html_name}}{{m.pk}}" name="{{form.user_levels.html_name}}" value="{{m.pk}}"/></td>
+											{%endfor%} 
+											<td></td>
+										</tr>
+											<script>
+												$(document).ready(function(){
+													{%for v in form.user_levels.value%}
+													$('#{{form.user_levels.html_name}}{{v}}').attr('checked',true);
+													{%endfor%}
+												});
+											</script>
+										{%endfor%}
+										
+									</tbody>
+								</table>
+								
+						<div class="form-actions">
+							<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+							<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+						</div>
+						
+					</form>
+					
+					
+					<div class="alert alert-info">
+						<h4>{%trans '说明'%}</h4>
+						<p></p>
+						<p>{%trans '将用户分配到组，用户将自动获取该组中的权限，当用户属于多个组时，权限叠加'%}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_yh').addClass('current');
+	$('#tab-setting').addClass('active');
+
+	deny_login=function(user_id){
+		if(!confirm("{%trans '确定禁用用户'%}"+$.trim($('#t_'+user_id).attr('tag'))+",{%trans '将导致用户登录被拒绝'%}？"))
+			return false;
+
+		$.ajax({
+			url:"{%url 'orgs_deny_login' org.pk%}",
+			type:'POST',
+			data:'user_id='+user_id,
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(u_id){
+				$('#t_'+u_id).parent().addClass('gray').end().find('.icon-user').removeClass('icon-white')
+					.end().find('li').eq(1).hide().next().show();
+				layer.msg("{%trans '用户'%}"+$.trim($('#t_'+u_id).attr('tag'))+"{%trans '已禁止登陆'%}",2,{'type':1,'shade':false});
+			}
+		});
+	}
+
+	allow_login=function(user_id){
+		if(!confirm("{%trans '确定启用用户'%}"+$.trim($('#t_'+user_id).attr('tag'))+",{%trans '将可以登录本系统'%}？"))
+			return false;
+
+		$.ajax({
+			url:"{%url 'orgs_allow_login' org.pk%}",
+			type:'POST',
+			data:'user_id='+user_id,
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(u_id){
+				$('#t_'+u_id).parent().removeClass('gray').end().find('.icon-user').addClass('icon-white')
+					.end().find('li').eq(1).show().next().hide();
+				layer.msg("{%trans '用户'%}"+$.trim($('#t_'+u_id).attr('tag'))+"{%trans '已允许登陆'%}",2,{'type':1,'shade':false});
+			}
+		});
+	}
+
+
+	delete_login=function(user_id){
+		if(!confirm("{%trans '您确定要删除用户'%}"+$.trim($('#t_'+user_id).attr('tag'))+"{%trans '，如果用户已有单据，将不能被删除？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'orgs_user_delete' org.pk%}",
+			type:'POST',
+			data:{'user_del_id':user_id},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(u_id){
+				if(parseInt(u_id)){
+					var uname=$.trim($('#t_'+u_id).attr('tag'))
+					$('#t_'+u_id).parent().remove();
+					layer.msg("{%trans '用户'%}"+uname+"{%trans '已删除'%}",2,{'type':1,'shade':false});
+				}else{
+					alert(u_id);
+				}
+			}
+		});
+	}
+});
+</script>
+{%endblock%}

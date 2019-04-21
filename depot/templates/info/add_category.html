@@ -1,0 +1,148 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="container" style="margin-top: 20px;">
+	<form class="form-horizontal form-min-horizontal" method="post" action="" enctype="multipart/form-data">{%csrf_token%}
+		<div class="row-fluid">
+		<div class="span6">
+			<div class="row-fluid">
+				<div class="control-group {%if form.name.errors%}error{%endif%}">
+					<label class="control-label" for="{{form.name.auto_id}}">{%if form.name.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.name.label}}</label>
+					<div class="controls">
+					{{form.name}}
+					<p class="help-block">{{form.name.help_text}}</p>
+					<p class="help-block">{{form.name.errors}}</p>
+					</div>						
+				</div>
+			</div>
+			
+			<div class="row-fluid hide">
+				<div class="control-group {%if form.code.errors%}error{%endif%}">
+					<label class="control-label" for="{{form.code.auto_id}}">{%if form.code.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.code.label}}</label>
+					<div class="controls">
+					{{form.code}}
+					<p class="help-block">{{form.code.help_text}}</p>
+					<p class="help-block">{{form.code.errors}}</p>
+					</div>						
+				</div>
+			</div>
+			
+			<div class="row-fluid">
+				<div class="control-group {%if form.parent.errors%}error{%endif%}">
+					<label class="control-label" for="{{form.parent.auto_id}}">{{form.parent.label}}</label>
+					<div class="controls">
+					{{form.parent}}
+					<p class="help-block">{{form.parent.help_text}}</p>
+					<p class="help-block">{{form.parent.errors}}</p>
+					</div>						
+				</div>
+			</div>
+			
+			<div class="span6">
+				<div class="control-group {%if form.status.errors%}error{%endif%}">
+					<label class="control-label" for="{{form.status.auto_id}}">{{form.status.label}}</label>
+					<div class="controls">
+					{{form.status}}
+					<!--p class="help-block">{{form.status.help_text}}</p-->
+					<p class="help-block">{{form.status.errors}}</p>
+					</div>						
+				</div>
+			</div>
+			
+		</div>
+		<!--
+		<div class="span6">
+			<div class="control-group small-control-group {%if form.cover.errors%}error{%endif%}">
+				<label class="control-label" for="{{form.cover.auto_id}}">{{form.cover.label}}</label>
+				<div class="controls">
+					{{form.cover}}
+					<p class="help-block">{{form.cover.help_text}}</p>
+					<p class="help-block">{{form.cover.errors}}</p>
+				</div>					
+			</div>
+			<div style="position: relative;">
+				<div style="position: absolute;left:80px;">
+				{%if form.instance.cover%}
+				<img id="img_pre" width="100" height="100" src="{{form.instance.cover.thumb_big_url}}" />
+				{%else%}
+				<img id="img_pre" src="/static/images/img.jpg" />
+				{%endif%}
+				</div>
+			</div>
+		</div>
+		</div>
+		-->
+
+		<div class="row-fluid hide">
+			<div class="span6">
+				<div class="control-group {%if form.index.errors%}error{%endif%}">
+					<label class="control-label" for="{{form.index.auto_id}}">{{form.index.label}}</label>
+					<div class="controls">
+					{{form.index}}
+					<p class="help-block">{{form.index.help_text}}</p>
+					<p class="help-block">{{form.index.errors}}</p>
+					</div>						
+				</div>
+			</div>			
+		</div>
+		
+		<div class="row-fluid">
+		<div class="span6">
+			<div class="control-group {%if form.description.errors%}error{%endif%}">
+				<label class="control-label" for="{{form.description.auto_id}}">{{form.description.label}}</label>
+				<div class="controls">
+				{{form.description}}
+				<p class="help-block">{{form.description.help_text}}</p>
+				<p class="help-block">{{form.description.errors}}</p>
+				</div>						
+			</div>
+			</div>
+		</div>
+		
+		<div class="form-actions">
+			<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+			<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" />
+		</div>
+	</form>
+</div>
+
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/common/jquery.form.js" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	var index = parent.layer.getFrameIndex(window.name);
+	{%if success%}
+	{%if form.instance.cover%}
+	parent.addNodeByPId("{{mod}}","{{form.instance.pk}}","{{form.parent.value}}","{{form.name.value}}",true,"{{form.instance.cover.thumb_url}}");
+	{%else%}
+	parent.addNodeByPId("{{mod}}","{{form.instance.pk}}","{{form.parent.value}}","{{form.name.value}}",true);
+	{%endif%}
+	parent.layer.close(index);
+	{%endif%}
+
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+	
+	$('#{{form.cover.auto_id}}').change(function(){
+		if ($("#{{form.cover.auto_id}}").val() == ""){
+			return;
+		}
+
+		$('.form-horizontal').ajaxSubmit({
+			url:"{%url 'prepic'%}?width=100&height=100",
+			success: function (html, status){
+				$('#img_pre').attr("src","/site_media/"+html+"?"+Math.random());
+			}
+		});
+
+	});
+
+});
+</script>
+{%endblock%}

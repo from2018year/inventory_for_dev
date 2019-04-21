@@ -1,0 +1,174 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%load extra_tags%}
+
+{%block title%}{%trans '利润分析'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{{day|date:'Y-m'}}{%trans '商品利润统计'%}</h5>
+					
+				</div>
+				<div class="widget-content" style="background: #fff;">
+				
+					<div class="xu_page clearfix"> 
+						<form action="" class="form-search  pull-left">
+							<div class="pull-right ">
+								<label>{%trans '选择月份'%}:<input name="r_day" type="text" value="{{day|date:'Y-m'}}" onclick="WdatePicker({dateFmt:'yyyy-MM'})" class="input"  /></label>
+								<button type="submit" class="btn">{%trans '转到'%}</button>
+							</div>
+						</form>
+						<div class="pull-right ">
+							<a href="?r_day={{prev|date:'Y-m-d'}}" class="btn" >&lt;&lt;{%trans '上一月'%}</a>
+							<a href="?r_day={{next|date:'Y-m-d'}}" class="btn btn-primary" >{%trans '下一月'%}&gt;&gt;</a>
+							<a id='download' class="btn btn-primary">{%trans '下载'%}</a>
+						</div>
+					</div>
+					
+					<div id="invocie-hq" style="width:100%;overflow: visible"></div>
+					
+					<div class="xu_page clearfix"> 
+						<form action="" class="form-search  pull-left">
+							<div class="pull-right ">
+								<label>{%trans '选择月份'%}:<input name="r_day" type="text" value="{{day|date:'Y-m'}}" onclick="WdatePicker({dateFmt:'yyyy-MM'})" class="input"  /></label>
+								<button type="submit" class="btn">{%trans '转到'%}</button>
+							</div>
+						</form>
+						<div class="pull-right ">
+							<a href="?r_day={{prev|date:'Y-m-d'}}" class="btn" >&lt;&lt;{%trans '上一月'%}</a>
+							<a href="?r_day={{next|date:'Y-m-d'}}" class="btn btn-primary" >{%trans '下一月'%}&gt;&gt;</a>
+						</div>
+					</div>
+					
+					
+					<div id="chart" style="min-width: 600px; height: 400px; margin: 0 auto;"></div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/main_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block rel%}
+<link href="/static/js/handsontable/jquery.handsontable.full.css" rel="stylesheet">
+<style>
+.handsontable .htDimmed {
+	color:black;
+	background-color: #fff;
+}
+</style>
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script type="text/javascript" src="/static/js/charts/highcharts.js"></script>
+<script type="text/javascript" charset="utf8" src="/static/js/charts/modules/exporting.js"></script>
+<script type="text/javascript" src="/static/js/charts/themes/grid.js"></script>
+<script src="/static/js/handsontable/jquery.handsontable.full.js"></script>
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_lirun_fenxi').addClass('current');
+	$('#tab-warehouse').addClass('active');
+	$category_tr=$('.table thead tr').eq(1);
+
+	
+
+	$('#download').click(function(){
+		var nexturl = location.href;
+		if (nexturl.indexOf("?")==-1){
+			nexturl += '?'
+		}
+		else{
+			nexturl += '&'
+		}
+		nexturl += 'exportExcel=1'
+		//alert(nexturl);
+		location.href=nexturl;
+	});
+
+	
+	var datas=[
+	           {%for data in datas%}
+	           ["{{data.good__name}}","{{data.good__unit__unit|default:''}}",{{data.good__nums|floatformat:'2'}},{{data.in_num|floatformat:'2'}},{{data.in_price|floatformat:'2'}},
+	            {{data.in_price|division:data.in_num|floatformat:'2'}},{{data.out_num|floatformat:'2'}},{{data.out_price|floatformat:'2'}},
+	            {{data.out_price|division:data.out_num|floatformat:'2'}},{{data.out_price|floatformat:'2'}}-{{data.chenben|floatformat:'2'}}],
+	           {%endfor%}
+	       	];
+
+	col_width=$('.widget-content').width()*0.068;
+	col_width=col_width>80?80:col_width;
+	
+    $("#invocie-hq").handsontable({
+  		data:datas,
+  		minSpareRows: 1,
+  		columnSorting: true,
+  		colHeaders: ["{%trans '物品'%}","{%trans '物品单位'%}","{%trans '当前库存'%}","{%trans '入库数量'%}","{%trans '入库总价'%}","{%trans '入库均价'%}","{%trans '销售数量'%}","{%trans '销售总价'%}","{%trans '销售均价'%}","{%trans '销售利润'%}"],
+  		colWidths :[$('.widget-content').width()-col_width*9-50,col_width,col_width,col_width,col_width,col_width,col_width,col_width,col_width,col_width],
+  		columns:[{type:'text',renderer:function(instance, td, row, col, prop, value){
+  					if(row==instance.countRows()-1){td.style.fontWeight='bold';value="{%trans '物品合计'%}";}
+  					Handsontable.renderers.TextRenderer.apply(this, arguments);
+  				}},{},{type:'numeric'},{type:'numeric'},
+  				{type:'numeric',format: '$0.00',language: 'zh-cn',renderer:function(instance, td, row, col, prop, value){
+					if(row==instance.countRows()-1){td.style.fontWeight='bold';value={{agg.in_price|default:'0'}};}
+					Handsontable.NumericRenderer.apply(this, arguments);
+				}},{type:'numeric'},{type:'numeric'},{type:'numeric',format: '$0.00',language: 'zh-cn',renderer:function(instance, td, row, col, prop, value){
+					if(row==instance.countRows()-1){td.style.fontWeight='bold';value={{agg.out_price|default:'0'}}}
+					Handsontable.NumericRenderer.apply(this, arguments);
+				}},{type:'numeric'},{type:'numeric',format: '$0.00',language: 'zh-cn',renderer:function(instance, td, row, col, prop, value){
+					if(row==instance.countRows()-1){td.style.fontWeight='bold';value={{agg.out_price|default:'0'}}-{{agg.chenben|default:'0'}}}
+					Handsontable.NumericRenderer.apply(this, arguments);
+				}}],
+  		className:"htRight",
+  		rowHeaders: true,
+  		cells:function (row, col, prop){
+    		var cellProperties = {};
+    		cellProperties.readOnly = true;
+    		if(col==0){
+    			cellProperties.className='htCenter';
+        	}
+    		return cellProperties;
+  		}
+  	});
+
+    $container = $("#invocie-hq").handsontable('getInstance');
+  
+});
+
+$(window).load(function(){
+	
+	var resizeTimer;
+	col_width=$('.widget-content').width()*0.064;
+	col_width=col_width>80?80:col_width;
+	
+	window.onresize = function(){
+	    if (resizeTimer){
+	        clearTimeout(resizeTimer);
+	    } 
+	    resizeTimer = setTimeout(function(){
+	    	$container.updateSettings({'colWidths':[$('.widget-content').width()-col_width*9-50,col_width,col_width,col_width,col_width,col_width,col_width,col_width,col_width,col_width]});
+	        }, 100);
+	};
+});
+
+</script>
+{%endblock%}

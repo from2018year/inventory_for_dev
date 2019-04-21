@@ -1,0 +1,224 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '资金分析'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{{day|date:'Y-m'}}{%trans '进出账目统计'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'zijin_category1' org.pk%}" class="btn btn-primary">{%trans '编辑类目'%}</a>
+						
+					</div>
+				</div>
+				<div class="widget-content" style="background: #fff;">
+				
+					<div class="xu_page clearfix"> 
+						<form action="" class="form-search  pull-left">
+							<div class="pull-right ">
+								<label>{%trans '选择月份'%}:<input name="r_day" type="text" value="{{day|date:'Y-m'}}" onclick="WdatePicker({dateFmt:'yyyy-MM'})" class="input"  /></label>
+								<button type="submit" class="btn">{%trans '转到'%}</button>
+							</div>
+						</form>
+						<div class="pull-right ">
+							<a href="?r_day={{prev|date:'Y-m-d'}}" class="btn" >&lt;&lt;{%trans '上一月'%}</a>
+							<a href="?r_day={{next|date:'Y-m-d'}}" class="btn btn-primary" >{%trans '下一月'%}&gt;&gt;</a>
+							<a id='download' class="btn btn-primary">{%trans '下载'%}</a>
+						</div>
+					</div>
+					
+					<table  class="table table-bordered text-center">
+						
+							<col class="info" style="background-color: #DFF0D8;">
+							{%for small_category in small_categorys%}
+							<col style="font-size: 16px;">
+							{%endfor%}
+							<col style="background-color: #FCF8E3;">
+						
+						<thead>
+						<tr class="info"><th rowspan="2">{%trans '日期'%}</th>{%for big_category in big_categorys%}<th colspan="{{big_category.children_count}}">{{big_category}}</th>{%endfor%}<th rowspan="2">{%trans '合计'%}</th></tr>
+						<tr class="info">{%for small_category in small_categorys%}<th tag="{{small_category.pk}}">{{small_category}}</th>{%endfor%}</tr>
+						</thead>
+						<tbody>
+							{%for day,datas in day_data%}
+							<tr><td>{{day|date:'Y-m-d'}}</td>{%for category,data in datas%}<td class="edit" tag="{{category}}">{{data|floatformat:'2'|default_if_none:''}}{%if not forloop.last%}<i title="{%trans '编辑记账情况'%}" class="icon-pencil pull-right hide"></i>{%endif%}</td>{%endfor%}</tr>
+							{%endfor%}
+						</tbody>
+						<tfoot>
+							<tr class="info">
+							{%for day,total in category_total_data%}
+							{%if forloop.first%}
+							<th>{{day|date:'Y-m'}}</th>
+							{%elif forloop.last%}
+							<th>{{total}}</th>
+							{%else%}
+							<th>{{total}}</th>
+							{%endif%}
+							{%endfor%}</tr>
+							</tfoot>
+					</table>
+					
+					<div class="xu_page clearfix"> 
+						<form action="" class="form-search  pull-left">
+							<div class="pull-right ">
+								<label>{%trans '选择月份'%}:<input name="r_day" type="text" value="{{day|date:'Y-m'}}" onclick="WdatePicker({dateFmt:'yyyy-MM'})" class="input"  /></label>
+								<button type="submit" class="btn">{%trans '转到'%}</button>
+							</div>
+						</form>
+						<div class="pull-right ">
+							<a href="?r_day={{prev|date:'Y-m-d'}}" class="btn" >&lt;&lt;{%trans '上一月'%}</a>
+							<a href="?r_day={{next|date:'Y-m-d'}}" class="btn btn-primary" >{%trans '下一月'%}&gt;&gt;</a>
+						</div>
+					</div>
+					
+					
+					<div id="chart" style="min-width: 600px; height: 400px; margin: 0 auto;"></div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/main_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script type="text/javascript" src="/static/js/charts/highcharts.js"></script>
+<script type="text/javascript" charset="utf8" src="/static/js/charts/modules/exporting.js"></script>
+<script type="text/javascript" src="/static/js/charts/themes/grid.js"></script>
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){;
+	$('#li_zijin_fenxi').addClass('current');
+	$('#tab-warehouse').addClass('active');
+	$category_tr=$('.table thead tr').eq(1);
+
+	$('.table').on({
+		'mouseover':function(){
+			$(this).find('i').show();
+		},
+		'mouseout':function(){
+			$(this).find('i').hide();
+		},
+		'click':function(e){
+			if($(e.target).is('i')){
+				var date_str=$(this).parent().find('td:first').text();
+				var category_id=$(this).attr('tag');
+
+				$.layer({
+					type:2,
+					title:"{%trans '编辑'%}"+date_str,
+					iframe:{src:"{%url 'caiwu_edit_zijin' org.pk%}?date_str="+date_str+"&category_id="+category_id},
+					area:['620px','400px'],
+					offset : ['50px','']
+				});
+			}
+		}
+	},'td');
+
+	$('#download').click(function(){
+		var nexturl = location.href;
+		if (nexturl.indexOf("?")==-1){
+			nexturl += '?'
+		}
+		else{
+			nexturl += '&'
+		}
+		nexturl += 'exportExcel=1'
+		//alert(nexturl);
+		location.href=nexturl;
+	});
+
+	var colors = Highcharts.getOptions().colors,
+	categories = [{%for category in big_category_names%}'{{category}}',{%endfor%}],
+	name = "{%trans '资金对比分析'%}",	
+	data=[{%for category_data in category_datas%}{
+		y:{{category_data.y}},
+		color:colors[{{forloop.counter0}}],
+		drilldown:{
+			name:"{{category_data.name|safe}}",
+			categories:[{%for category in category_data.categorys%}'{{category}}',{%endfor%}],
+			data:{{category_data.data|safe}},
+			color:colors[{{forloop.counter0}}]
+		}
+	}{%if not forloop.last%},{%endif%}{%endfor%}
+	];
+	
+
+	var browserData = [];
+    var versionsData = [];
+    for (var i = 0; i < data.length; i++) {
+        // add browser data
+        browserData.push({
+            name: categories[i],
+            y: data[i].y,
+            color: data[i].color
+        });
+
+        // add version data
+        for (var j = 0; j < data[i].drilldown.data.length; j++) {
+            var brightness = 0.2 - (j / data[i].drilldown.data.length) / 5 ;
+            versionsData.push({
+                name: data[i].drilldown.categories[j],
+                y: data[i].drilldown.data[j],
+                color: Highcharts.Color(data[i].color).brighten(brightness).get()
+            });
+        }
+    }
+
+    // Create the chart
+    $('#chart').highcharts({
+        chart: {type: 'pie'},
+        credits:{href:"{{CREDIT_HREF}}",text:"{{CREDIT_TEXT}}"},
+        title: {text: "{{day|date:'Y-m'}}{%trans '资金对比分析'%}"},
+        yAxis: {title: {text: '%'}},
+        plotOptions: {pie: {shadow: false,center: ['50%', '50%']}},
+        tooltip: {valueSuffix: '%'},
+        series: [{
+            name: "{%trans '百分比'%}",
+            data: browserData,
+            size: '60%',
+            dataLabels: {
+                formatter: function() {
+                    return this.y > 5 ? this.point.name : null;
+                },
+                color: 'white',
+                distance: -30
+            }
+        }, {
+            name: "{%trans '百分比'%}",
+            data: versionsData,
+            size: '80%',
+            innerSize: '60%',
+            dataLabels: {
+                formatter: function() {
+                    return this.y > 0.1 ? '<b>'+ this.point.name +':</b> '+ this.y +'%'  : null;
+                }
+            }
+        }]
+    });
+
+});
+
+
+
+</script>
+{%endblock%}

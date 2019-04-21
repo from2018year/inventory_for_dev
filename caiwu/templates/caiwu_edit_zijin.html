@@ -1,0 +1,135 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="container" style="margin-top: 20px;">
+	<form class="form-horizontal" method="post" action="">{%csrf_token%}
+		{{formset.management_form}}
+		
+		<table id="ltable" class="table">
+			<thead><tr class="info"><th width="100px">{%trans '所属分类'%}</th><th width="70px">{%trans '金额'%}</th><th>{%trans '备注'%}</th></tr></thead>
+			<tbody>
+				{%if category.ftype != 3%}
+				{%for form in formset.forms%}
+				<tr><td>{{form.instance.category}}</td>
+				<td>{{form.instance.amount}}</td><td>{{form.instance.remark}}</td></tr>
+				{%empty%}
+				<tr><td colspan="3">{%trans '未接收到'%}{{category}}{%trans '数据'%}-{%trans '数据来源'%}-<strong>{{category.get_ftype_display}}</strong></td></tr>
+				{%endfor%}
+				{%else%}
+				{%for form in formset.forms%}
+				<tr><td>{{form.category}}<div class="hide">{{form.id}}{{form.org}}{{form.date}}</div>
+				{{ form.DELETE }}
+				</td>
+				<td>{{form.amount}}</td><td>{{form.remark}}</td></tr>
+				{%endfor%}
+				{%endif%}
+			</tbody>
+		</table>
+		
+		
+		<div class="form-actions" style="padding-left:50px">
+			{%if category.ftype == 3%}
+			<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+			{%endif%}
+			<input id="close_layrt" type="button" class="btn btn-warning" value="{%trans '关闭'%}" />
+		</div>
+	</form>
+</div>
+
+
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/jquery.formset.js" type="text/javascript"></script>
+<script src="/static/js/common/jquery.form.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('.hide_delete').attr('readonly',true);
+	var index = parent.layer.getFrameIndex(window.name);
+	{%if success%}
+	parent.layer.close(index);
+	{%endif%}
+	$('#close_layrt').click(function(){	
+		var index = parent.layer.getFrameIndex(window.name);
+		parent.layer.close(index);
+	});
+	{%if category.ftype == 3%}
+	$('#ltable tbody tr').formset({
+		prefix: '{{formset.prefix}}',
+		removed:function(row){
+	
+		},
+		added:function(row){
+			row.find('.org').val('{{org.pk}}');
+		}
+	});
+	{%endif%}
+	//提交表单
+	jQuery.fn.preventDoubleSubmission = function() {
+	  $(this).on('submit',function(e){
+	    var $form = $(this);
+	
+	    if ($form.data('submitted') === true) {
+	      // Previously submitted - don't submit again
+	      e.preventDefault();
+	    } else {
+	      // Mark it so that the next submit can be ignored
+	      $form.data('submitted', true);
+	    }
+	  });
+	
+	  // Keep chainability
+	  return this;
+	};
+	$('form').preventDoubleSubmission();
+
+	window.flag=0;
+	function block_form(){
+        $('input','.form-horizontal').prop('disabled', 'disabled');
+        $('.form_error').removeClass('form_error');
+	}
+	function unblock_form(){
+		$('input','.form-horizontal').removeAttr('disabled');
+		flag=0;
+	}
+	$('.form-horizontal').ajaxForm({
+		beforeSubmit: function(form,options){
+        	block_form();
+    	},
+		success:function(resp){
+    		unblock_form();
+    		parent.layer.msg("{%trans '保存成功'%}", 1, {type:1,shade:false});
+    		var index = parent.layer.getFrameIndex(window.name);
+  			parent.location=parent.location;
+    		//$('#widget-content',parent.document).load(parent.request_url,function(response,status){
+    		//	parent.layer.close(index);
+    		//});
+    		//parent.layer.close(index);
+		},
+		error:function(resp){
+			unblock_form();
+			var errors=eval("("+resp.responseText+")");
+			for(k in errors){
+				if(errors[k] instanceof Array){
+					for(var i=0;i<errors[k].length;i++){
+						for(error in errors[k][i]){
+							console.log(error+ ":"+errors[k][i][error])
+							$('#id_'+error).addClass('form_error');
+						}
+					}
+				}else{
+					for(error in errors[k]){
+						console.log(error+ ":"+errors[k][error]);
+						$('#id_'+error).addClass('form_error');
+					}
+				}
+			}
+		
+		}
+	});
+	
+});
+</script>
+{%endblock%}

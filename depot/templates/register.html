@@ -1,0 +1,36 @@
+{%load url from future%}
+{%load i18n%}
+<html>
+	<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>
+	</head>
+	<body>
+		<div style="text-align:center">
+			<div style="display:block;width:600px;margin:200px auto;padding:20px;background:#eee;border: 3px solid rgb(188, 204, 238);">
+				{%if STYLE == 'gicater'%}
+				{{res}},{%trans '请联系聚客餐饮软件'%}(<a target="_blank" href="http://www.gicater.com/">www.gicater.com</a>)，{%trans '或'%}<a target="_blank" href="http://shop104286815.taobao.com/">{%trans '在线购买'%}</a>
+				{%else%}
+				{{res}},{%trans '请联系软件供应商'%}
+				{%endif%}
+				<form id="form1" action="{%url 'register'%}" method="post">{%csrf_token%}
+					{%trans '您的机器码为'%}<div style="line-height: 30px">{{cpuid}}</div>
+					{%trans '请输入您得到的注册码'%}<textarea rows="5" id="ma" name="ma" cols="60" style="overflow:hidden;">{{ma|default:''}}</textarea>
+					<br/><br/>
+					<input onclick="checkSubmit()" type="button" class="btn" value="{%trans '注册'%}" />
+				</form>
+				{{msg|safe}}
+			</div>
+		</div>
+	<script type="text/javascript">
+	checkSubmit=function(){
+		ma=document.getElementById('ma');
+		if(!ma.value){
+			alert('{%trans "请输入注册码"%}');
+			ma.focus();
+			return false;
+		}
+		document.getElementById('form1').submit();
+	}
+	</script>
+	</body>
+</html>

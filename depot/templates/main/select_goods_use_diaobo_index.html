@@ -1,0 +1,98 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 10 goods_details %}
+{% get_pages %}
+<table class="table table-hover table-condensed">
+	<thead>
+		<tr><th width="100px">{%trans '编号'%}</th><th>{%trans '名称/批次'%}</th><th width="50px">{%if supplier%}{{supplier}}{%endif%}{%trans '库存'%}</th><th width="50px">{%trans '单位'%}</th><th width="50px">{%trans '规格'%}</th><th width="50px">{%trans '均价'%}</th><th>{%trans '操作'%}</th></tr>
+	</thead>
+	{%for good,details in goods_details%}
+	{%if good.is_batchs%}
+	<tr id="good_{{good.pk}}" good_id="{{good.pk}}" shelf_life="{{good.shelf_life|default:''}}" shelf_life_type="{{good.shelf_life_type|default:''}}"><td>{{good.code|default:'-'}}</td><td><span class="good_name">{{good.name}}</span></td><td>{{good.sum|floatformat:'2'}}</td><td upk="{{good.unit_id|default:''}}"><span upk="{{good.unit_id|default:''}}">{{good.unit|default:'-'}}</span>{%if good.auxiliary_unit.exists%}({%for u in good.auxiliary_unit.all%}<span upk="{{u.pk}}">{{u}}</span>{%if not forloop.last%}/{%endif%}{%endfor%}){%endif%}</td><td>{{good.standard|default:'-'}}</td><td>{{good.price|floatformat:'2'}}</td><td width="30px">-</td></tr>
+	{%for detail in details%}
+	<tr good_id="{{good.pk}}" batch_id="{{detail.pk}}"><td>-</td><td><span class="good_name hide">{{good.name}}</span><span class="good_batch">{{detail.batch_code}}</span></td><td>{{detail.last_nums_unit1|floatformat:'2'}}</td><td><span upk="{{detail.unit1_id|default:''}}">{{detail.unit1}}</span></td><td>-</td><td>{{detail.price|floatformat:'2'}}</td><td><i class="icon icon-ok"></i></td></tr>
+	{%endfor%}
+	{%else%}
+	<tr good_id="{{good.pk}}" shelf_life="{{good.shelf_life|default:''}}" shelf_life_type="{{good.shelf_life_type|default:''}}"><td>{{good.code|default:'-'}}</td><td><span class="good_name">{{good.name}}</span></td><td>{{good.sum|floatformat:'2'}}</td><td upk="{{good.unit_id|default:''}}"><span upk="{{good.unit_id|default:''}}">{{good.unit|default:'-'}}</span>{%if good.auxiliary_unit.exists%}({%for u in good.auxiliary_unit.all%}<span upk="{{u.pk}}">{{u}}</span>{%if not forloop.last%}/{%endif%}{%endfor%}){%endif%}</td><td>{{good.standard|default:'-'}}</td><td>{{good.refer_price|floatformat:'2'}}</td><td width="30px"><i class="icon icon-ok"></i></td></tr>
+	{%endif%}
+	{%endfor%}
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$(document).ready(function(){
+	$('.icon-ok','.table').click(function(){
+		$tr=$(this).parent().parent();
+		$cur=window.parent.$cur_tr;
+		
+		//判定批次号或物品号不重复
+		var $table=$cur.parent();
+		var batch_code=$tr.find('td').eq(1).find('.good_batch').text();
+		if(batch_code){
+			var cont=true;
+			$table.find('.good_batch').each(function(){
+				if($(this).val()==batch_code){
+					cont=false;
+					alert('{%trans '已添加批次'%}');
+					return false;
+				}
+			});
+
+			if(!cont){return false;}
+		}
+		
+		
+		$cur.find('input.good_text').val($tr.find('td').eq(1).find('.good_name').text());
+		$cur.find('input.good_rel').val($tr.attr('good_id'));
+		$cur.find('input.batch_rel').val($tr.attr('batch_id'));
+		$cur.find('input.good_batch').val($tr.find('td').eq(1).find('.good_batch').text());
+		
+		if(parseFloat($tr.find('td').eq(5).text())){
+			$cur.find('td').eq(3).find('input').val($tr.find('td').eq(5).text());
+		}
+
+		//增加最大可退数量
+		$cur.find('.num').attr('max_num',$tr.find('td').eq(2).text());
+
+		//增加多单位选择
+		var $unit_td=$tr.find('td').eq(3);
+		var tmp_arr=[];
+		var str="";
+		$unit_td.find('span').each(function(){
+			str+="<option value='"+$(this).attr('upk')+"'>"+$(this).text()+"</option>";
+			tmp_arr.push($(this).attr('upk'));
+		});
+		//增加可选单位
+		var $extra_unit_td=$('#good_'+$tr.attr('good_id'));
+		$extra_unit_td.find('td').eq(3).find('span').each(function(){
+			if($.inArray($(this).attr('upk'),tmp_arr)==-1){
+				str+="<option value='"+$(this).attr('upk')+"'>"+$(this).text()+"</option>";
+				tmp_arr.push($(this).attr('upk'));
+			}
+		});
+	
+		$cur.find('td').eq(4).find('select').empty().append(str);
+		window.parent.$goods_layer.hide();
+	});
+	
+});
+</script>

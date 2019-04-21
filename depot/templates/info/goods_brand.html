@@ -1,0 +1,59 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '管理物品品牌'%}</h5>
+				</div>
+				<div class="widget-content">
+					<div class="alert">
+						<i class="icon icon-lock"></i> {%trans '号的品牌为已有物品使用的品牌，删除需谨慎(使用此品牌的物品将清除品牌)'%}
+					</div>
+					<form class="form-horizontal" action="" method="post">{%csrf_token%}
+					{{ formset.management_form }}
+					<table class="table table-condensed" style="margin-top:10px;width:40%;min-width:500px;" id='ta'>
+						<thead><tr><th>{%trans '品牌'%}</th><th>{%trans '品牌备注'%}</th><th>{%trans '状态'%}</th><th>{%trans '删除'%}</th></tr></thead>
+				 		{%for form in formset%}
+				 		<tr {%if form.errors%}class="error"{%endif%}><td>{{form.brand}}{%if form.instance.pk and form.instance.goods_set.count%}<i class="icon icon-lock"></i>{%endif%}{{form.brand.errors}}</td><td>{{form.des}}</td><td>{{form.status}}</td><td>{{form.DELETE}}{{ form.id }}</td></tr>
+						{%endfor%}
+					</table>
+					
+					<div class="form-actions">
+						<input type="submit" class="btn btn-primary" value="{%trans '确定'%}"/>
+						<button type="reset" class="btn btn-warning">{%trans '重置'%}</button>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/info_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_brand').addClass('current');
+	$('#tab-setting').addClass('active');
+});
+</script>
+{%endblock%}

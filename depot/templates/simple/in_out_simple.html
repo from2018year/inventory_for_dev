@@ -1,0 +1,213 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="container" style="margin-top: 20px;">
+	<ul class="nav nav-tabs">
+			<li class="active"><a data-toggle="tab" href="#in_stock">{%trans '增加库存'%}</a></li>
+			<li><a data-toggle="tab" href="#out_stock">{%trans '减少库存'%}</a></li>
+		</ul>
+		<div class="tab-content">
+			<div id="in_stock" class="tab-pane fade active in">
+				<form class="form-horizontal form-min-horizontal" method="post" action="">{%csrf_token%}
+					<div class="control-group">
+						<label class="control-label">{%trans '入库类型'%}</label>
+						<div class=" clearfix" style="margin-left:90px">
+							<label class="radio inline">
+							  <input type="radio" name="in_invoice_type" tag="ghs" checked="checked" value="1001"> {%trans '采购入库'%}
+							</label>
+							<label class="radio inline">
+							  <input type="radio" name="in_invoice_type" tag="none" value="1000"> {%trans '初始入库'%}
+							</label>
+						</div>					
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="in_nums">{%trans '入库数量'%}</label>
+						<div class="controls">
+							<input type="text" name="in_nums" id="in_nums" class="input-small" />
+							<select name="in_unit" id="in_unit" class="input-small">
+								<option price="{{good.price|default:''}}" sale_price="{{good.sale_price|default:''}}" value="{{good.unit_id|default:''}}">{{good.unit|default:'----'}}</option>
+								{%for unit in units%}
+								<option price="{{unit.price|default:''}}" sale_price="{{unit.sale_price|default:''}}" value="{{unit.id|default:''}}">{{unit}}</option>
+								{%endfor%}
+							</select>
+						</div>						
+					</div>
+					<div class="control-group" >
+						<label class="control-label" for="in_price">{%trans '入库单价'%}</label>
+						<div class="controls">
+							<input type="text" name="in_price" id="in_price" class="input-small" value="{{good.price|default:'0'}}" />
+						</div>						
+					</div>
+					<div class="control-group for-radio" id="ghs">
+						<label class="control-label" for="supplier">{%trans '供货商'%}</label>
+						<div class="controls">
+							<select name="supplier" id="supplier" class="input with-after">
+								{%for supplier in suppliers%}
+								<option value="{{supplier.id}}">{{supplier}}</option>
+								{%endfor%}
+							</select>
+							<input class="unitbox" id="supplier_cus" name="supplier_cus" type="text" autocomplete="off" value="" style="margin-left:-224px;width:188px"/>
+						</div>						
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="remark">{%trans '备注'%}</label>
+						<div class="controls">
+							<textarea rows="3" name="remark" id="remark"></textarea>
+						</div>						
+					</div>
+					  <div class="control-group">
+					    <div class="controls">
+					      <button type="submit" class="btn btn-primary">确认入库</button>
+					    </div>
+					  </div>
+				</form>
+			</div>
+			
+			<div id="out_stock" class="tab-pane fade">
+				<form class="form-horizontal form-min-horizontal" method="post" action="">{%csrf_token%}
+					<div class="control-group">
+						<label class="control-label">{%trans '出库类型'%}</label>
+						<div class=" clearfix" style="margin-left:90px">
+							<label class="radio inline">
+							  <input type="radio" name="out_invoice_type" tag="dep" checked="checked" value="2001"> {%trans '领用出库'%}
+							</label>
+							<label class="radio inline">
+							  <input type="radio" name="out_invoice_type" tag="cus" value="2002"> {%trans '销售出库'%}
+							</label>
+							<label class="radio inline">
+							  <input type="radio" name="out_invoice_type" tag="sup" value="2000"> {%trans '采购退货'%}
+							</label>
+						</div>					
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="out_nums">{%trans '出库数量'%}</label>
+						<div class="controls">
+							<input type="text" name="out_nums" id="out_nums" class="input-small" />
+							<select name="out_unit" id="out_unit" class="input-small">
+								<option price="{{good.price|default:''}}" sale_price="{{good.sale_price|default:''}}" value="{{good.unit_id|default:''}}">{{good.unit|default:'----'}}</option>
+								{%for unit in units%}
+								<option price="{{unit.price|default:''}}" sale_price="{{unit.sale_price|default:''}}" value="{{unit.id|default:''}}">{{unit}}</option>
+								{%endfor%}
+							</select>
+						</div>						
+					</div>
+					<div class="control-group for-radio hide" id="cus">
+						<label class="control-label" for="out_price">{%trans '出库单价'%}</label>
+						<div class="controls">
+							<input type="text" name="out_price" id="out_price" class="input-small" value="{{good.sale_price|default:'0'}}" />
+						</div>						
+					</div>
+					<div class="control-group for-radio hide" id="sup">
+						<label class="control-label" for="supplier">{%trans '供货商'%}</label>
+						<div class="controls">
+							<select name="supplier" id="supplier" class="with-after">
+								{%for supplier in suppliers%}
+								<option value="{{supplier.id}}">{{supplier}}</option>
+								{%endfor%}
+							</select>
+							<input class="unitbox" id="supplier_cus" name="supplier_cus" type="text" autocomplete="off" value="" style="margin-left:-224px;width:188px"/>
+						</div>						
+					</div>
+					<div class="control-group for-radio hide" id="cus">
+						<label class="control-label" for="customer">{%trans '客户'%}</label>
+						<div class="controls">
+							<select name="customer" id="customer" class="with-after">
+								{%for customer in customers%}
+								<option value="{{customer.id}}">{{customer}}</option>
+								{%endfor%}
+							</select>
+							<input class="unitbox" id="customer_cus" name="customer_cus" type="text" autocomplete="off" value="" style="margin-left:-224px;width:188px"/>
+						</div>						
+					</div>
+					<div class="control-group for-radio" id="dep">
+						<label class="control-label" for="department">{%trans '部门'%}</label>
+						<div class="controls">
+							<select name="department" id="department" class="with-after">
+								{%for department in departments%}
+								<option value="{{department.id}}">{{department}}</option>
+								{%endfor%}
+							</select>
+							<input class="unitbox" id="department_cus" name="department_cus" type="text" autocomplete="off" value="" style="margin-left:-224px;width:188px"/>
+						</div>						
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="remark">{%trans '备注'%}</label>
+						<div class="controls">
+							<textarea rows="3" name="remark" id="remark"></textarea>
+						</div>	
+											
+					</div>
+					  <div class="control-group">
+					    <div class="controls">
+					      <button type="submit" class="btn btn-primary">确认出库</button>
+					    </div>
+					  </div>
+				</form>
+			</div>
+		</div>
+</div>
+{%endblock%}
+
+
+{%block endrel%}
+<script src="/static/js/common/jquery.form.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('input[name="out_invoice_type"],input[name="in_invoice_type"]').change(function(){
+		$(this).parents('.form-horizontal').find('.for-radio').hide().filter("[id='"+$(this).attr('tag')+"']").show();
+	});
+	
+	$('#in_unit').change(function(){
+		$('#in_price').val($('#in_unit option:selected').attr('price'));
+	}).change();
+	
+	$('#out_unit').change(function(){
+		$('#out_price').val($('#out_unit option:selected').attr('sale_price'));
+	}).change();
+	
+	$(".with-after").change(function(){         
+        $(this).next().val($(this).find('option:selected').text());
+    }).change();
+	
+	
+	$('.form-horizontal').on('submit', function(e) {
+        e.preventDefault(); 
+        
+        $inputs=$(this).find('input:visible');
+        var need_bq=false;
+        $inputs.each(function(){
+        	if(!$.trim($(this).val())){
+        		need_bq=true;
+        		alert("{%trans '请先填写'%}"+$(this).parents('.control-group').find('label:first').text());
+        		$(this).focus();
+        		return false;
+        	}
+        });
+        
+        if(need_bq){
+        	return;
+        }
+        
+        $(this).ajaxSubmit({
+        	success: function(json){
+        		console.log(json)
+            	if(json.success){
+            		parent.update_in_out_stock(json.tag%20,json.invoice_type,json.good_nums,json.unit,json.nums,json.price,json.date,json.good_id);
+            		parent.layer.close(index);
+            	}else{
+            		alert(json.message)
+            	}
+            },
+            error:function(json){
+                console.log(json)
+            }
+        });
+    });
+	
+
+});
+</script>
+{%endblock%}

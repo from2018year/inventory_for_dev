@@ -1,0 +1,61 @@
+{%extends 'base_print.html'%}
+{%load i18n%}
+
+{%block title%}{%trans '打印盘点表'%}{%endblock%}
+
+{%block body%}
+<div class="container-fluid">
+	<table id="b_table" class="table table-hover table-condensed">
+		<thead>
+			<tr>
+				<th width="100px">{%trans '名称'%}</th><th width="100px">{%trans '编码'%}</th><th width="100px">{%trans '类别'%}</th>
+				<th width="70px">{%trans '规格'%}</th><th width="70px">{%trans '单位'%}</th><th width="70px">{%trans '库存数量'%}</th>
+				<th width="120px">{%trans '盘点数量'%}</th><th width="120px">{%trans '盘差'%}</th></tr>
+		</thead>
+		
+		<tbody>
+			{%for good in b_goods%}
+			<tr class="goods_info" id="t{{good.0.goods_code}}" good_id="{{good.0.good_id}}" class="good_items" tag="{{good.0.goods_abbreviation}}">
+				<td>{{good.0.name}}</td><td>{{good.0.code}}</td><td>{{good.0.category_name}}</td><td>{{good.0.standard}}</td>
+				<td>{{good.0.unit__unit|default:'无'}}</td><td>{{good.0.last_nums|floatformat:'2'}}</td>
+				<td>
+					{%if not good.0.is_batchs%}
+					<div class="user-option"><input type="text" value="{{good.0.shiji|default_if_none:''}}" class="no-margin under-line under-left-line pandian-remark" /></div>
+					{%endif%}
+				</td>
+				<td><div class="user-option"><input type="text" value="{{good.0.pancha|default_if_none:''}}" class="no-margin under-line under-left-line pandian-remark" /></div></td>
+			</tr>
+			{%if good.0.is_batchs%}
+			<tr class="batch_info_class">
+			<td colspan="8" class="no-padding">
+				<table class="table table-bordered" width="100%">
+					<thead><tr>
+						<th>{%trans '批次号'%}</th><th width="100px">{%trans '货架'%}</th>
+						<th width="70px">{%trans '单价'%}</th><th width="70px">{%trans '单位'%}</th>
+						<th width="70px">{%trans '库存数量'%}</th><th width="120px">{%trans '盘点数量'%}</th>
+						<th width="115px">{%trans '盘差'%}</th>
+					</tr></thead>
+					{%for batch in good.1%}
+					<tr tag="{{batch.batch_code}}" class="batch_info">
+					<td>{{batch.batch_code}}</td><td>{{batch.warehouse.full_name}}</td>
+					<td>{{batch.price|floatformat:'2'}}</td><td>{{batch.unit}}</td>
+					<td>{{batch.last_nums|floatformat:'2'}}</td>
+					<td><div class="user-option"><input type="text" value="{{batch.shiji|default_if_none:''}}" class="no-margin under-line under-left-line" /></div></td><td><div class="user-option"><input type="text" value="{{batch.pancha|default_if_none:''}}" class="no-margin under-line under-left-line" /></div></td></tr>
+					{%if forloop.last%}
+					<tr><td colspan="7"><div class="user-option">{%trans '备注:'%}<input type="text" class="pandian-remark no-margin under-line under-large-line"/></div></td></tr>
+					{%endif%}
+					
+					{%endfor%}
+				</table>
+			</td>
+			</tr>
+			{%else%}
+			<tr class="goods_info"><td colspan="8"><div class="user-option">{%trans '备注:'%}<input type="text" class="pandian-remark no-margin under-line under-large-line"/></div></td></tr>
+			{%endif%}
+		{%endfor%}
+		</tbody>
+		
+	</table>
+</div>
+
+{%endblock%}

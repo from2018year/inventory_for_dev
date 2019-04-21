@@ -1,0 +1,587 @@
+{%extends 'base_print.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="" id="check_msg"></div>
+<div id="container_invoice" class="container" style="margin-top:20px;">
+	<h2 class="text-center">{{invoice.get_invoice_type_display}}</h2>
+	{%if invoice.invoice_type == 1001 %}
+	<div class="row-fluid clearfix">
+		<span class="span5  pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '供货商'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+		<span class="pull-right">{%trans '结款状态'%}:<span id="invoice_result_text">{{invoice.result|yesno:_('已结款,未结款')}}</span></span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th><th>{%trans '货位'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td><td>{{detail.warehouse}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td><td>-</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="6">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+
+		{%elif invoice.invoice_type == 1004 %}
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '供货商'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+		<span class="pull-right">{%trans '结款状态'%}:<span id="invoice_result_text">{{invoice.result|yesno:_('已结款,未结款')}}</span></span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th><th>{%trans '货位'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td><td>{{detail.warehouse}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td><td>-</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="6">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+
+	{%elif invoice.invoice_type == 1000 %}
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '供货商'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th><th>{%trans '货位'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td><td>{{detail.warehouse}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td><td>-</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="6">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	{%elif invoice.invoice_type == 2000 %}
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '供货商'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+		<span class="pull-right">{%trans '结款状态'%}:<span id="invoice_result_text">{{invoice.result|yesno:_('已结款,未结款')}}</span></span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '退货数量'%}</th><th>{%trans '退货单价'%}</th><th>{%trans '金额'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="5">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	{%elif invoice.invoice_type == 2001 %}
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '领用部门'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '领用数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th><th>{%trans '货位'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td><td>{%for dd in detail.from_batches.all%}{% ifchanged dd.to_batch.warehouse.full_name %} {{dd.to_batch.warehouse.full_name}}{%if not forloop.last%};{%endif%}{% endifchanged %}{%endfor%}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td><td></td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="6">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	{%elif invoice.invoice_type == 1002 %}
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '退料部门'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="5">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	{%elif invoice.invoice_type == 2002 %}
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '客户'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+		<span class="pull-right">{%trans '结款状态'%}:<span id="invoice_result_text">{{invoice.result|yesno:_('已结款,未结款')}}</span></span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="5">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+
+	{%elif invoice.invoice_type == 9000 %}
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '客户'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+		<span class="pull-right">{%trans '结款状态'%}:<span id="invoice_result_text">{{invoice.result|yesno:_('已结款,未结款')}}</span></span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th><th>{%trans '成本'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+				<td>{{detail.chenben_price|floatformat:'2'}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td><td>{{invoice.sale_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="6">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+
+	{%elif invoice.invoice_type == 9001 %}
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span5 pull-left">{%trans '客户'%}:{{invoice.content_object}}</span>
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+		<span class="pull-right">{%trans '结款状态'%}:<span id="invoice_result_text">{{invoice.result|yesno:_('已结款,未结款')}}</span></span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th><th>{%trans '成本'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+				<td>{{detail.chenben_price|floatformat:'2'}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td><td>{{invoice.sale_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="6">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	
+	{%elif invoice.invoice_type == 10000 %}
+	<div class="row-fluid clearfix">
+		<span class="pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span3 pull-left">{%trans '源仓库'%}:{{invoice.warehouse_root}}</span>
+		<span class="span3 pull-left">{%trans '目标'%}:{{invoice.content_object}}</span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '出库位置'%}</th><th>{%trans '目标位置'%}</th><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td-->
+				<td>{{detail.warehouse.full_name}}</td><td>{{detail.rel_warehouse.full_name}}</td>
+				<td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="6">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="8">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	{%elif invoice.invoice_type == 2009 %}
+	<div class="row-fluid clearfix">
+		<span class="pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span3 pull-left">{%trans '源仓库'%}:{{invoice.warehouse_root}}</span>
+		<span class="span3 pull-left">{%trans '目标'%}:{{invoice.content_object.content_object}}</span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '出库位置'%}</th><th>{%trans '目标位置'%}</th><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td-->
+				<td>{{detail.warehouse.full_name}}</td><td>{{detail.rel_warehouse.full_name}}</td>
+				<td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+				
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="6">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="8">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	{%elif invoice.invoice_type == 1009 %}
+	<div class="row-fluid clearfix">
+		<span class="pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span3 pull-left">{%trans '源仓库'%}:{{invoice.content_object.warehouse_root}}</span>
+		<span class="span3 pull-left">{%trans '目标'%}:{{invoice.warehouse_root}}</span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '入库位置'%}</th><th>{%trans '源位置'%}</th><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td-->
+				<td>{{detail.warehouse.full_name}}</td><td>{{detail.rel_warehouse.full_name}}</td>
+				<td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="6">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="8">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	{%elif invoice.invoice_type == 9999 %}
+	<div class="row-fluid clearfix">
+		<span class="pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+	<div class="row-fluid clearfix">
+		<span class="span3 pull-left">{%trans '仓库'%}:{{invoice.warehouse_root}}</span>
+	</div>
+	
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编号'%}</th><!--th>{%trans '规格'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '金额'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.details.all%}
+			<tr>
+				<td>{{detail.good}}</td><td>{{detail.good.code}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.unit1|default:'-'}}</td>
+				<td>{{detail.num1|floatformat:'2'}}</td><td>{{detail.price|floatformat:'2'}}</td><td>{{detail.total_price|floatformat:'2'}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr><td>{%trans '合计'%}</td><td colspan="4">{%if LANGUAGE_CODE != "en"%}{{invoice.total_price_des}}{%endif%}</td><td>{{invoice.total_price|floatformat:'2'}}</td></tr>
+			<tr><td>{%trans '备注'%}</td><td colspan="6">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+	{%endif%}
+	
+	{%if invoice.status == 2 and not invoice.confirm_user %}
+	
+	{%else%}
+	<div class="row-fluid user-option">
+		<div class="span3 pull-left">{%trans '申请人'%} <input type="text" readonly="readonly" class="under-line" tabindex="-1" value="{{invoice.user}}" /></div>
+		<div class="span3 pull-left">{%trans '审核人'%} <input type="text" readonly="readonly" class="under-line" value="{{invoice.confirm_user|default:''}}" /></div>
+		<div class="span3 pull-right">{%trans '时间'%} <input type="text" readonly="readonly" class="under-line" value="{{invoice.modify_time|date:'Y-n-j'}}" /></div>
+	</div>
+	{%endif%}
+	
+	
+</div>
+<div class="noprint container form-actions">
+	<a id="print_invoice" class="btn" href="javascript:void(0)"><i class="icon icon-print"></i> {%trans '打印单据'%}</a>
+	<a class="btn" href="javascript:history.go(-1)"> {%trans '返回'%}</a>
+</div>
+<!--
+<div class=" container form-actions">
+	{%if confirm and invoice.invoice_type != 1009 and invoice.invoice_type != 2009%}
+		{%if invoice.status != 2 %}
+			<input type="button" id="confirm" class="btn btn-primary" value="{%trans '审核单据'%}" />
+		{%elif invoice.status == 1%}
+			<input type="button" id="confirm" class="btn btn-primary" value="{%trans '审核单据'%}" />
+		{%endif%}
+		
+		{%if invoice.status == 2 and invoice.confirm_user%}
+		<input type="button" id="unconfirm" class="btn btn-warning" value="{%trans '反审核单据'%}" />
+		{%endif%}
+	{%endif%}
+	
+	{%if invoice.status != 2%}
+		{%if invoice.charger == request.user or invoice.user == request.user or invoice.user == pos_user%}
+		<input type="button" id="modify_invoice" class="btn btn-success" value="{%trans '修改单据'%}" />
+		
+		<input type="button" id="delete_invoice" class="btn btn-danger" value="{%trans '删除单据'%}" />
+		{%endif%}
+		
+		{%if invoice.charger.pk == -1%}<input type="button" id="delete_invoice" class="btn btn-danger" value="{%trans '删除单据'%}" />{%endif%}
+	{%endif%}
+	
+	{%if invoice.invoice_type == 1001 or invoice.invoice_type == 2000 or invoice.invoice_type == 2002 %}
+	{%if confirm or invoice.charger == request.user or invoice.user == request.user%}
+	<input type="button" id="result_ok" class="btn btn-primary {%if invoice.result%}hide{%endif%}" value="{%trans '设置已结款'%}" />
+	<input type="button" id="result_cancel" class="btn btn-warning {%if not invoice.result%}hide{%endif%}" value="{%trans '设置未结款'%}" />
+	{%endif%}
+	{%endif%}
+	
+		<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" />
+		<div class="pull-right">
+			{%if invoice.invoice_type == 2002 and invoice.user == pos_user%}
+			<a id="show_log" class="btn" target="_blank" href="{%url 'invoice_view_log' org.pk invoice.pk%}">{%trans '查看日志'%}</a>
+			{%endif%}
+			<a id="print_invoice" class="btn" href="javascript:void(0)"><i class="icon icon-print"></i> {%trans '打印单据'%}</a>
+		</div>
+	</div>
+	-->
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	/*
+	var index = parent.layer.getFrameIndex(window.name);
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+	*/
+	$('#confirm').click(function(){
+		if(!confirm("{%trans '审核后物品才入库,单据不能再修改，是否要审核单据？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"",
+			data:{'invoice_id':'{{invoice.pk}}'},
+			type:'POST',
+			success:function(text){
+				if(text=='{{invoice.pk}}'){
+					parent.location=parent.location;
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+
+	$('#unconfirm').click(function(){
+		if(!confirm("{%trans '反审核后单据可以本人再修改，但是会扣减库存，如果已使用不能反审核，是否继续？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"",
+			data:{'invoice_id':'{{invoice.pk}}'},
+			type:'POST',
+			success:function(text){
+				if(text=='{{invoice.pk}}'){
+					parent.location=parent.location;
+				}else{
+					alert(text);
+				}
+			}
+		});
+	}); 
+
+	$('#result_ok').click(function(){
+		if(!confirm("{%trans '将结款状态设置为已结款？'%}")){
+			return false;
+		}
+
+		$.ajax({
+			url:"{%url 'result_ok' org.pk%}",
+			data:{'invoice_id':'{{invoice.pk}}'},
+			type:'POST',
+			success:function(text){
+				if(parseInt(text)){
+					layer.msg("{%trans '更新结款状态成功'%}", 2, {type:1,shade:false});
+					$('#result_ok').hide();
+					$('#result_cancel').show();
+					$('#invoice_result_text').text("{%trans '已结款'%}");
+				}else{
+					layer.msg("{%trans '更新结款状态失败'%}", 2, {type:2,shade:false});
+				}
+			}
+		});
+	});
+
+	$('#result_cancel').click(function(){
+		if(!confirm("{%trans '将结款状态设置为未结款？'%}")){
+			return false;
+		}
+
+		$.ajax({
+			url:"{%url 'result_cancel' org.pk%}",
+			data:{'invoice_id':'{{invoice.pk}}'},
+			type:'POST',
+			success:function(text){
+				if(parseInt(text)){
+					layer.msg("{%trans '更新结款状态成功'%}", 2, {type:1,shade:false});
+					$('#result_ok').show();
+					$('#result_cancel').hide();
+					$('#invoice_result_text').text("{%trans '未结款'%}");
+				}else{
+					layer.msg("{%trans '更新结款状态失败'%}", 2, {type:2,shade:false});
+				}
+			}
+		});
+	});
+
+	$('#modify_invoice').click(function(){
+		top.location.href="{{invoice.get_modify_url}}"
+	});
+
+	$('#delete_invoice').click(function(){
+		if(!confirm("{%trans '确认删除单据？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"",
+			data:{'invoice_id':'{{invoice.pk}}'},
+			type:'POST',
+			success:function(text){
+				if(parseInt(text)){
+					top.location=top.location;
+				}else{
+					alert(text);
+				}
+			}
+		});
+		
+	});
+
+	//LODOP=CheckIsInstall();
+
+	/* if(typeof(LODOP) == 'undefined'){
+		alert("您尚未安装打印机驱动，这会导致您无法使用打印功能，请前往http://www.lodop.net/download.html安装")
+	}
+	*/
+
+	$('#print_invoice').click(function(){
+		/*
+		LODOP.PRINT_INIT('invoice_print');
+		var strBodyStyle="<link href='/static/css/bootstrap.css' rel='stylesheet'>";
+		strBodyStyle=strBodyStyle+"<style>td,th {font-size:12px;} .user-option .under-line {border-width: 0;border-bottom-width:1px;width:100px;text-align: center;border-color: #aaa;} </style>";
+		
+		var strBodyhtml=strBodyStyle+$('.container').html();
+		LODOP.ADD_PRINT_HTM(0,'2%','96%','100%',strBodyhtml);
+		//LODOP.PRINT();
+		LODOP.PREVIEW();
+		*/
+		//top.location.href="{%url 'print_template' org.pk invoice.pk 1 %}"
+		
+		$("#container_invoice").jqprint();
+	});
+	
+	
+}); 
+</script>
+{%endblock%}

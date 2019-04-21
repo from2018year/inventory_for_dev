@@ -1,0 +1,184 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '编辑'%}{{warehouse_display_name}}<small><a href="{%url 'warehouses_list' org.uid%}">{%trans '仓库列表'%}</a>{%for w in parent_warehouses%}{%if forloop.first%} > {%endif%}<a href="{{w.get_absolute_url}}">{{w}}</a>{%if not forloop.last%} > {%endif%}{%endfor%}</small></h5>
+					<div class="widget-title-option">
+						{%if mod_warehouse%}
+						{%if parent_warehouse%}
+						<a href="{%url 'shelf_list' org.uid parent_warehouse.pk%}" class="btn btn-primary">{%trans '返回'%}</a>
+						{%else%}
+						<a href="{%url 'warehouses_list' org.uid%}" class="btn btn-primary">{%trans '返回'%}</a>
+						{%endif%}
+						<a href="javascript:void(0)" tag="{{mod_warehouse.pk}}" tag_name="{{mod_warehouse}}" id="del_warehouse" class="btn btn-warning">{%trans '删除'%}</a>
+						{%endif%}
+					</div>
+				</div>
+				<div class="widget-content">
+					<form class="form-horizontal" action="" method="post">{%csrf_token%}
+					<div class="row-fluid">
+						<div class="span9">
+							<div class="control-group {%if form.name.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.name.auto_id}}">{{form.name.label}}</label>
+								<div class="controls">
+									{{form.name}}
+									<span class="help-block">{{form.name.help_text}}</span>
+									<span class="help-block">{{form.name.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					{%if form.charger%}
+					<div class="row-fluid">
+						<div class="span9">
+							<div class="control-group {%if form.charger.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.charger.auto_id}}">{{form.charger.label}}</label>
+								<div class="controls">
+									<input type="text" id="s_user" name="s_user" value="{{s_user|default:''}}" class="input"/>&nbsp;<abbr title="{%trans '查找用户'%}"><i class="icon icon-search"></i></abbr>
+									<input type="hidden" id="charger" name="{{form.charger.html_name}}" value="{{form.charger.value|default:''}}" />
+									<span class="help-block">{%trans '输入联系人手机或姓名，可自动查找，您也可以点击后面的搜索按钮'%}</span>
+									<span class="help-block">{{form.charger.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					{%endif%}
+					<div class="row-fluid">
+						<div class="span9">
+							<div class="control-group {%if form.status.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.status.auto_id}}">{{form.status.label}}</label>
+								<div class="controls">
+									{{form.status}}
+									<span class="help-block">{{form.status.help_text}}</span>
+									<span class="help-block">{{form.status.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row-fluid">
+						<div class="span9">
+							<div class="control-group {%if form.address.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.address.auto_id}}">{{form.address.label}}</label>
+								<div class="controls">
+									{{form.address}}
+									<span class="help-block">{{form.address.help_text}}</span>
+									<span class="help-block">{{form.address.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span9">
+							<div class="control-group {%if form.remark.errors%}error{%endif%}">
+								<label class="control-label" for="{{form.remark.auto_id}}">{{form.remark.label}}</label>
+								<div class="controls">
+									{{form.remark}}
+									<span class="help-block">{{form.remark.help_text}}</span>
+									<span class="help-block">{{form.remark.errors}}</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					{{msg|safe}}
+		
+					
+					<div class="form-actions">
+						<input type="submit" class="btn btn-primary" value="{%trans '确定'%}"/>
+						<button type="reset" class="btn btn-warning">{%trans '重置'%}</button>
+					</div>
+					</form>
+				</div>
+			</div>								
+			
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_chhw').addClass('current');
+
+	$('#del_warehouse').click(function(){
+		{%if parent_warehouse%}
+		if(!confirm("{%trans '您正在删除'%}"+$(this).attr('tag_name')+"{%trans '如果货架中有物品,物品将转移到父级，是否继续？'%}" )){
+			return false;
+		}
+		{%else%}
+		if(!confirm("{%trans '您正在删除仓库'%}"+$(this).attr('tag_name')+"{%trans '如果仓库中有物品,将禁止删除，是否继续？'%}" )){
+			return false;
+		}
+		{%endif%}
+		$.ajax({
+			url:"{%url 'warehouses_delete' org.pk %}",
+			type:'POST',
+			data:{'del_warehouses_id':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					{%if parent_warehouse%}
+					location.href="{%url 'shelf_list' org.pk parent_warehouse.pk%}";
+					{%else%}
+					location.href="{%url 'warehouses_list' org.pk%}";
+					{%endif%}
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+
+	$('#s_user').typeahead({
+		name: 's_user',
+		remote: "{%url 'get_users'%}?username=%QUERY&org_id={{org.pk}}",
+		template: [
+			'<p class="repo-name">{%trans "姓名"%}:\{\{username\}\}</p>',
+			'<p class="repo-description">{%trans "电话"%}:\{\{tel\}\}</p>'
+		].join(''),
+		valueKey:'username',
+		engine: Hogan
+	}).bind('typeahead:selected', function(obj, datum, name) {      
+        $('#charger').val(datum.pk);
+	});
+
+	$('.icon-search').click(function(){
+		$.layer({
+			type:2,
+			title:"{%trans '请选择用户'%}",
+			iframe:{src:"{%url 'select_user' org.pk%}?s_type=0"},
+			area:['600px','400px'],
+			offset : ['100px','']
+		});
+	});
+
+	
+});
+</script>
+{%endblock%}

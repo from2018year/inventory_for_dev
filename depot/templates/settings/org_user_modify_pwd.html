@@ -1,0 +1,60 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="containter" style="margin-top: 20px;">
+	<form class="form-horizontal" method="post" action="">{%csrf_token%}
+		<div class="widget-content">
+			{%if opwd%}
+			<div class="control-group {%if form.old_password.errors%}error{%endif%}">
+				<label class="control-label" for="{{form.old_password.auto_id}}">{{form.old_password.label}}</label>
+				<div class="controls">
+					{{form.old_password}}
+					<p class="help-block">{{form.old_password.errors}}</p>
+				</div>						
+			</div>
+			{%endif%}
+			<div class="control-group {%if form.password.errors%}error{%endif%}">
+				<label class="control-label" for="{{form.password.auto_id}}">{{form.password.label}}</label>
+				<div class="controls">
+					{{form.password}}
+					<p class="help-block">{{form.password.errors}}</p>
+				</div>						
+			</div>
+			
+			<div class="control-group {%if form.password_re.errors%}error{%endif%}">
+				<label class="control-label" for="{{form.password_re.auto_id}}">{{form.password_re.label}}</label>
+				<div class="controls">
+					{{form.password_re}}
+					<p class="help-block">{{form.password_re.errors}}</p>
+				</div>						
+			</div>
+			
+		</div>
+		
+		<div class="form-actions">
+			<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+			<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" />
+		</div>
+	</form>
+</div>
+
+
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	{%if success%}
+	parent.layer.msg("{%trans '您已成功修改密码'%}",2,{'type':1,'shade':false});
+	parent.layer.close(index);
+	{%endif%}
+
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+});
+</script>
+{%endblock%}

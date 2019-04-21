@@ -1,0 +1,436 @@
+{%load i18n%}
+<HTML>  
+ <HEAD>  
+  <TITLE> {% trans '打印单据' %} </TITLE>  
+  <meta charset="utf8">
+  <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/bootstrap3/css/bootstrap.min.css">
+  <script src="/static/js/jquery.jqprint-0.3.js" type="text/javascript"></script>
+  <script type="text/javascript" src="/static/bootstrap3/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+(function(jQuery){   
+  
+if(jQuery.browser) return;   
+  
+jQuery.browser = {};   
+jQuery.browser.mozilla = false;   
+jQuery.browser.webkit = false;   
+jQuery.browser.opera = false;   
+jQuery.browser.msie = false;   
+  
+var nAgt = navigator.userAgent;   
+jQuery.browser.name = navigator.appName;   
+jQuery.browser.fullVersion = ''+parseFloat(navigator.appVersion);   
+jQuery.browser.majorVersion = parseInt(navigator.appVersion,10);   
+var nameOffset,verOffset,ix;   
+  
+// In Opera, the true version is after "Opera" or after "Version"   
+if ((verOffset=nAgt.indexOf("Opera"))!=-1) {   
+jQuery.browser.opera = true;   
+jQuery.browser.name = "Opera";   
+jQuery.browser.fullVersion = nAgt.substring(verOffset+6);   
+if ((verOffset=nAgt.indexOf("Version"))!=-1)   
+jQuery.browser.fullVersion = nAgt.substring(verOffset+8);   
+}   
+// In MSIE, the true version is after "MSIE" in userAgent   
+else if ((verOffset=nAgt.indexOf("MSIE"))!=-1) {   
+jQuery.browser.msie = true;   
+jQuery.browser.name = "Microsoft Internet Explorer";   
+jQuery.browser.fullVersion = nAgt.substring(verOffset+5);   
+}   
+// In Chrome, the true version is after "Chrome"   
+else if ((verOffset=nAgt.indexOf("Chrome"))!=-1) {   
+jQuery.browser.webkit = true;   
+jQuery.browser.name = "Chrome";   
+jQuery.browser.fullVersion = nAgt.substring(verOffset+7);   
+}   
+// In Safari, the true version is after "Safari" or after "Version"   
+else if ((verOffset=nAgt.indexOf("Safari"))!=-1) {   
+jQuery.browser.webkit = true;   
+jQuery.browser.name = "Safari";   
+jQuery.browser.fullVersion = nAgt.substring(verOffset+7);   
+if ((verOffset=nAgt.indexOf("Version"))!=-1)   
+jQuery.browser.fullVersion = nAgt.substring(verOffset+8);   
+}   
+// In Firefox, the true version is after "Firefox"   
+else if ((verOffset=nAgt.indexOf("Firefox"))!=-1) {   
+jQuery.browser.mozilla = true;   
+jQuery.browser.name = "Firefox";   
+jQuery.browser.fullVersion = nAgt.substring(verOffset+8);   
+}   
+// In most other browsers, "name/version" is at the end of userAgent   
+else if ( (nameOffset=nAgt.lastIndexOf(' ')+1) <   
+(verOffset=nAgt.lastIndexOf('/')) )   
+{   
+jQuery.browser.name = nAgt.substring(nameOffset,verOffset);   
+jQuery.browser.fullVersion = nAgt.substring(verOffset+1);   
+if (jQuery.browser.name.toLowerCase()==jQuery.browser.name.toUpperCase()) {   
+jQuery.browser.name = navigator.appName;   
+}   
+}   
+// trim the fullVersion string at semicolon/space if present   
+if ((ix=jQuery.browser.fullVersion.indexOf(";"))!=-1)   
+jQuery.browser.fullVersion=jQuery.browser.fullVersion.substring(0,ix);   
+if ((ix=jQuery.browser.fullVersion.indexOf(" "))!=-1)   
+jQuery.browser.fullVersion=jQuery.browser.fullVersion.substring(0,ix);   
+  
+jQuery.browser.majorVersion = parseInt(''+jQuery.browser.fullVersion,10);   
+if (isNaN(jQuery.browser.majorVersion)) {   
+jQuery.browser.fullVersion = ''+parseFloat(navigator.appVersion);   
+jQuery.browser.majorVersion = parseInt(navigator.appVersion,10);   
+}   
+jQuery.browser.version = jQuery.browser.majorVersion;   
+})(jQuery);  
+  </script>    
+ </HEAD>  
+   
+<body>
+{% load url from future %}
+<div>
+
+  <div class="dropdown" style="display: inline-block;margin-top: 20px;margin-left: 1060px;margin-bottom: 20px;">
+  <button id="dLabel" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {{common_template.name}}
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dLabel">
+    {% for item in common_template_list %}
+    <li><a href="../{{item.id}}">{{item.name}}</a></li>
+    {% endfor %}
+  </ul>
+  </div>
+
+  <a href="{%url 'org_settings' org.uid %}" class="btn btn-default" style="margin-left: 150px;">{% trans '返回' %}</a>
+
+  </div>
+    <div id="print" style="width:794px;height:1123px;border:1px solid #000000;text-align: center;float: left;margin-left: 150px;">
+        <div  id="type" data="type" style="font-weight: bold;font-size: 30px;margin-top: 20px;">
+        {% trans '销售出库' %}
+        </div>
+
+        <div style="width: 794px;margin-top: 20px;">
+        <div style="margin:0 20px;display: inline;" data="result">{% trans '结款状态：' %}
+        {% if invoice.result == 0 %}
+        {% trans '未结款' %}
+        {% else %}
+        {% trans '已结款' %}
+        {% endif %}
+        </div><div  style="margin:0 20px;display: inline;" data="date">{% trans '单据日期：' %}2016-01-01</div><div style="margin:0 20px; display: inline;" data="code">{% trans '单据号：' %}T000000123456</div>
+        </div>
+
+        <div style="margin-top: 20px;width: 794px;">
+        <div style="margin:0 20px; display: inline;" data="charger">{% trans '负责人：库瑞德' %}</div><div style="margin:0 20px; display: inline;" data="voucher_code">{% trans '凭证号：' %}987654321</div>
+        </div>
+
+        <table style="margin: 0 auto;margin-top: 20px;width: 700px;" border="1">
+        <tr>
+            <th data="counter">{% trans '序号' %}</th><th>{% trans '物品编码' %}</th><th>{% trans '物品名称'%}</th>
+			<th>{% trans '批次编号' %}</th><th>{% trans '单位' %}</th><th>{% trans '数量' %}</th><th>{% trans '单价' %}</th><th>{% trans '总金额' %}</th>
+        </tr>
+        <tr>
+        <td>1</td><td>12345</td><td>{% trans '大米' %}</td><td>123</td><td>{% trans '斤' %}</td><td>1</td><td class="add_unit">50</td><td class="add_unit">50</td>
+        </tr>
+        </table>
+
+        <div style="margin-top: 20px;width: 794px;">
+        <div style="margin:0 20px;display: inline;" data="confirmer">{% trans '审核人：库瑞德' %}</div><div style="margin:0 20px;display: inline;" data="total_price" class="add_unit">{% trans '总金额：' %}50</div>
+        </div>
+
+        <div style="margin-top: 20px;width: 794px;">
+        <div style="margin:0 20px;display: inline;" data="make">{% trans '经办人：库瑞德' %}</div><div style="margin:0 20px;display: inline;" data="remark">{% trans '备注：库瑞德' %}</div>
+        </div>
+
+        <div style="margin-top: 20px;width: 794px;">
+        <div data="status" style="margin:0 20px;display: inline;">{% trans '单据状态：' %}
+        {% if invoice.status == 0%}
+        {% trans '草稿' %}
+        {% elif invoice.status == 1%}
+        {% trans '开始申请' %}
+        {% else %}
+        {% trans '已审核' %}
+        {% endif %}
+        </div>
+        </div>
+        <hr style="width: 750px;border: 1px solid black">
+
+        <div style="margin-top: 10px;width: 794px;text-align: left;font-size: 13px;" data="footer">
+        <div style="margin-left: 20px;display: inline-block;">{% trans '打印日期：' %}2017-01-01</div>
+        <div style="display: inline-block;margin-left: 200px">1/1</div>
+    </div>
+    </div>
+
+
+    <div id="check_container">
+
+      <div class="dropdown" style="display: inline-block;margin-left: 20px;margin-top: 20px;">
+        <button id="label" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {% trans '默认模板' %}
+        <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="label">
+        <li><a href="#" id="default_template">{% trans '默认模板' %}</a></li>
+    {% for item in print_template_list %}
+    <li><a href="#" rel="{{item.id}}" class="template">{{item.template_name}}</a></li>
+    {% endfor %}
+        </ul>
+    </div>
+
+    <div class="dropdown" style="display: inline-block;margin-left: 70px;margin-top: 20px;">
+        <button id="csf" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {% trans '销售出库' %}
+        <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="csf">
+    <li><a href="#" class="invoice_type" value="2002">{% trans '销售出库' %}</a></li>
+    <li><a href="#" class="invoice_type" value="1004">{% trans '采购申请' %}</a></li>
+    <li><a href="#" class="invoice_type" value="1001">{% trans '采购入库' %}</a></li>
+    <li><a href="#" class="invoice_type" value="1000">{% trans '初始入库' %}</a></li>
+        </ul>
+    </div>
+    <input type="hidden" id="invoice_type" value="2002"/>
+
+    <div style="display: inline-block;margin-left: 20px;margin-top: 20px;"><label>{% trans '货币单位：' %}</label><input id="unit" type="text" name="unit" value="￥"></div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '结款状态：' %}</label><input class="check" type="checkbox" checked="checked" name="result" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '单据日期：' %}</label><input class="check" type="checkbox" name="date" checked="checked" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '单据号：' %}</label><input class="check" type="checkbox" name="code" checked="checked" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '负责人：' %}</label><input class="check" type="checkbox" name="charger" checked="checked" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '凭证号：' %}</label><input class="check" type="checkbox" name="voucher_code" checked="checked" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '审核人：' %}</label><input class="check" type="checkbox" checked="checked" name="confirmer" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '总金额：' %}</label><input class="check" type="checkbox" checked="checked" name="total_price" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '经办人：' %}</label><input class="check" type="checkbox" checked="checked" name="make" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '备注：' %}</label><input class="check" type="checkbox" checked="checked" name="remark" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label>{% trans '单据状态：' %}</label><input class="check" type="checkbox" checked="checked" name="status" />
+    </div>
+
+    <div style="margin-top: 20px; margin-left: 20px;">
+    <label> {% trans '底部：' %}</label><input class="check" type="checkbox" name="footer" checked="checked" />
+    </div>
+    
+    <span style="display: none;" data="" id="delete_id"></span>
+    <button id="print_btn" class="btn btn-default" style="margin-top: 20px; margin-left: 60px;margin-bottom: 20px">{% trans '打印' %}</button>
+    <button id="save_btn" class="btn btn-default" style="margin-top: 20px; margin-left: 20px;margin-bottom: 20px">{% trans '保存模板' %}</button>
+    <button id="delete_btn" class="btn btn-danger" style="margin-top: 20px; margin-left: 20px;margin-bottom: 20px">{% trans '删除模板' %}</button>
+    </div>
+</body>
+
+<style type="text/css">
+@media screen and (max-width: 1500px){
+    #check_container{
+        border:1px solid #000000;
+        float: left;
+        margin-left: 130px;
+        width: 300px;
+    }
+}
+@media screen and(min-width: 1500px){
+    #check_container{
+        border:1px solid #000000;
+        float: left;
+        margin-left: 100px;
+        width: 400px;
+    }
+}
+</style>
+
+<script>
+
+$.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
+
+$(document).ready(function(){
+
+   // $('.dropdown-toggle').dropdown()
+   //加载货币单位
+   var add_unit_content = []
+   var add_unit = $(".add_unit")
+   for(var i=0;i<add_unit.length;i++){
+        add_unit_content.push($(add_unit[i]).text())
+        $(add_unit[i]).text($(add_unit[i]).text() + $("input[name='unit']").val())
+   }
+
+   //输入货币单位更改打印内容
+   $("#unit").keyup(function(){
+      for(var i=0;i<add_unit.length;i++){
+          $(add_unit[i]).text(add_unit_content[i] + $("input[name='unit']").val())
+        }
+   })
+
+
+    $("#print_btn").click(function(){
+    $("#print").jqprint({
+      debug:false,
+      operaSupport:true
+    });
+    })
+
+    $(".check").click(function(){
+      var data = $(this).attr("name")
+      var element = $("#print").find("div[data="+data+"]")
+      if($(this).is(":checked")){
+        $(element).show()
+      }else{
+        $(element).hide()
+      }
+    })
+
+    function getPostUrl(){
+        return "{%url 'save_print_template' org.pk common_template.pk %}"
+    }
+    
+    //加载模板数据
+    $(".template").click(function(){
+        var template = $(this).attr('rel')
+        var template_name = $(this).text()
+        var data={}
+        data.template_id = template
+        $.ajax({
+            url:"{% url 'get_print_template' %}",
+            type:'post',
+            data:data,
+            success:function(data){
+                var objData = JSON.parse(data)
+                var content = JSON.parse(objData.content)
+                $("input[name='unit']").val(objData.unit)
+
+                for(var i=0;i<add_unit.length;i++){
+                    
+                    $(add_unit[i]).text(add_unit_content[i] + $("input[name='unit']").val())
+                }
+
+                for(var i in content){
+                    if(content[i] == 0){
+                        $("input[name="+ i +"]").prop("checked",false)
+                        $("div[data="+ i + "]").hide()
+                    }else{
+                        $("input[name="+ i +"]").prop("checked",true)
+                        $("div[data="+ i + "]").show()
+                    }
+                }
+
+                $("#label").text(template_name)
+                
+                var invoice_type = objData.invoice_type.toString()
+                var text = $(".invoice_type[value="+ invoice_type +"]").text()
+                $("#type").text(text)
+                $("#csf").text(text)
+                $("#invoice_type").val(invoice_type)
+
+            }
+
+        })
+
+        $("#delete_id").attr("data",$(this).attr('rel'))
+
+
+    })
+
+    //点击默认模板
+    $("#default_template").click(function(){
+        $("#label").text("{% trans '默认模板' %}")
+        $("input").prop("checked",true)
+        $("#delete_id").attr("data","")
+    })
+
+    //选择单据类型
+    $(".invoice_type").click(function(){
+        $("#csf").text($(this).text())
+        $("#invoice_type").val($(this).attr("value"))
+        $("#type").text($(this).text())
+    })
+
+    //保存模板
+    $("#save_btn").click(function(){
+        var template_name = prompt("{% trans '请输入模板名称' %}")
+        var postdata = {}
+        var data={}
+        if(!template_name){
+            alert("{% trans '请输入模板名称' %}")
+            return false
+        }else{
+            var components = $("#check_container").find("input")
+            for(var i=0;i<components.length;i++){
+                if($(components[i]).is(":checked")){
+                    var name = $(components[i]).attr("name")
+                    data[name] = 1
+                }else{
+                    if($(components[i]).attr("name") == 'unit'){
+                        postdata.unit = $(components[i]).val()
+                    }else{
+                        var name = $(components[i]).attr("name")
+                        data[name] = 0
+                    }
+                }
+            }
+
+            postdata.content = JSON.stringify(data)
+            postdata.template_name = template_name
+            postdata.template_type = parseInt($("#invoice_type").val())
+
+            $.ajax({
+                url:getPostUrl(),
+                type:'post',
+                data:postdata,
+                success:function(data){
+                    alert(data)
+                    window.location.reload()
+                }
+
+            })
+        }
+
+    })
+
+    //删除模板
+    $("#delete_btn").click(function(){
+        if($("#delete_id").attr("data") == ""){
+            alert("{% trans '默认模板不允许删除' %}")
+            return false
+        }
+        if(!confirm("{% trans '是否删除模板' %}")){
+            return false;
+        }
+
+        $.ajax({
+            url:"{%url 'delete_print_template' %}",
+            type:"post",
+            data:{template_id:$("#delete_id").attr("data")},
+            success:function(data){
+                alert(data)
+                window.location.reload()
+            }
+        })
+    })
+
+})
+</script>
+</HTML>

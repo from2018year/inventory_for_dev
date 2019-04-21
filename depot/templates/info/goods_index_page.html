@@ -1,0 +1,104 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 20 goods %}
+{% get_pages %}
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+				
+				<!--a id="download_pandian" href="{%url 'download_pandian_goods' org.pk%}?warehouse_id={{warehouse_id|default:''}}&category_id={{category_id|default:''}}&keyword={{keyword|default:''}}">{%trans '下载'%}</a-->
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<table class="table table-hover table-condensed">
+  <thead><tr><th>{%trans '物品名称'%}</th><th>{%trans '物品编码'%}</th><th>{%trans '分类'%}</th><th>{%trans '规格'%}</th><th>{%trans '单位'%}</th><th>{%trans '库存数量'%}</th><th>{%trans '品牌'%}</th><th>{%trans '进价'%}</th><th>{%trans '上下限报警'%}</th>{%if mod%}<th>{%trans '操作'%}</th>{%endif%}</tr></thead>
+  <tbody>
+  	{%for good in goods%}
+  	{%if mod%}
+  	<tr><td>{%if good.cover%}<img src="{{good.cover.thumb_url}}" />{%endif%} {{good.name}}</td><td>{{good.code}}</td><td>{{good.category}}</td><td>{{good.standard|default:'-'}}</td><td>{{good.unit|default:'-'}}</td><td>{{good.nums|floatformat:'2'}}</td><td>{{good.brand|default:'-'}}</td><td>{{good.price|floatformat:'2'}}</td>
+  	<td>{%if good.max_warning >= 0%}{{good.max_warning|floatformat:'2'}}{%else%}-{%endif%}/{%if good.min_warning >= 0%}{{good.min_warning|floatformat:'2'}}{%else%}-{%endif%}</td>
+  	<td><a class="layer" href="{%url 'add_goods' org.pk%}?goods_id={{good.pk}}&category_id={{good.category_id}}" height="550px" width="800px">{%trans '编辑'%}</a> <a tag="{{good.pk}}" tag_name="{{good.name}}" class="del_goods" href="javascript:void(0)">{%trans '删除'%}</a> {%if good.unit%}<a href="{%url 'auxiliary_unit' org.pk good.pk%}" class="layer" width="800px" height="550px">{%trans '辅助单位'%}</a>{%endif%}</td>
+  	</tr>
+  	{%else%}
+  	<tr><td>{%if good.cover%}<img src="{{good.cover.thumb_url}}" />{%endif%} 
+  		{%if warehouse_id%}
+  		
+  		<a target="_blank" href="{%url 'goods_detail' org.uid good.pk warehouse_id%}">{{good.name}}</a>
+  		
+  		{%else%}
+  		
+  		<a target="_blank" href="{%url 'goods_detail_total' org.uid good.pk%}">{{good.name}}</a>
+  		
+  		{%endif%}
+  	</td><td>{{good.code}}</td><td>{{good.category}}</td><td>{{good.standard}}</td><td>{{good.unit|default:'-'}}</td><td>{{good.sum|floatformat:'2'}}</td><td>{{good.brand|default:'-'}}</td><td>{{good.price|floatformat:'2'}}</td>
+  	<td>{%if good.max_warning >= 0%}{{good.max_warning|floatformat:'2'}}{%else%}-{%endif%}/{%if good.min_warning >= 0%}{{good.min_warning|floatformat:'2'}}{%else%}-{%endif%}</td>
+  	</tr>
+  	{%endif%}
+  	
+  	{%endfor%}
+  </tbody>
+</table>
+
+
+
+<div class="row-fluid">
+	<div class="span12">
+		{% get_pages %}
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{%block endrel%}
+<script type="text/javascript">
+var request_url="{{request.get_full_path}}";
+$(document).ready(function(){
+	/*
+	$('.del_goods').click(function(){
+		if(!confirm("{%trans '您确定要删除'%}"+$(this).attr('tag_name')+",如果物品已有出库单据，将禁止删除？")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'del_goods' org.pk%}",
+			type:'POST',
+			data:{'goods_id':$(this).attr('tag')},
+			success:function(){
+				$('#main-wrap').load(request_url);
+			},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			}
+		});
+	});
+	*/
+
+	
+});
+</script>
+{%endblock%}

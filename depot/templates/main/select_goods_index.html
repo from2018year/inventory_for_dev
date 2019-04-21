@@ -1,0 +1,32 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 50 goods %}
+{% get_pages %}
+<table class="table table-hover table-condensed">
+	<thead>
+		<tr><th width="50px">{%trans '多选'%}</th><th width="100px">{%trans '编号'%}</th><th>{%trans '名称'%}</th><th width="50px"><span class="hide">{%trans '库存'%}</span></th><th width="50px">{%trans '单位'%}</th><th width="50px">{%trans '规格'%}</th><th width="50px">{%trans '最近单价'%}</th><th>{%trans '单选'%}</th></tr>
+	</thead>
+	{%for good in goods%}
+	<tr good_id="{{good.pk}}"><td><input type="checkbox" value="{{good.pk}}" name="gcheck" /></td><td abbrev="{{good.abbreviation}}">{{good.code|default:'-'}}</td><td>{%if good.is_batchs%}<i class="icon-list"></i>{%else%}<i class="icon-book"></i>{%endif%}{{good.name}}</td><td><span class="hide">{{good.sum|floatformat:'2'}}</span></td><td upk="{{good.unit_id|default:''}}"><span upk="{{good.unit_id|default:''}}" rate="1">{{good.unit|default:'-'}}</span>{%if good.auxiliary_unit.exists%}({%for u in good.auxiliary_unit.all%}<span upk="{{u.pk}}" price='{{u.price}}' rate='{{u.rate}}'>{{u}}</span>{%if not forloop.last%}/{%endif%}{%endfor%}){%endif%}</td><td>{{good.standard|default:'-'}}</td><td refer_price="{{good.refer_price}}">{{good.price|floatformat:'2'}}</td><td width="30px"><i class="icon icon-ok"></i></td></tr>
+	{%endfor%}
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

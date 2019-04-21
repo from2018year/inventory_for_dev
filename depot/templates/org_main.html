@@ -1,0 +1,109 @@
+{%extends 'main_base.html' %}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			
+			
+			<div style="position: relative;width: 750px;margin:0px auto;margin-top:20px;height: 400px;" class="clearfix">
+			
+				<a {%if warehouse_write_perm%}href="{%url 'caigouruku' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:50px;left:0px;" alt="{%trans '采购入库'%}" height="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/1.png">
+				</a>
+				
+				<img style="position: absolute;top:50px;left:100px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/2.png">
+				
+				<a href="{%url 'jishikucun' org.pk%}">
+				<img style="position: absolute;top:110px;left:160px;" alt="{%trans '即时库存'%}" height="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/3.png">
+				</a>
+				
+				<img style="position: absolute;top:170px;left:110px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/4.png">
+				
+				<a {%if warehouse_write_perm%}href="{%url 'pandian_view' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:170px;left:5px;" alt="{%trans '盘盈盘亏'%}" height="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/11.png">
+				</a>
+				
+				<img style="position: absolute;top:70px;left:269px;" alt="" height="195px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/6.png">
+				
+				<a {%if warehouse_write_perm%}href="{%url 'lingyongchuku' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:0px;left:315px;" alt="{%trans '领用出库'%}" height="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/7.png">
+				</a>
+				
+				<a {%if warehouse_write_perm%}href="{%url 'xiaoshouchuku' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:220px;left:315px;" alt="{%trans '销售出库'%}" height="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/8.png">
+				</a>
+				
+				<!--a href="{%url 'caigoutuihuo' org.pk%}">
+				<img style="position: absolute;top:220px;left:315px;" alt="{%trans '采购退货'%}" height="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/9.png">
+				</a-->
+				
+				<!--a {%if warehouse_write_perm%}href="{%url 'pandian_view' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:330px;left:10px;" alt="{%trans '仓库盘点'%}" height="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/10.png">
+				</a>
+				
+				<img style="position: absolute;top:310px;left:115px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/2.png">
+				
+				<a {%if warehouse_write_perm%}href="{%url 'panyinpankui' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:330px;left:185px;" alt="{%trans '盘盈盘亏'%}" height="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/11.png">
+				</a-->
+				
+				<!--img style="position: absolute;top:70px;left:500px;" alt="{%trans '其他操作'%}" width="170px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/12.png"-->
+				
+				<!--a {%if warehouse_perm or warehouse_write_perm%}href="{%url 'goods_warnings' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:130px;left:500px;" alt="{%trans '物品警告'%}" width="170px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/13.png">
+				</a-->
+				
+				<!--a {%if warehouse_write_perm%}href="{%url 'kuweidiaobo' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:190px;left:500px;" alt="{%trans '库位调拨'%}" width="175px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/14.png">
+				</a-->
+				
+				<!--img style="position: absolute;top:250px;left:500px;" alt="{%trans '部门直拨'%}" width="170px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/15.png"-->
+				
+				<!--a {%if warehouse_write_perm%}href="{%url 'chushiruku' org.pk%}"{%endif%}>
+				<img style="position: absolute;top:250px;left:500px;" alt="{%trans '初始入库'%}" width="170px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/16.png">
+				</a-->
+				
+				<!--img style="position: absolute;top:360px;left:2px;" alt="{%trans '注意事项'%}" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/1/17.png"-->
+				
+				
+				
+				
+			</div>
+			
+			
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/main_left_nav.html'%}
+		</div>
+	</div>
+
+	
+	
+</div>
+<script>
+$(document).ready(function(){
+	$('#tab-warehouse').addClass('active');
+});
+</script>
+{%endblock%}
+
+{%block rel%}
+<style>
+#announces {
+	width: 100%;height:22px;position: relative;border:1px #d3d3d3 solid; background-color:#fff; overflow:hidden;
+	background-color: #FCF8E3;;
+}
+#announces ul{ position:absolute; top:0; left:0; padding:0;margin-left:2px} 
+#announces ul li{ width:100%; padding:0; overflow:hidden; } 
+#announces ul li p{line-height:22px; }
+</style>
+{%endblock%}

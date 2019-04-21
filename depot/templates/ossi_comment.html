@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>测试回复页面</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/> 
+	    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+		<base target="_blank">
+		<!--[if lt IE 9]>
+        <script src="/static/bootstrap3/js/html5shiv.min.js"></script>
+        <script src="/static/bootstrap3/js/respond.min.js"></script>
+    	<![endif]-->
+
+	</head>
+	
+	<body>
+		 <div class="container">
+		 	<P class="sr-only" id="org_name">{{request.session.org.org_name}}</P>
+			<p class="sr-only" id="verbose_name">{{request.user.username}}</p>
+	      	<script src="http://libs.baidu.com/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
+	      	<script data-isso-css="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" data-isso="{{OSSI_URL}}" src="{{OSSI_URL}}/js/embed.min.js?v=20151123"></script>
+	      	<section id="isso-thread"></section>
+		 </div>
+	</body>
+</html>

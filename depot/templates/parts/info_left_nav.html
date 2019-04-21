@@ -1,0 +1,54 @@
+{%load i18n%}
+{%load url from future%}
+
+			<div class="left-sub-menu">
+				
+				<strong><i class="icon-list-alt"></i> {%trans '仓库与用户设置'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="settings_org"><a href="{%url 'settings_org' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '公司设置'%}</a></li>
+					
+					
+					<!--li id="settings_chhw"><a href="{%url 'warehouses_list' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '仓库货位设置'%}</a></li-->
+					
+					<!--li id="settings_yhz"><a href="{%url 'orgs_levels' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '用户组设置'%}</a></li-->
+					<!--li id="settings_yh"><a href="{%url 'orgs_users' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '用户设置'%}</a></li-->	
+					{%if SITE_MARK == "online"%}
+					<li id="settings_auth"><a href="{%url 'org_auth_web' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '授权查看'%}</a></li>
+					{%else%}
+					<li id="settings_bfhy"><a href="{%url 'backup' org.pk%}" class="app ctext"><i class="icon-th"></i> {%trans '备份还原'%}</a></li>
+					{%endif%}
+					<!--li id="li_announce"><a href="{%url 'org_announce' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '公告管理'%}</a></li-->
+				</ul>
+				
+				<strong><i class="icon-list-alt"></i> {%trans '物品相关'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="settings_wpdw"><a href="{%url 'goods_unit' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '物品单位设置'%}</a></li>
+					<!--li id="settings_brand"><a href="{%url 'goods_brand' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '品牌设置'%}</a></li-->
+					<li id="settings_good"><a href="{%url 'goods_and_category' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '物品和分类'%}</a></li>
+						
+				</ul>
+				
+				<strong><i class="icon-list-alt"></i> {%trans '单据相关'%}</strong>
+				<ul id="left-sub-menu-ul">
+				    <li id="settings_kh"><a href="{%url 'customers' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '客户设置'%}</a></li>
+					<li id="settings_ghs"><a href="{%url 'suppliers' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '供货商设置'%}</a></li>
+					<li id="settings_bm"><a href="{%url 'departments' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '领料部门设置'%}</a></li>
+					
+					<li id="settings_xslx"><a href="{%url 'sale_type_setting' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '销售类型设置'%}</a></li>
+					<li id="settings_zhsz"><a href="{%url 'settings_account' org.pk%}" class="app ctext"><i class="icon-th"></i> {%trans '结算账户设置'%}</a></li>
+					<li id="print_template_setting"><a href="{%url 'print_template_setting' org.uid 1%}" class="app ctext"><i class="icon-th"></i> {%trans '打印模板设置'%}</a></li>
+				</ul>
+
+
+				
+				{% if is_superior %}
+				<strong><i class="icon-list-alt"></i> {%trans '系统管理'%}</strong>
+				<ul id="left-sub-menu-ul">
+				    <li id="settings_param"><a href="{%url 'settings_param' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '参数设置'%}</a></li>
+					<li id="settings_userlevels"><a href="{%url 'staff_list' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '员工设置'%}</a></li>
+					<li id="settings_permission"><a href="{%url 'permission_list' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '操作权限设置'%}</a></li>
+					<li id="settings_perm_log"><a href="{%url 'operate_log' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '操作日志'%}</a></li>
+				</ul>
+				{% endif %}
+
+			</div>

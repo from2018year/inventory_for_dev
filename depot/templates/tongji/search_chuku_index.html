@@ -1,0 +1,38 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 20 invoices %}
+{% get_pages %}
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '单据号'%}</th><th>{%trans '时间'%}</th><th>{%trans '客户'%}</th><th>{%trans '出库类型'%}</th><th>{%trans '物品编号'%}</th><th>{%trans '物品名称'%}</th><!--<th>{%trans '规格'%}</th>--><th>{%trans '单位'%}</th><th>{%trans '单价'%}</th><th>{%trans '出库数量'%}</th><th>{%trans '出库金额'%}</th></tr>
+	</thead>
+	{%for invoice in invoices%}
+		<tr><td><a class="layer" width="800px" height="600px" title="{%trans '查看'%}{{invoice.invoice.invoice_code}}{%trans '详情'%}" href="{{invoice.invoice.get_absolute_url}}">{{invoice.invoice.invoice_code}}</a></td><td>{{invoice.invoice.event_date|date:'Y-m-d'}}</td><td>{{invoice.invoice.content_object}}</td><td>{{invoice.invoice.get_invoice_type_name}}</td><td>{{invoice.good.code}}</td><td>{{invoice.good.name}}</td><!--<td>{{invoice.good.standard|default:''}}</td>-->
+		<td>{{invoice.good.unit|default:''}}</td>
+		<td>{{invoice.avg_price|floatformat:'2'}}</td>
+		<td>{{invoice.num|floatformat:'-2'}}</td>
+		<td>{{invoice.total_price|floatformat:'2'}}</td>
+		</tr>
+	{%endfor%}
+	<tr style="background-color:rgb(242,242,242); "><td>{%trans '合计：'%}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>{{total.num__sum}}</td><td>{{total.total_price__sum}}</td></tr>
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

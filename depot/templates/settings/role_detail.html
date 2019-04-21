@@ -1,0 +1,28 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%block body%}
+<div class="container-fluid" style="padding-top: 0">
+<table class="table table-bordered">
+						<thead><tr><th>{%trans '序号'%}</th><th>{%trans '拥有权限'%}</th></tr></thead>
+						<tbody>
+							{%for permission in permissions%}
+							<tr><td>{{forloop.counter}}</td>
+							<td>{{permission.name}}</td>
+							</tr>
+
+							{%endfor%}
+						</tbody>
+					</table>
+<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" style="margin-left: 20px;" />	
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+
+})
+</script>
+{% endblock %}

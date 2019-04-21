@@ -1,0 +1,105 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box" id="main-wrap">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans 'POS菜品列表'%} </h5>
+					<div class="widget-title-option">
+						{%if SITE_MARK == "online"%}<a id="sync_menuitem" class="btn btn-primary" href="javascript:;">立即和收银同步</a>{%endif%}
+					</div>
+				</div>
+				<div class="widget-content">
+					{%include page_template%}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/chengben_left_nav.html'%}
+		</div>
+	</div>
+	
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<script src="/static/endless_pagination/js/endless-pagination.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_cost_profit').addClass('current');
+	$('#tab-chengben').addClass('active');
+	
+	
+	$('.sort_th').removeClass('cur_sort').removeClass('order_0').removeClass('order_1');
+	$(".sort_th[tag='{{sort}}']").attr('href',"?sort={{sort}}&order={{order|yesno:'0,1'}}").addClass('cur_sort').addClass('order_{{order}}');
+	
+	$('.table tr').hover(function(){$(this).find('.delete').show()},function(){$(this).find('.delete').hide()});
+	
+	$('.table').on('click','.delete',function(){
+		if(!confirm("{%trans '删除记录后下次与收银同步时会自动生成'%}")){return false}
+		$.ajax({
+			url:"{%url 'cost_delete_menuItem' org.pk%}",
+			data:{menu_item:$(this).attr('tag')},
+			type:'POST',
+			error:function(){
+				alert("{%trans '删除失败'%}");
+			},
+			success:function(json){
+				$("#menu"+json.menu_item).remove();
+				
+			}
+		});
+		
+	});
+	
+	$('#sync_menuitem').click(function(){
+		$.ajax({
+			url:"",
+			type:'POST',
+			data:{'action':'sync_menuitem'},
+			error:function(x,y,z){
+				alert("{%trans '出错了'%}");
+				console.log(x,y,z)
+			},
+			success:function(json){
+				alert(json.message);
+			}
+		});
+	});
+});
+</script>
+{%endblock%}
+
+
+{%block rel%}
+<style>
+.cur_sort {
+	color: #444;
+	background-color: #fff;
+}
+.order_0 {
+	padding-left:16px;
+	background: url("/static/images/desc.gif") no-repeat left center;
+}
+.order_1 {
+	padding-left:16px;
+	background: url("/static/images/asc.gif") no-repeat left center;
+}
+</style>
+{%endblock%}

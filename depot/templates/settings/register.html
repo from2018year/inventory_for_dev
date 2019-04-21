@@ -1,0 +1,71 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '录入新授权'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">										
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '新授权'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'org_auth_web' org.uid%}" class="btn btn-primary">{%trans '返回授权管理'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<div style="text-align:center">
+						<div style="display:block;width:80%;margin:50px auto;padding:20px;background:#eee;border: 3px solid rgb(188, 204, 238);">
+							{{res}}
+							<form id="form1" action="." method="post">{%csrf_token%}
+								
+								{%trans '请输入您得到的注册码'%}<br/><textarea rows="5" id="ma" name="ma" style="overflow:hidden;width: 100%"></textarea>
+								<br/>
+								<input onclick="checkSubmit()" type="button" class="btn" value="{%trans '注册'%}" />
+							</form>
+							{{msg|safe}}
+							{%if success%}
+							<br/><span style="color: red">{%trans '您重新登录以使用新的注册码'%}</span><a href="{%url 'logout'%}">{%trans '注销返回登录页'%}</a>
+							{%endif%}
+						</div>
+					</div>
+				<script type="text/javascript">
+				checkSubmit=function(){
+					ma=document.getElementById('ma');
+					if(!ma.value){
+						alert("{%trans '请输入注册码'%}");
+						ma.focus();
+						return false;
+					}
+					document.getElementById('form1').submit();
+				}
+				</script>
+				</div>
+			</div>
+
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	
+	
+</div>
+
+<script>
+$(document).ready(function(){
+	$('#tab-setting').addClass('active');
+	$('#settings_auth').addClass('current');
+});
+</script>
+{%endblock%}

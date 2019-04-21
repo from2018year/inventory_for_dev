@@ -1,0 +1,237 @@
+{% load i18n %}
+{%load url from future%}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/> 
+<title>{%trans '用户登陆'%}</title>
+<script src="/jsi18n"></script>
+<script src="/static/js/common/jquery.js" type="text/javascript"></script>
+<script>
+$(document).ready(function(){ 	
+	$('#user_session_login').focus(function(){
+		$('#id_img').attr('src','/static/images/id_select.png');
+	}).blur(function(){
+		$('#id_img').attr('src','/static/images/id.png');
+	}).focus();
+	$('#user_session_password').focus(function(){
+		$('#key_img').attr('src','/static/images/key_select.png');
+	}).blur(function(){
+		$('#key_img').attr('src','/static/images/key.png');
+	});
+	$('#sub_img').mouseover(function(){
+		$('#sub_img').attr('src','/static/images/submit_focus.png');
+	}).mouseout(function(){
+		$('#sub_img').attr('src','/static/images/submit.png');
+	}).mousedown(function(){
+		$('#sub_img').attr('src','/static/images/submit_press.png');
+	}).mouseup(function(){
+		$('#sub_img').attr('src','/static/images/submit.png');
+	});
+	
+	
+	$('#language_option').css({'right':$('#big_bar').offset().left,'display':'block'});
+});
+
+</script>
+
+<style>
+		*{
+		margin:0px;
+		padding:0px;
+		font-family: '微软雅黑';
+	}
+	body {
+		/*background:url(bg1.png) repeat-x;*/
+		overflow-y:hidden;
+		font-family: '微软雅黑';
+	}
+  .bg {
+		position:absolute;
+		top:0;
+		left:0;
+		width:100%;
+		height:100%;
+		z-index: -9999999;
+	}
+	
+	.align-center{ 
+		{%if INDUSTRY == "retail"%}
+		position:absolute; top:50%; left:50%; margin:-66px 0 0 -147px; width:294px; height:93px;
+		{%else%}
+		position:absolute; top:50%; left:50%; margin:-46px 0 0 -247px; width:294px; height:93px;
+		{%endif%}
+		background:url(/static/images/login-bg.png);
+		_behavior: url(/static/js/iepngfix.htc)
+	} 
+	.username {
+		position:absolute;
+		top:15px;
+		left:15px;
+	}
+	.usernameinput{
+		position:absolute;
+		top:18px;
+		left:55px;
+	}
+	.key {
+		position:absolute;
+		top:55px;
+		left:15px;
+	}
+	.keyinput {
+		position:absolute;
+		top:55px;
+		left:55px;
+	}
+	.subutton {
+		position:absolute;
+		top:12px;
+		left:260px;
+	}
+	#user_session label {
+		font-size: 13px;
+	}
+	
+	input {
+		font-family:tahoma;
+		background:url(/static/images/pp.png) repeat;
+		_behavior: url(/static/js/iepngfix.htc);
+		border-width:0px;
+		color:#fff;
+		font-weight:bold;
+	}
+	.logo-big{
+		position: absolute;
+		bottom: 120px;
+		left:-50px;
+		border: none;
+	}
+	.logo-big img {
+		border: none;
+	}
+	#remember {
+		position: absolute;
+		top:110px;
+		
+	}
+	.copyright{
+		position:absolute;
+		bottom:5px;
+		text-align:center;
+		width:100%;
+		font-family:"微软雅黑", "宋体", Tahoma;
+		font-weight:bold;
+		font-size:10px;
+	}
+	#msg{
+		position:absolute;
+		top:180px;
+		left:0px;
+		color:red;
+	}
+	
+</style>
+</head>
+<body>
+	<!--img src="/static/images/bg.gif" class="bg"/-->
+	<img id="big_bar" src="/static/images/big-bar{%if INDUSTRY == "retail"%}-retail{%endif%}.jpg" style="position: absolute;height:100%;margin:auto;top: 0; left: 0; bottom: 0; right: 0;" class=""/>
+	<script type="text/javascript">
+	if(top!=this){
+		window.top.location=location.href;
+	}
+	</script>
+	<div id="language_option" style="position:absolute;right:10px;padding:10px;font-weight: bold;color: #fff;z-index: 1000;display: none;">
+		<span>
+			{%if STYLE == 'gicater' and LANGUAGE_CODE != 'en' %}
+			
+			<br/><br/>
+			{%endif%}
+			
+		</span>
+		
+		{%if STYLE == "inventory_en"%}
+		{%include 'language_select.html'%}
+		{%endif%}
+	</div>
+	
+	{%if INDUSTRY == "retail"%}
+	<div style="position: absolute;width: 100%;height: 100%;right:0">
+	{%else%}
+	<div style="position: absolute;width: 50%;height: 100%;right:0">
+	{%endif%}
+	
+	<form action="." id="user_session" method="post" onkeydown = "if(event.keyCode==13) checksubmit()">{% csrf_token %}
+		
+	
+		<div class="align-center">
+				<div class="logo-big">
+					<a href="/"><img src="/static/images/logo-big-{{STYLE}}-{{LANGUAGE_CODE|default:'zh-cn'}}.png" style="height:60px;{%if LANGUAGE_CODE == 'en'%}margin-left:25px{%endif%}" alt="" /></a>
+				</div>
+				<div class="username"><img id="id_img" src="/static/images/id.png"/></div>
+				<div class="key"><img id="key_img" src="/static/images/key.png"/></div>
+				<input class="usernameinput" id="user_session_login" name="user_session_login" size="24" type="text"/>
+				<input class="keyinput" id="user_session_password" name="user_session_password" size="24" type="password"/>
+				<img  id="sub_img" src="/static/images/submit.png" class="subutton" onclick="checksubmit()"/>
+				<p id=remember>
+				<label>
+				<input type="checkbox" id="user_session_remember_me" name="user_session_remember_me"></input>
+				{%trans '记住我'%}</label>
+				</p>
+				
+				<label id="msg">{{msg|default:''}}</label><br/>
+				{%if request.META.zhuce%}
+				<label style="position: absolute;top: 130px;left: 0px;">{%trans '默认用户/密码'%}:{%if STYLE == "inventory_en"%}gicater/gicater{%else%}gicater/gicater{%endif%}<br/>{%trans '授权到期时间'%}:{{request.META.date|date:'Y-m-j'}},<a href="{%url 'register'%}">{%trans '立即注册'%}</a></label>
+				{%endif%}
+		</div>
+	</form>
+	</div>
+	
+	{%if SITE_MARK == 'online' and  not 'sandy' in request.META.HTTP_HOST%}
+	<div class="copyright">
+		粤ICP备12072590号-4
+	</div>
+	{%endif%}
+<script src="/static/js/common/md5.js" type="text/javascript"></script>
+<script src="/static/js/common/common.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+//以纯js验证以加快加载速度
+window.onload=function(){
+	rSelect=document.getElementById('user_session_remember_me');
+	uname=GetCookie('username');
+	if(uname){
+		rSelect.checked=true;
+		document.getElementById('user_session_login').value=uname;
+	}
+
+	checksubmit=function(){
+		login=document.getElementById('user_session_login');
+		passwd=document.getElementById('user_session_password');
+
+		if(!login.value){
+			alert("{%trans '请填写用户名'%}");
+			login.focus();
+			return false;
+		}
+
+		if(!passwd.value){
+			alert("{%trans '请填写登陆密码'%}");
+			passwd.focus();
+			return false;
+		}
+		
+		if(rSelect.checked){
+			SetCookie('username',login.value,2);
+		}else{
+			DelCookie('username');
+		}
+
+		document.getElementById('user_session').submit();
+	}
+
+}
+</script>
+</body>
+</html>

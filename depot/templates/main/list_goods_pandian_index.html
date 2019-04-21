@@ -1,0 +1,403 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 30 b_goods %}
+{% get_pages %}
+
+{%if edit%}
+	<div class="alert alert-error">
+		<i class="icon icon-info-sign"></i> {%trans '当前为预览状态,您可以删除不必要的盘点条目，保存后进行盘点'%}
+	</div>
+{%endif%}
+<table id="b_table" class="table table-hover table-condensed">
+	<thead>
+		<tr>
+			<th style="min-width:70px">{%trans '名称'%}</th><th width="100px">{%trans '编码'%}</th><th width="100px">{%trans '类别'%}</th>
+			<th width="70px">{%trans '规格'%}</th><th width="70px">{%trans '单位'%}</th><th width="70px">{%trans '库存数量'%}</th>
+			
+			
+			{%if edit%}
+			<th width="120px">{%trans '操作'%}</th>
+			{%else%}
+			<th width="120px">{%trans '盘点数量'%}</th>
+			<th width="120px">{%trans '盘差'%}</th>
+			{%endif%}
+			</tr>
+	</thead>
+	
+	<tbody>
+		{%for good in b_goods%}
+		<tr  id="t{{good.0.goods_code}}" good_id="{{good.0.good_id}}" class="good_items" tag="{{good.0.goods_abbreviation}}">
+			<td>{{good.0.name}}</td><td>{{good.0.code}}</td><td>{{good.0.category_name}}</td><td>{{good.0.standard|default:""}}</td>
+			<td>{{good.0.unit__unit|default:'无'}}</td><td>{{good.0.last_nums|floatformat:'2'}}</td>
+			
+			
+			{%if edit%}
+			<td><a href="javascript:void(0)" class="del_snapshot_good" good_id="{{good.0.good_id}}" >{%trans '不盘点此项'%}</a></td>
+			{%else%}
+			<td>
+				{%if not good.0.is_batchs%}
+				<div class="user-option"><input type="text" value="{{good.0.shiji|default_if_none:''}}" class="no-margin under-line under-left-line pandian-remark" /></div>
+				{%endif%}
+			</td>
+			<td>{{good.0.pancha|default_if_none:''}}</td>
+			{%endif%}
+		</tr>
+		{%if good.0.is_batchs and not edit%}
+		<tr class="batch_info_class">
+		<td colspan="8" class="no-padding">
+			<table class="table table-bordered" width="100%">
+				<thead><tr>
+					<th>{%trans '批次号'%}</th><th width="100px">{%trans '货架'%}</th>
+					<th width="70px">{%trans '单价'%}</th><th width="70px">{%trans '单位'%}</th>
+					<th width="70px">{%trans '库存数量'%}</th>
+					
+					<th width="120px">{%trans '盘点数量'%}</th>
+					<th width="115px">{%trans '盘差'%}</th>
+					
+				</tr></thead>
+				{%for batch in good.1%}
+				<tr tag="{{batch.batch_code}}" class="batch_info">
+				<td>{{batch.batch_code}}</td><td>{{batch.warehouse.full_name}}</td>
+				<td>{{batch.price|floatformat:'2'}}</td><td>{{batch.unit|default:''}}</td>
+				<td>{{batch.last_nums|floatformat:'2'}}</td>
+				
+				<td><div class="user-option"><input type="text" value="{{batch.shiji|default_if_none:''}}" class="no-margin under-line under-left-line" /></div></td>
+				<td>{{batch.pancha|default_if_none:''}}</td>
+				
+				
+				</tr>
+				{%endfor%}
+			</table>
+		</td>
+		</tr>
+		{%else%}
+		
+		{%endif%}
+	{%endfor%}
+	</tbody>
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{%if snapshotWarehouse.status != 2%}
+<div class="form-actions no-margin">
+	
+	{%if edit%}
+	<input type="button" id="c_button"  class="btn btn-primary" value="{%trans '我确定盘点这些物品'%}"/>
+	
+	{%else%}
+	<!--a id="sync_button"  class="btn btn-primary"><i class="icon icon-folder-close icon-white"></i> {%trans '保存盘点数据'%}</a-->	
+	
+	<a id="save_button"  class="btn btn-primary"><i class="icon icon-pencil icon-white"></i> {%trans '保存数据'%}</a>
+	
+	<br/><br/>
+	<div class="alert alert-success alert-warning-border">
+	
+		<i class="icon-info-sign"></i> {%trans '保存盘点数据:您可以先保存盘点数据，之后可以随时再次录入盘点数据，待所有盘点数据录入完毕，可以开始修正库存 ，系统会自动生成盘盈盘亏单据,并将物品库存补齐到盘点数'%}
+	
+	</div>
+	
+	
+	{%endif%}
+
+	
+</div>
+{% else %}
+  
+	<img src="/static/images/icons/is_confirm.png" />	
+{%endif%}
+
+
+
+
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#b_table').on('blur','.under-line',function(event){
+		$td=$(this).parent().parent();
+		$td.next().text('');
+		
+		if(!$.trim($(this).val())) return false;
+		var v=parseFloat($(this).val());
+		if(isNaN(v)){
+			alert("{%trans '请输入正确的数值'%}");
+			$(this).val('').focus();
+		}else{
+			$(this).val(v);
+			$td.next().text((parseFloat($(this).val())-parseFloat($td.prev().text())).toFixed(2));
+		}
+	});
+	
+	//重定义分页按钮，先保存再下页
+	$('.endless_page_link').click(function(e){
+		var $href=$(this).attr('href');
+		arr=new Array();
+		error=false;
+		msg='';
+
+		$('#b_table tbody > tr.good_items').each(function(){
+			_good_id=$(this).attr('good_id');
+			_good_nums=$(this).find('.under-line').val();
+			_good_nums_float=isNaN(parseFloat(_good_nums))?false:true;
+			_pancha=$(this).find('td:last').text();
+
+			barr=new Array();
+			_batch_good_nums=0;
+			_batch_modify=false;
+			_batch_all_modify=true;
+			$(this).next().find('.batch_info').each(function(){
+				__nums=$(this).find('.under-line').val();
+				__nums_float=isNaN(parseFloat(__nums))?false:true;
+				if (__nums_float){
+					_batch_good_nums+=parseFloat(__nums);
+					barr.push({'batch_code':$(this).attr('tag'),'nums':__nums,'pancha':$(this).find('td:last').text()});
+					_batch_modify=true
+				}else{
+					//_batch_good_nums+=parseFloat($(this).find('td:eq(4)').text());
+					_batch_all_modify=false;
+				}
+				
+			});
+			_batch_good_nums=_batch_good_nums.toFixed(2)
+
+			if (_good_nums_float && _batch_good_nums>parseFloat(_good_nums).toFixed(2)){
+				msg='{%trans "物品"%}【'+$(this).find('td:eq(0)').text()+'】{%trans "的盘点数量"%}'+_good_nums+'{%trans "小于批次累计数量"%}'+_batch_good_nums+'\n{%trans "如果填了物品最终的盘点数量\n则盘点数量不可小于已盘点批次的数量之和"%}';
+				error=true;
+				return false;
+			}
+			
+			if (_good_nums_float && _batch_all_modify && _batch_good_nums!=parseFloat(_good_nums).toFixed(2)){
+			
+				if(parseFloat(_batch_good_nums)){
+					msg='{%trans "物品"%}【'+$(this).find('td:eq(0)').text()+'】{%trans "的盘点数量"%}'+_good_nums+'{%trans "不等于批次累计数量"%}'+_batch_good_nums+'\n{%trans "如果填了物品最终的盘点数量和所有批次\n则盘点数量须等于已盘点批次的数量之和"%}';
+					error=true;
+					return false;
+				}
+			}
+			
+			//if(_batch_modify || _good_nums_float){
+			arr.push({'good_id':parseInt(_good_id),'remark':$(this).next().find('.pandian-remark').val(),'batch_modify':_batch_modify,'batch_all_modify':_batch_all_modify,'nums':_good_nums,'pancha':_pancha,'batchs':barr});
+			//}
+		});
+
+		if(error){
+			alert(msg);
+			return false;
+		}
+
+		$.post("{%url 'sync_good_count' org.pk%}",{'v':JSON.stringify(arr),'snapshotWarehouse_id':{{snapshotWarehouse.pk}},'warehouse_id':{{warehouse.pk}},'remark':$('#invoice_remark').val()},function(text){
+			if(!isNaN(parseInt(text))){
+				location.href=$href;
+			}else{
+				alert(text);
+				return false;
+			}
+		}); 
+		
+		return false;
+	});
+
+	//比较当前页数据
+	$('#sync_button').click(function(){
+		arr=new Array();
+		error=false;
+		msg='';
+
+		$('#b_table tbody > tr.good_items').each(function(){
+			_good_id=$(this).attr('good_id');
+			_good_nums=$(this).find('.under-line').val();
+			_good_nums_float=isNaN(parseFloat(_good_nums))?false:true;
+			_pancha=$(this).find('td:last').text();
+
+			barr=new Array();
+			_batch_good_nums=0;
+			_batch_modify=false;
+			_batch_all_modify=true;
+			$(this).next().find('.batch_info').each(function(){
+				__nums=$(this).find('.under-line').val();
+				__nums_float=isNaN(parseFloat(__nums))?false:true;
+				if (__nums_float){
+					_batch_good_nums+=parseFloat(__nums);
+					barr.push({'batch_code':$(this).attr('tag'),'nums':__nums,'pancha':$(this).find('td:last').text()});
+					_batch_modify=true
+				}else{
+					//_batch_good_nums+=parseFloat($(this).find('td:eq(4)').text());
+					_batch_all_modify=false;
+				}
+				
+			});
+			_batch_good_nums=_batch_good_nums.toFixed(2)
+
+			if (_good_nums_float && _batch_good_nums>parseFloat(_good_nums).toFixed(2)){
+				msg='{%trans "物品"%}【'+$(this).find('td:eq(0)').text()+'】{%trans "的盘点数量"%}'+_good_nums+'{%trans "小于批次累计数量"%}'+_batch_good_nums+'\n{%trans "如果填了物品最终的盘点数量\n则盘点数量不可小于已盘点批次的数量之和"%}';
+				error=true;
+				return false;
+			}
+			
+			if (_good_nums_float && _batch_all_modify && _batch_good_nums!=parseFloat(_good_nums).toFixed(2)){
+			
+				if(parseFloat(_batch_good_nums)){
+					msg='{%trans "物品"%}【'+$(this).find('td:eq(0)').text()+'】{%trans "的盘点数量"%}'+_good_nums+'{%trans "不等于批次累计数量"%}'+_batch_good_nums+'\n{%trans "如果填了物品最终的盘点数量和所有批次\n则盘点数量须等于已盘点批次的数量之和"%}';
+					error=true;
+					return false;
+				}
+			}
+			
+			//if(_batch_modify || _good_nums_float){
+			arr.push({'good_id':parseInt(_good_id),'remark':$(this).next().find('.pandian-remark').val(),'batch_modify':_batch_modify,'batch_all_modify':_batch_all_modify,'nums':_good_nums,'pancha':_pancha,'batchs':barr});
+			//}
+		});
+
+		if(error){
+			alert(msg);
+			return false;
+		}
+
+		$.post("{%url 'sync_good_count' org.pk%}",{'v':JSON.stringify(arr),'snapshotWarehouse_id':{{snapshotWarehouse.pk}},'warehouse_id':{{warehouse.pk}},'remark':$('#invoice_remark').val()},function(text){
+			if(!isNaN(parseInt(text))){
+				alert('{%trans "保存数据完成,您可以在合适的时候确认开始同步"%}');
+			}else{
+				alert(text);
+			}
+		});
+
+	});
+
+	$('#save_button').click(function(){
+		//同步按钮
+		arr=new Array();
+		error=false;
+		msg='';
+
+		$('#b_table tbody > tr.good_items').each(function(){
+			_good_id=$(this).attr('good_id');
+			_good_nums=$(this).find('.under-line').val();
+			_good_nums_float=isNaN(parseFloat(_good_nums))?false:true;
+			_pancha=$(this).find('td:last').text();
+
+			barr=new Array();
+			_batch_good_nums=0;
+			_batch_modify=false;
+			_batch_all_modify=true;
+			$(this).next().find('.batch_info').each(function(){
+				__nums=$(this).find('.under-line').val();
+				__nums_float=isNaN(parseFloat(__nums))?false:true;
+				if (__nums_float){
+					_batch_good_nums+=parseFloat(__nums);
+					barr.push({'batch_code':$(this).attr('tag'),'nums':__nums,'pancha':$(this).find('td:last').text()});
+					_batch_modify=true
+				}else{
+					//_batch_good_nums+=parseFloat($(this).find('td:eq(4)').text());
+					_batch_all_modify=false;
+				}
+				
+			});
+			_batch_good_nums=_batch_good_nums.toFixed(2)
+
+			if (_good_nums_float && _batch_good_nums>parseFloat(_good_nums).toFixed(2)){
+				msg='{%trans "物品"%}【'+$(this).find('td:eq(0)').text()+'】{%trans "的盘点数量"%}'+_good_nums+'{%trans "小于批次累计数量"%}'+_batch_good_nums+'\n{%trans "如果填了物品最终的盘点数量\n则盘点数量不可小于已盘点批次的数量之和"%}';
+				error=true;
+				return false;
+			}
+			
+			if (_good_nums_float && _batch_all_modify && _batch_good_nums!=parseFloat(_good_nums).toFixed(2)){
+			
+				if(parseFloat(_batch_good_nums)){
+					msg='{%trans "物品"%}【'+$(this).find('td:eq(0)').text()+'】{%trans "的盘点数量"%}'+_good_nums+'{%trans "不等于批次累计数量"%}'+_batch_good_nums+'\n{%trans "如果填了物品最终的盘点数量和所有批次\n则盘点数量须等于已盘点批次的数量之和"%}';
+					error=true;
+					return false;
+				}
+			}
+			
+			//if(_batch_modify || _good_nums_float){
+			arr.push({'good_id':parseInt(_good_id),'remark':$(this).next().find('.pandian-remark').val(),'batch_modify':_batch_modify,'batch_all_modify':_batch_all_modify,'nums':_good_nums,'pancha':_pancha,'batchs':barr});
+			//}
+		});
+
+		if(error){
+			alert(msg);
+			return false;
+		}
+
+		$.post("{%url 'sync_good_count' org.pk%}",{'v':JSON.stringify(arr),'snapshotWarehouse_id':{{snapshotWarehouse.pk}},'warehouse_id':{{warehouse.pk}},'remark':$('#invoice_remark').val()},function(text){
+			if(!isNaN(parseInt(text))){
+				/*$.ajax({
+					url:"{%url 'confirm_pandian_dan' org.pk snapshotWarehouse.pk%}",
+					data:{'snapshotWarehouse_id':{{snapshotWarehouse.pk}}},
+					type:"POST",
+					error:function(){
+						alert("{%trans '同步失败'%}");
+					},
+					success:function(text){
+						if(!isNaN(parseInt(text))){
+							alert('{%trans "同步数据完成，并已生成相应的盘盈盘亏单据"%}');
+							$('.form-actions').remove();
+						}else{
+							alert(text);
+						}
+					}
+				});*/
+				window.location.href = "{%url 'pandian_view' org.pk%}"
+			}else{
+				alert(text);
+			} 
+		});
+		
+	});
+
+	$('#c_button').click(function(){
+		$.ajax({
+			url:"{%url 'set_pandian_dan' org.pk%}",
+			data:{'snapshotWarehouse_id':{{snapshotWarehouse.pk}}},
+			type:"POST",
+			error:function(){
+				alert("{%trans '保存失败'%}");
+			},
+			success:function(text){
+				if(!isNaN(parseInt(text))){
+					location.href="{%url 'list_goods_pandian_preview' org.pk snapshotWarehouse.pk%}"
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+
+	$('.del_snapshot_good').click(function(){
+		$.ajax({
+			url:"{%url 'del_snapshot_good' org.pk%}",
+			data:{'snapshotWarehouse_id':{{snapshotWarehouse.pk}},'good_id':$(this).attr('good_id')},
+			type:"POST",
+			error:function(){
+				alert("{%trans '删除失败'%}");
+			},
+			success:function(text){
+				/*$('#widget-content').load("{%url 'list_goods_pandian_preview' org.pk snapshotWarehouse.pk%}?edit=1"); */
+
+				window.location.href = "{%url 'list_goods_pandian_preview' org.pk snapshotWarehouse.pk%}?edit=1"
+			}
+		});
+	});
+	
+});
+</script>
+{%endblock%}

@@ -1,0 +1,95 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%load extra_tags%}
+
+{%block titel%}{%trans '物品出入明细查询'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			<form method="GET" action="" class="form-horizontal form-min-horizontal" >	
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '物品出入查询'%}</h5>
+					<div class="widget-title-option">
+						
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="row-fluid">
+		            	<div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_from.auto_id}}">{{form.date_from.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_from}}
+		                            <p class="help-block">{{form.date_from.help_text}}</p>
+									<p class="help-block">{{form.date_from.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_to.auto_id}}">{{form.date_to.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_to}}
+		                            <p class="help-block">{{form.date_to.help_text}}</p>
+									<p class="help-block">{{form.date_to.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		               
+		        	</div>
+
+		        	
+		        	<div class="form-actions no-margin">
+						<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+						<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+					</div>
+					
+					
+				</div>
+			</div>
+			
+			{%if good_details%}
+			<div class="alert alert-success">
+				<div class="pull-right"><a href="javascript:void(0)" onclick="javascript:location.href=location.href+'&exportExcel=1'">{%trans '导出为Excel'%}</a></div>
+				{%trans '共有物品种类'%}{{goods_count}}
+			</div>
+			<table class="table">
+				<thead><tr class="info"><th>{%trans '物品'%}</th><th>{%trans '物品单位'%}</th><th>{%trans '当前库存'%}</th><th>{%trans '出库数量'%}</th></tr></thead>
+				{%for good_detail in good_details%}
+				<tr><td>{{good_detail.good__name}}</td><td>{{good_detail.good__unit__unit|default:'-'}}</td><td>{{good_detail.good__nums|floatformat:'2'}}</td><td>{{good_detail.out_num|floatformat:'2'}}</td></tr>
+				{%endfor%}
+				{%endif%}
+			</table>
+			</form>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/tongji_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_search_auto_stock_sum').addClass('current');
+	$('#tab-tongji').addClass('active');
+});
+</script>
+{%endblock%}

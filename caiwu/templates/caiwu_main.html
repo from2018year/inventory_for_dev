@@ -1,0 +1,230 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			{%if STYLE == "agile--"%}	
+			<div id="container" style="width: 640px;margin:20px auto;min-height:400px;">
+			</div>
+			{%else%}
+			<div style="position: relative;width: 700px;margin:0 auto;margin-top:20px;" >
+				<a href="{%url 'zijin_category1' org.pk%}">
+				<img style="position: absolute;top:0px;left:0px;" alt="{%trans '收入分类'%}" height="80px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/3/1.png">
+				</a>
+				
+				<img style="position: absolute;top:20px;left:150px;" alt="" width="70px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/3/2.png">
+				
+				
+				<a href="{%url 'zijin_fenxi' org.pk%}">
+				<img style="position: absolute;top:70px;left:0px;" alt="{%trans 'POS销售'%}" height="80px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/3/4.png">
+				</a>
+				
+				
+				<a href="{%url 'zijin_fenxi' org.pk%}">
+				<img style="position: absolute;top:140px;left:0px;" alt="{%trans '采购成本'%}" height="80px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/3/6.png">
+				</a>
+				
+				<a href="{%url 'zijin_fenxi' org.pk%}">
+				<img style="position: absolute;top:20px;left:230px;" alt="{%trans '填写记账'%}" width="120px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/3/7.png">
+				</a>
+				
+				<a href="{%url 'zijin_fenxi' org.pk%}">
+				<img style="position: absolute;top:10px;left:350px;" alt="" width="60px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/3/8.png">
+				</a>
+				
+				
+				<a href="{%url 'zijin_fenxi' org.pk%}">
+				<img style="position: absolute;top:35px;left:420px;" alt="{%trans '收支情况'%}" height="120px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/3/9.png">
+				</a>
+			
+				<!--img style="position: absolute;top:230px;left:10px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/3/10.png"-->
+				
+			</div>
+			{%endif%}
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/caiwu_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+<script type="text/javascript" src="/static/js/charts/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#tab-caiwu').addClass('active');
+	{%if STYLE == "agile--"%}
+	var chart=new Highcharts.Chart({
+		chart:{
+			renderTo:'container',
+			events:{
+				load:function(){
+					var ren = this.renderer,
+        				colors = Highcharts.getOptions().colors,
+        				rightArrow = ['M', 0, 0, 'L', 30, 0, 'L', 25, 5, 'M', 30, 0, 'L', 25, -5],
+        				leftArrow = ['M', 30, 0, 'L', 0, 0, 'L', 5, 5, 'M', 0, 0, 'L', 5, -5];
+
+					//左右线
+					ren.path(['M', 355, 40, 'L', 355, 330])
+	                    .attr({
+	                        'stroke-width': 2,
+	                        stroke: 'silver',
+	                        dashstyle: 'dash'
+	                    })
+	                    .add();
+
+					ren.label("{%trans '设置'%}", 160, 40)
+	                    .css({
+	                        fontWeight: 'bold'
+	                    })
+	                    .add();
+	                ren.label("{%trans '查看'%}", 440, 40)
+	                    .css({
+	                        fontWeight: 'bold'
+	                    })
+	                    .add();
+                
+	                ren.label("{%trans '设置分类'%}", 10, 150)
+	                    .attr({
+	                        fill: colors[0],
+	                        stroke: 'white',
+	                        'stroke-width': 2,
+	                        padding: 15,
+	                        r: 5
+	                    }).css({
+	                        color: 'white',
+	                        cursor:'pointer',
+	                    }).add().on('click',function(){
+		                    location.href="{%url 'zijin_category1' org.pk%}";
+		                }).shadow(true);
+
+	                ren.path([ 'M', 92, 172, 'L', 190, 172, 'L', 183, 177, 'M', 188, 172, 'L', 183, 167])
+                         .attr({
+                             'stroke-width': 2,
+                             stroke: colors[3]
+                         })
+                         .add();
+	                
+
+	               	ren.label("{%trans '记录数据'%}", 190, 150)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'zijin_fenxi' org.pk%}";
+	                }).shadow(true);
+
+
+	               	
+
+	               	ren.path([ 'M', 275, 172,'L',385,172,
+	       	               	   'M',385,125,'C',385,125,370,125,370,140,'L',370,204,'C',370,204,370,219,385,219])
+                         .attr({
+                             'stroke-width': 2,
+                             stroke: colors[3]
+                         })
+                         .add();
+
+	               	ren.path(rightArrow)
+	                    .attr({
+	                        'stroke-width': 2,
+	                        stroke: colors[3]
+	                    })
+	                   .translate(385, 125)
+	                   .add();
+	               	ren.path(rightArrow)
+	                    .attr({
+	                        'stroke-width': 2,
+	                        stroke: colors[3]
+	                    })
+	                   .translate(385, 172)
+	                   .add();
+	               	ren.path(rightArrow)
+	                    .attr({
+	                        'stroke-width': 2,
+	                        stroke: colors[3]
+	                    })
+	                   .translate(385, 219)
+	                   .add();
+	                   
+
+	               	ren.label("{%trans '查看资金小计'%}", 417, 112)
+	                    .attr({
+	                        fill: colors[4],
+	                        stroke: 'white',
+	                        'stroke-width': 2,
+	                        padding: 5,
+	                        r: 5
+	                    }).css({
+	                        color: 'white',
+	                        cursor:'pointer',
+	                    }).add().on('click',function(){
+		                    location.href="{%url 'zijin_fenxi' org.pk%}";
+		                }).shadow(true);
+
+	               	ren.label("{%trans '查看POS销售'%}", 417, 159)
+                    .attr({
+                        fill: colors[4],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 5,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'zijin_his' org.pk%}";
+	                }).shadow(true);
+
+	               	ren.label("{%trans '查看月资金对比'%}", 417, 206)
+                    .attr({
+                        fill: colors[4],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 5,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'zijin_his' org.pk%}";
+	                }).shadow(true);
+				}
+			}
+		},
+		title: {
+            text: "{%trans '财务管理流程'%}"
+        },
+        {%if LANGUAGE_CODE == "zh-cn"%}
+        credits:{
+			href:"{{CREDIT_HREF}}",
+			text:"{{CREDIT_TEXT}}"
+		}
+        {%else%}
+        credits:{
+			href:"",
+			text:""
+		}
+        {%endif%}
+	});
+	{%endif%}
+});
+</script>
+{%endblock%}

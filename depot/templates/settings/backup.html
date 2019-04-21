@@ -1,0 +1,155 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '备份中心'%}</h5>
+					<div class="widget-title-option">
+						{%if operms.depot.org_settings%}
+						<input id="clear_receipt" type="button" class="btn btn-primary"  value="{%trans '清空所有单据'%}" />
+						{%endif%}
+						<input id="beifen" type="button" class="btn btn-primary"  value="{%trans '立即备份'%}" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="alert alert-info">
+						{%trans '有小部分机器由于设置问题，使用还原时会一直显示等待，请下载手动还原工具运行（需在服务器上以管理员身份运行）'%},<a href="{%url 'down_backup_tools' org.pk%}"><strong>{%trans '点此下载'%}</strong></a>
+					</div>
+					
+					<div class="row-fluid">
+						<ul class="thumbnails">
+							{%for backup in backups%}
+							<li id="{{backup}}" class="span" style="width: 160px">
+								<div class="thumbnail">
+									<img src="/static/images/backup.png"></img>
+									<div class="caption">
+										<h5>{{backup}}{%trans '的备份'%}</h5>
+										<p>
+											<a href="javascript:void(0)" tag="{{backup}}" class="btn btn-mini btn-primary use_backup" >{%trans '使用'%}</a>
+											<a href="javascript:void(0)" tag="{{backup}}" class="btn btn-mini btn-warning del_backup" >{%trans '删除'%}</a>
+											<a href="{%url 'down_backup' org.pk%}?backup={{backup}}" tag="{{backup}}" class="btn btn-mini btn-warning down_backup" >{%trans '下载'%}</a>
+										</p>
+									</div>
+								</div>
+							</li>
+							{%endfor%}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+
+{%block endrel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_bfhy').addClass('current');
+	$('#tab-setting').addClass('active');
+
+	layer.use('extend/layer.ext.js');
+
+	$('#beifen').click(function(){
+		if(!confirm("{%trans '系统会在后台开始备份，您可能需要耐心等一会才能看到，开始备份？'%}")){
+			return false;
+		}
+		load_id=layer.load("{%trans '备份中，请稍候...'%}");
+		$.ajax({
+			url:"{%url 'do_backup' org.pk%}",
+			type:'post',
+			error:function(){
+				alert("{%trans '备份失败'%}");
+				layer.close(load_id);
+			},
+			success:function(text){
+				layer.close(load_id);
+				alert("{%trans '备份成功，页面将刷新以显示最新备份'%}");
+				location.reload()
+			}
+		})
+	});
+
+	$("#clear_receipt").click(function(){
+		if(!confirm("{%trans '该操作不可还原，请谨慎操作.将删除所有出入库单据，确定清空所有单据?'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'del_all_receipt' org.pk%}",
+			type:'post',
+			error:function(){
+				alert("{%trans '删除失败'%}");
+			},
+			success:function(text){
+				
+				alert("{%trans '删除成功'%}");
+			}
+		});
+	});
+
+	$('.del_backup').click(function(){
+		if(!confirm("{%trans '确定删除备份'%}"+$(this).attr('tag'))){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'del_backup' org.pk%}",
+			type:'post',
+			data:{'backup':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '删除失败'%}");
+			},
+			success:function(text){
+				$('#'+text).remove();
+				alert("{%trans '删除成功'%}");
+			}
+		});
+	});
+
+	$('.use_backup').click(function(){
+		if(!confirm("{%trans '确定使用备份'%}"+$(this).attr('tag')+",{%trans '您的数据将被还原'%}！")){
+			return false;
+		}
+
+		if(!confirm("{%trans '真的确定使用备份'%}"+$(this).attr('tag')+",{%trans '您的数据将被还原'%}?")){
+			return false;
+		}
+		load_id=layer.load("{%trans '还原中，请稍候...'%}");
+		$.ajax({
+			url:"{%url 'use_backup' org.pk%}",
+			type:'post',
+			data:{'backup':$(this).attr('tag')},
+			error:function(){
+				layer.close(load_id);
+				alert("{%trans '会话丢失，如果还原失败，您可以下载本页的还原工具还原'%}");
+			},
+			success:function(text){
+				layer.close(load_id);
+				alert("{%trans '还原成功,您需要重新登陆以获取新的数据'%}");
+				location.href="{%url 'logout'%}";
+			}
+		});
+	});
+});
+</script>
+{%endblock%}

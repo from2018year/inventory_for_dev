@@ -1,0 +1,159 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '用户组管理'%}</h5>
+					<div class="widget-title-option">
+	
+					</div>
+				</div>
+				<div class="widget-content" style="overflow-x: scroll">
+					<form class="form-horizontal" action="" method="post">{%csrf_token%}
+								{{groupFormSet.management_form}}
+								<table class="table table-condensed">
+									<colgroup span="8">
+										<col span='2' />
+										<col span='4' style="background-color: #eee;" />
+										<col span='2' style="background-color: #ddd;" />
+									</colgroup>
+									<thead class="table-bordered">
+										<tr><th class="text-center" colspan="2">{%trans '组基本信息'%}</th><th class="text-center" colspan="4">{%trans '系统权限'%}</th><th class="text-center" colspan="2">{%trans '仓库权限'%}</th></tr>
+										<tr><th width="50px">{%trans '删除'%}</th><th width="280px">{{groupFormSet.0.name.label}}</th>
+
+										
+										<th>{%trans '成本管理'%}</th>
+										<th>{%trans '收支管理'%}</th>
+										<th>{%trans '统计报表'%}</th>
+										
+										<th>{%trans '系统设置'%}</th>
+										
+										<th>{%trans '仓库查看'%}</th>
+										<th>{%trans '仓库修改'%}</th>
+										
+										
+										</tr>
+									</thead>
+									<tbody>
+										{%for groupForm in groupFormSet%}
+										<tr>
+											<td rowspan="2">{%if groupForm.instance.pk%}{{groupForm.DELETE}}{%else%}
+														<script>
+															$(document).ready(function(){
+																$('#{{groupForm.name.auto_id}}').attr('placeholder',"{%trans '新增用户组'%}");
+															});
+														</script>{%endif%}</td>
+											<td rowspan="2">{{groupForm.id}}
+												<div class="control-group {%if groupForm.errors%}error{%endif%}">
+													<div class="controls" style="margin-left: 0;">
+														{{groupForm.name}}{{groupForm.id}}
+														{%if groupForm.errors%}
+														<p class="help-block">{{groupForm.errors}}</p>
+														{%endif%}
+														
+														
+														
+													</div>						
+												</div>
+											</td>
+											{%for m in org_permissions%}
+											<td rowspan="2"><input type="checkbox" id="{{groupForm.permissions.html_name}}{{m.pk}}" name="{{groupForm.permissions.html_name}}" value="{{m.pk}}"/></td>
+											{%endfor%} 
+											{%for m in warehouse_permissions%}
+											<td><input type="checkbox" id="{{groupForm.permissions.html_name}}{{m.pk}}" name="{{groupForm.permissions.html_name}}" value="{{m.pk}}"/></td>
+											{%endfor%}
+										</tr>
+										<tr>
+										<td colspan="{{p_len}}">
+											<div class="control-group {%if groupForm.errors%}error{%endif%}">
+												<div class="controls" style="margin-left: 0;">
+													<span class="help-block">
+														{%trans '请选择对应的仓库'%}
+													</span>
+													
+													{%for w in warehouses%}
+													<label class="checkbox inline">
+													<input type="checkbox" id="{{groupForm.warehouse.html_name}}{{w.pk}}" name="{{groupForm.warehouse.html_name}}" value="{{w.pk}}"/>
+													{{w}}
+													</label>
+													{%endfor%}
+	
+													
+												</div>						
+											</div>
+															
+														
+										</td>		
+											<script>
+												$(document).ready(function(){
+													{%for v in groupForm.permissions.value%}
+													$('#{{groupForm.permissions.html_name}}{{v}}').attr('checked',true);
+													{%endfor%}
+
+													{%for w in groupForm.warehouse.value%}
+													$('#{{groupForm.warehouse.html_name}}{{w}}').attr('checked',true);
+													{%endfor%}
+												});
+											</script>
+										</tr>
+										
+										{%endfor%}
+									</tbody>
+									
+								</table>
+								
+						<div class="form-actions">
+							<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+							<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+						</div>
+					</form>
+					
+					<div class="alert alert-info">
+						<h4>{%trans '权限说明'%}</h4>
+						
+						<dl class="dl-horizontal">
+							<dt>{%trans '系统权限-成本管理'%}</dt><dd>{%trans '用户可以进入成本管理'%}</dd>
+							<dt>{%trans '系统权限-收支管理'%}</dt><dd>{%trans '用户可以进行收支管理'%}</dd>
+							<dt>{%trans '系统权限-统计报表'%}</dt><dd>{%trans '用户可以查看报表'%}</dd>
+							
+							<dt>{%trans '系统权限-系统设置'%}</dt><dd>{%trans '用户可以进行系统设置'%}</dd>
+							
+							
+							<dt>{%trans '仓库权限-仓库可读'%}</dt><dd>{%trans '用户可以查看仓库的数量'%}</dd>
+							<dt>{%trans '仓库权限-仓库可写'%}</dt><dd>{%trans '用户拥有仓库的所有权限'%}</dd>
+		 				</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_yhz').addClass('current');
+	$('#tab-setting').addClass('active');
+});
+</script>
+{%endblock%}

@@ -1,0 +1,70 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '公告管理'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">										
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '公告列表'%}</h5>
+					<div class="widget-title-option">
+						<a class="btn btn-primary" href="{%url 'org_announce_new' org.pk%}">{%trans '新增公告'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+				
+					<table class="table table-bordered">
+						<thead><tr><th width="30px">{%trans '编号'%}</th><th>{%trans '内容'%}</th><th width="70px">{%trans '类型'%}</th><th width="70px">{%trans '过期时间'%}</th><th width="50px">{%trans '状态'%}</th><th width="70px">{%trans '操作者'%}</th><th width="70px">{%trans '操作时间'%}</th><th width="70px">{%trans '操作'%}</th></tr></thead>
+						<tbody>
+							{%for announce in announces%}
+							<tr id="a{{announce.id}}"><td>{{forloop.counter}}</td><td>{{announce.content}}</td><td>{{announce.get_announce_type_display}}</td><td>{{announce.expired_date|date:'Y-m-d'}}</td><td>{{announce.get_status_display}}</td><td>{{announce.user|default:'-'}}</td><td>{{announce.update_date|date:'Y-m-d'}}</td><td><a href="{%url 'org_announce_modify' org.pk announce.pk%}">{%trans '编辑'%}</a> <a href="javascript:void(0)" onclick="del_announce({{announce.pk}})">{%trans '删除'%}</a></td></tr>
+							{%endfor%}
+						</tbody>
+					</table>	
+				
+				</div>
+			</div>
+
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	
+	
+</div>
+
+<script>
+$(document).ready(function(){
+	$('#tab-settings').addClass('active');
+	$('#li_announce').addClass('current');
+});
+
+del_announce=function(announce_id){
+	if(!confirm("{%trans '确认删除？'%}")){
+		return false;
+	}
+
+	$.ajax({
+		url:"{%url 'org_announce_delete' org.pk%}",
+		data:{'announce_id':announce_id},
+		type:"POST",
+		success:function(announce_id){
+			$('#a'+announce_id).remove();
+		}
+	});
+}
+</script>
+{%endblock%}

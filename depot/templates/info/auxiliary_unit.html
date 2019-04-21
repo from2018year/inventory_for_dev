@@ -1,0 +1,80 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="container" style="margin-top: 20px;">
+	<h4>{{goods}}{%trans '辅助单位列表'%}</h4>
+	<form class="form-horizontal" method="post" action="" >{%csrf_token%}
+		{{ formset.management_form }}
+		<table class="table table-condensed table-mini-input">
+			<thead><tr><th width="100px">{%trans '辅助单位'%}</th><td width="20px"></td><th width="100px">{%trans '与主单位转换率'%}</th><th>{%trans '成本价格'%}</th><th>{%trans '销售价格'%}</th><th>{%trans '描述'%}</th><th width="100px">{%trans '删除'%}</th></tr></thead>
+		 	<tbody>
+		 	{%for form in formset%}
+		 	<tr><td {%if form.unit.errors%}class="error"{%endif%}>1 {{form.unit}}{{form.unit.errors}}</td><td>=</td>
+		 	<td {%if form.rate.errors%}class="error"{%endif%}>{{form.rate}} {{goods.unit}}{{form.rate.errors}}</td>
+		 	<td {%if form.price.errors%}class="error"{%endif%}>{{form.price}}</td>
+		 	<td {%if form.sale_price.errors%}class="error"{%endif%}>{{form.sale_price}}</td>
+		 	<td>{%if form.instance.pk%}
+		 		{%if form.rate.value >= 0%}
+		 		1{{form.unit.value}}={{form.rate.value|floatformat:'-2'}}{{goods.unit}}
+		 		{%else%}
+		 		1{{goods.unit}}={{form.rate.value|cut:'-'|floatformat:'-2'}}{{form.unit.value}}
+		 		{%endif%}
+		 	{%endif%}
+		 	</td><td>{{form.org}}{{form.parent}}{{form.DELETE}}{{ form.id}}</td></tr>
+			{%endfor%}
+			</tbody>
+		</table>
+	
+		<div class="alert">{%trans '如果辅助单位超过4个，超过的部分将在零售前端被忽略'%}</div>
+		
+		<div class="alert">{%trans '对于有些不能整除的单位，您可以通过负数转换率来实现<br/>例如主单位是瓶，辅助单位是杯，则可以告诉系统1杯=-3瓶(推荐)，或1杯=0.3333瓶(可能产生误差)'%}</div>
+		
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">{%trans '保存'%}</button>
+			<input type="button" id="close_box" class="btn btn-warning" value="{%trans '关闭'%}" />
+		</div>
+	</form>
+</div>
+{%endblock%}
+
+
+{%block endrel%}
+<style>
+.table-mini-input td input[type="text"] {
+    width: 50px;
+}
+.table-mini-input td.error input {border-color:red;}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+	{%if success%}
+	alert("{%trans '保存成功'%}");
+	{%endif%}
+	//$('.xubox_close',parent.document).off('click').unbind().click(function(){alert()});
+	{%if init%}
+	parent.preventXuboxClose("{%url 'wupin' org.id%}"+"?category_id={{form.category.value}}");
+	{%endif%}
+	
+	$('#close_box').click(function(){
+		var index = parent.layer.getFrameIndex(window.name);
+		{%if init%}
+		//load parent
+		if($('#main-wrap',parent.document).size()){
+			$('#main-wrap',parent.document).load(parent.request_url,function(){
+				parent.layer.close(index);
+			});
+		}else{
+			parent.location.href="{%url 'wupin' org.id%}"+"?category_id={{form.category.value}}";
+		}
+		{%else%}
+		parent.layer.close(index);
+		{%endif%}
+		
+	});
+
+});
+</script>
+{%endblock%}
+

@@ -1,0 +1,11 @@
+{%load i18n%}
+{%load url from future%}
+
+			<div class="left-sub-menu">			
+				<strong><i class="icon-list-alt"></i> {%trans '资金分析'%}</strong>
+				<ul>
+					<li id="li_zijin_fenxi"><a href="{%url 'zijin_fenxi' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '月资金使用分析'%}</a></li>
+					<!--li id="li_zijin_his"><a href="{%url 'zijin_his' org.pk%}" class="app ctext"><i class="icon-th"></i> {%trans '历史资金使用分析'%}</a></li-->
+					<li id="li_lirun_fenxi"><a href="{%url 'lirun_fenxi' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '物品利润分析'%}</a></li>
+				</ul>
+			</div>

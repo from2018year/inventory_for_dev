@@ -1,0 +1,211 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block body%}
+<div class="container">
+	<div style="margin-top:20px">
+		<div style="float:right;width: 170px">
+			<div class="well" >
+					<p class="">{%trans '菜品名称'%}:{{menuItem.item_name}}</p>
+					<p class="">{%trans '菜品售价'%}:{{menuItem.price}}</p>
+					<p class="">{%trans '成本价格'%}:<span id="cellTotal">{{menuItem.cost}}</span></p>
+					<p class=""><label>{%trans '是否自动扣减库存'%}: <input type="checkbox" {%if  menuItem.sync_type%}checked="checked"{%endif%} id="auto_reduce" name="auto_reduce" style="margin-top:-2px" /></label></p>
+			</div>
+			<div style="">
+				<input id="submit_1" type="button" class="btn btn-primary" value="{%trans '确定'%}" />
+				<input id="close_frame" type="button" class="btn" value="{%trans '取消'%}" />
+			</div>
+		</div>
+		<div id="invocie-body" style="width:370px;overflow: visibility;padding-bottom: 340px"></div>
+	</div>
+	
+	
+
+	
+</div>
+{%endblock%}
+
+
+
+{%block endrel%}
+<link href="/static/js/handsontable/jquery.handsontable.full.css" rel="stylesheet">
+<style>
+.handsontable .htDimmed {
+	color:black;
+	background-color: #eee;
+}
+.htCenter {background-color: #ccc;}
+</style>
+<script src="/static/js/handsontable/jquery.handsontable.full.js"></script>
+<script src="/static/js/handsontable/customerh.js?v=20160529"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('#close_frame').click(function(){
+		parent.layer.close(index);
+	});
+
+	goods_json=parent.goods_json;
+	var datas={{datas|safe}};
+	var max_item={{max_item|safe}}
+	console.log(max_item)
+	var columns=[
+					{data:0},
+					{data:1,renderer:'autocompletefind',editor:'autocompletefind',type:'autocomplete',
+						source: function(query,process){
+							var query=query.toUpperCase().trim();
+							process($.map(goods_json,function(n){return ((n.code.indexOf(query)>-1)||(n.abbreviation.indexOf(query)>-1)||(n.name.indexOf(query)>-1))?n.name:null}));
+						}
+					},
+					{data:2,type:'numeric',format: '0.00'},
+					{data:3,editor:'unitselect',selectOptions: []},
+					{data:4,type:'numeric',format: '0.00'},
+					{data:5,type:'numeric',renderer:totalPriceRender,format: '0.00'},
+					{data:6}
+	             ]
+	
+	$("#invocie-body").handsontable({
+		data:datas,
+		minRows: parseInt(max_item)+1,
+		maxRows:parseInt(max_item)+1,
+		minSpareRows: 0,
+		rowHeaders: true,
+		colHeaders: [null,"{%trans '原材料' %}","{% trans '数量' %}","{% trans '单位' %}","{% trans '单价' %}","{% trans '总价' %}"],
+		columns:columns,
+		colWidths :[1,180,70,70,70,70,1],
+		contextMenu:{
+			items:{
+				'remove_row':{name:"{%trans '删除此行配置'%}"},
+				'row_below':{name:"{%trans '增加物品'%}"}
+			}
+		},
+		cells:function (row, col, prop){
+    		var cellProperties = {};
+    		if(row == parseInt(max_item) || col == 4){
+    			cellProperties.readOnly = true;
+        	}else{
+        		cellProperties.readOnly = false;
+        	}
+    		return cellProperties;
+  		}
+	});
+	$container = $("#invocie-body").handsontable('getInstance');
+	
+	
+	$('#submit_1').click(function(){
+		//block_form();
+		$('#submit').attr('disabled',true);
+		if($('#invocie-body .htInvalid').size()){
+			layer.msg(gettext("请先修正单据中红色提示部分再保存"), 3, {type:2,shade:false});
+			$('#submit_1').attr('disabled',false);
+			return false;
+		}
+		curdata=$container.getData();
+		console.log(curdata)
+		for(var i=0;i<curdata.length;i++){
+			if(curdata[i][1]==""){
+				curdata[i].splice(1,1,null);
+				continue
+			   }
+		    curdata[i][1] = escape(curdata[i][1])
+		}
+		
+		submit_id=layer.load(gettext("正在提交单据数据，请稍候..."));
+		$.ajax({
+			data:$("#invoice_form").serialize()+'&data='+JSON.stringify(curdata)+'&auto_reduce='+$('#auto_reduce').is(':checked'),
+			dataType: 'json',
+		    type: 'POST',
+		    success:function(json){
+		    	$('#submit').attr('disabled',false);
+		    	layer.close(submit_id);
+		    	if(json.success){
+		    		parent.$container.setDataAtCell(json.seq-parent.start_index+1,parseInt(max_item)+3,json.cost);
+		    		parent.$container.setDataAtCell(json.seq-parent.start_index+1,parseInt(max_item)+4,json.profit);
+		    		parent.$container.setDataAtCell(json.seq-parent.start_index+1,parseInt(max_item)+5,json.percent2+"%");
+		    		if(json.datas.length<5){
+		    		for(var i=0;i<json.datas.length;i++){
+		    			parent.$container.setDataAtCell(json.seq-parent.start_index+1,2+i,json.datas[i]['name']+' '+json.datas[i]['weight']+json.datas[i]['unit']);
+		    		}
+		    	}else{
+		    		for(var i=0;i<5;i++){
+		    			parent.$container.setDataAtCell(json.seq-parent.start_index+1,2+i,json.datas[i]['name']+' '+json.datas[i]['weight']+json.datas[i]['unit']);
+		    		}
+		    	}
+		    		parent.layer.close(index);
+		    	
+		    	}else{
+		    		
+		    	}
+		   	},
+		   	error:function(resp){
+		   		$('#submit').attr('disabled',false);
+		   		layer.close(submit_id);
+		   		var errors=eval("("+resp.responseText+")");
+		   		if(errors.error){
+		   			alert(errors.error);
+		   		}
+		   		for(var k in errors){
+		   			if(errors[k] instanceof Array){
+		   				for(var i=0;i<errors[k].length;i++){
+			   				for(var j=0;j<errors[k][i].length;j++){
+			   					$container.setCellMeta(i,errors[k][i][j],'valid',false);
+				   			}
+		   				}
+		   				$container.render();
+			   		}else{
+			   			for(error in errors[k]){
+			   				if($('#id_'+error).size()){
+								$('#id_'+error).addClass('form_error');
+							}else{
+								$('body').append(error+"<br/>");
+							}
+				   		}
+				   	}
+			   	}
+			}
+		});
+	});
+});
+
+function updateRow(cur_row,change_value){
+	if(!change_value){
+		change_value=$container.getDataAtCell(cur_row,1);
+	}
+
+	var items=$.grep(goods_json,function(n,i){return n.name===change_value||n.code===change_value});
+	if(!items.length){
+		return;
+	}
+	
+	var item=items[0];
+	$container.setDataAtCell(cur_row,0,item.pk);
+	$container.setDataAtCell(cur_row,1,item.name);
+	$container.setDataAtCell(cur_row,2,1);
+	$container.setDataAtCell(cur_row,4,item.refer_price);
+	$container.setDataAtCell(cur_row,5,item.refer_price||0);
+
+	var total_price = Number($("#cellTotal").text())?Number($("#cellTotal").text()):0
+
+	total_price = total_price + item.price_ori
+	$("#cellTotal").text(total_price)
+	
+	if(item.unit){
+		var units=[item.unit];
+		$container.setDataAtCell(cur_row,3,item.unit);
+		if(item.auxiliary_unit){
+			for(var k=0;k<item.auxiliary_unit.length;k++){
+				units.push(item.auxiliary_unit[k].unit);
+			}
+		}
+		$container.setCellMeta(cur_row,3,'selectOptions',units);
+
+	}else{
+		$container.setDataAtCell(cur_row,3,'');
+		$container.setCellMeta(cur_row,3,'selectOptions',[]);
+	}
+}
+
+</script>
+{%endblock%}

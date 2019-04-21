@@ -1,0 +1,54 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '授权管理'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">										
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '授权历史'%}</h5>
+					<div class="widget-title-option">
+						
+					</div>
+				</div>
+				<div class="widget-content">
+					<table class="table table-bordered">
+						<thead><tr><th>{%trans '序号'%}</th><th>{%trans '注册时间'%}</th><th>{%trans '到期日期'%}</th><th>{%trans '允许仓库数量'%}</th></tr></thead>
+						<tbody>
+							{%for key_info in key_arr%}
+							<tr><td>{{forloop.revcounter}}</td><td>{{key_info.1|date:'Y-m-d'}}</td><td>{{key_info.3|date:'Y-m-d'}}</td><td>{{key_info.4}}</td></tr>
+							{%endfor%}
+					
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	
+	
+</div>
+
+<script>
+$(document).ready(function(){
+	$('#tab-setting').addClass('active');
+	$('#settings_auth').addClass('current');
+});
+</script>
+{%endblock%}

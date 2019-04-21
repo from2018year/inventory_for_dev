@@ -1,0 +1,48 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%block body%}
+<div class="container" style="margin-top: 200px;margin-left: 150px;">
+	<div id="lresult" class="lresult"></div>
+	<form class="form-horizontal form-min-horizontal" style="height:600px" method="post">{%csrf_token%}
+		<div class="tab-content">
+			<div id="base" class="tab-pane fade active in">
+				<div class="row-fluid">
+						<div class="control-group {%if form.non_field_errors or form.password.errors%}error{%endif%}">
+							<div class="controls" style="margin-left: 78px;">
+							<label class="control-label" for="{{form.password.auto_id}}" style="margin-right: 12px;">{%if form.password.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.password.label}}</label>
+							{{form.password}}
+							<p class="help-block">{{form.password.help_text}}</p>
+							<p class="help-block">{{form.password.errors}}</p>
+							</div>						
+					</div>
+					</div>
+
+		        <div class="row-fluid">
+						<div class="control-group {%if form.non_field_errors or form.password_re.errors%}error{%endif%}">
+							<div class="controls" style="margin-left: 78px;">
+							<label class="control-label" for="{{form.password_re.auto_id}}" style="margin-right: 12px;">{%if form.password_re.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.password_re.label}}</label>
+							{{form.password_re}}
+							<p class="help-block">{{form.password_re.help_text}}</p>
+							<p class="help-block">{{form.password_re.errors}}</p>
+							</div>						
+					</div>
+					</div>
+
+		<div class="form-actions">
+			<input type="submit" id="submit" class="btn btn-primary" value="{%trans '确定'%}"/>
+			<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" />			
+		</div>
+	</form>
+</div>
+<script src="/static/js/common/jquery.form.js" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+
+})
+</script>
+{% endblock %}

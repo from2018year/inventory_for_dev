@@ -1,0 +1,87 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '分类设置'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'zijin_fenxi' org.pk%}" class="btn btn-primary">{%trans '返回资金分析'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="alert">
+						{%trans '打*号的分类为已有账目的分类，禁止删除'%}
+					</div>
+					
+					<form class="form-horizontal" action="" method="post">{%csrf_token%}
+						{{ formset.management_form }}
+						<table class="table table-condensed" style="margin-top:10px;min-width:500px;" id='ta'>
+							<thead><tr><th width="250px">{%trans '一级分类名称'%}</th><th width="80px">{%trans '类型'%}</th><th>{%trans '二级分类'%}</th><th width="40px">{%trans '删除'%}</th></tr></thead>
+					 		<tbody>
+					 		{%for form in formset%}
+					 		<tr {%if form.instance.pk and form.instance.count or form.instance.status == 0 %}class="hide_delete"{%endif%} {%if form.errors%}class="error"{%endif%}>
+					 		<td>{{form.name}}{%if form.instance.pk and form.instance.count%}*{%endif%}{{form.name.errors}}</td>
+					 		<td>{{form.ftype}}</td>
+					 		<td>{%if form.instance.pk%}
+					 			<a title="{%trans '编辑二级分类'%}-{{form.instance}}" class="layer" width="600px" height="400px" href="{%url 'zijin_category2' org.pk%}?category_id={{form.instance.pk}}">{%trans '点击编辑二级分类'%}</a>:{%for c in form.instance.children.all%} <span class="label label-info">{{c}}</span> {%endfor%}
+					 			{%endif%}
+					 		</td><td>{{form.DELETE}}
+					 		<div class="hide">{{form.status}}{{form.parent}}{{form.org}}{{form.id}}</div></td></tr>
+					 		{{form.errors}}
+				
+							{%endfor%}
+							</tbody>
+						</table>
+						
+						<div class="form-actions">
+							<input type="submit" class="btn btn-primary" value="{%trans '确定'%}"/>
+							<button type="reset" class="btn btn-warning">{%trans '重置'%}</button>
+						</div>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/main_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<script src="/static/js/jquery.formset.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_zijin_fenxi').addClass('current');
+	$('#tab-warehouse').addClass('active');
+
+	$('#ta tbody tr').formset({
+		prefix: '{{formset.prefix}}',
+		removed:function(row){
+	
+		},
+		added:function(row){
+			
+		}
+	});
+});
+</script>
+{%endblock%}

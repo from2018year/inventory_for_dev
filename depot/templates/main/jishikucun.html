@@ -1,0 +1,161 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">
+			{%if announces%}
+			<div id="announces">
+				<ul>
+				{%for announce in announces%}
+					<li>
+						<p><i class="icon icon-volume-up"></i> <strong>{{announce.org|default:_('系统')}}{%trans '公告'%}</strong> : {{announce.content|safe}}</p>
+					</li>
+				{%endfor%}
+				</ul>
+			</div>
+			<br/>
+			{%endif%}
+			
+			<div id="summary">
+				<div class="row-fluid">
+					<div class="span3 alert alert-success">
+					<p>{%trans '库存物品种类'%}: <a href="{%url 'jishikucun' org.uid%}"><span class="val">{{wh_all.1}}</span></a></p>
+					<p>{%trans '库存价值总额'%}: <a href="{%url 'jishikucun' org.uid%}"><span class="val">{{wh_all.2|floatformat:'2'}}</span></a></p>
+					
+					</div>
+					<div class="span3 alert alert-success">
+					<p>{%trans '未结采购单据'%}: <span class="val">{{weijie.caigou|default:'0'}}</span></p>
+					<p>{%trans '未结销售单据'%}: <span class="val">{{weijie.xiaoshou|default:'0'}}</span></p>
+					</div>
+					<div class="span3 alert alert-success">
+					<p>{%trans '本月采购成本'%}: <span class="val">{{benyue.caigou|default:'0'|floatformat:'2'}}</span></p>
+					<p>{%trans '本月销售金额'%}: <span class="val">{{benyue.xiaoshou|default:'0'|floatformat:'2'}}</span></p>
+					</div>
+					<div class="span3 alert alert-success">
+					<p>{%trans '数量下限警告'%}: <a href="{%url 'goods_warnings' org.uid%}"><span class="val">{{min_warning|length|default:'0'}}</span></a></p>
+					<p>{%trans '物品过期提醒'%}: <a href="{%url 'goods_warnings' org.uid%}"><span class="val">{{life_serious|length|default:'0'}}</span></a></p>
+					</div>
+				</div>
+			</div>
+					
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '选择您要查看的库存'%}</h5>
+					<div class="widget-title-option">
+					</div>
+				</div>
+				<div class="widget-content">
+					{%for warehouse in warehouses%}
+					{%if forloop.first%}
+					<ul class="thumbnails">
+						<li class="span" id="warehouse0">
+							<a href="{%url 'jishikucun_view_total' org.uid%}" class="thumbnail" tag="0" tag_name="">
+								<div class="caption">
+									<strong>{%trans '仓库合计'%}</strong> 
+									<p>
+										<dl class="dl-horizontal" title="{%trans '单击查看即时库存'%}">
+											<dt>{%trans '负责人'%}</dt><dd>{{warehouse.charger|default:_('未指定')}}</dd>
+											<!--dt>{%trans '共有分类'%}</dt><dd></dd-->
+											<dt>{%trans '共有物品'%}</dt><dd>{{wh_all.1}}</dd>
+											<dt>{%trans '价值'%}</dt><dd>{{wh_all.2|floatformat:'2'}}</dd>
+											<dt>{%trans '货架数量'%}</dt><dd>{{wh_all.0}}</dd>
+										</dl>
+									</p>
+								</div>
+							</a>
+						</li>
+					{%endif%}
+					
+						<li class="span" id="warehouse{{warehouse.pk}}">
+							<a href="{%url 'jishikucun_view' org.uid warehouse.pk%}" class="thumbnail" tag="{{warehouse.pk}}" tag_name="{{warehouse}}">
+								<div class="caption">
+									<strong>{{warehouse}}</strong> 
+									<p>
+										<dl class="dl-horizontal" title="{%trans '单击查看即时库存'%}">
+											<dt>{%trans '负责人'%}</dt><dd>{{warehouse.charger|default:_('未指定')}}</dd>
+											<!--dt>{%trans '共有分类'%}</dt><dd></dd></dd-->
+											<dt>{%trans '共有物品'%}</dt><dd>{{warehouse.get_goods.0}}</dd>
+											<dt>{%trans '价值'%}</dt><dd>{{warehouse.get_goods.1|floatformat:'2'}}</dd>
+											<dt>{%trans '货架数量'%}</dt><dd>{{warehouse.get_children.count}}</dd>
+										</dl>
+									</p>
+								</div>
+							</a>
+						</li>
+					{%if forloop.last%}
+					</ul>
+					{%endif%}
+					{%empty%}
+					<div class="well">
+					{%if parent_warehouse%}
+					{%trans '还未创建'%}{{warehouse_display_name}},<a href="{%url 'shelf_new' org.pk parent_warehouse.pk%}">{%trans '立即创建'%}</a>
+					{%else%}
+					{%trans '还未创建'%}{{warehouse_display_name}},<a href="{%url 'warehouses_new' org.pk%}">{%trans '立即创建'%}</a>
+					{%endif%}
+					
+					</div>
+					{%endfor%}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/warehouse_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<style>
+.dl-horizontal dt  {
+	width: 100px;
+}
+.dl-horizontal dd  {
+	margin-left: 110px;
+}
+.thumbnail {
+	width:200px;
+	position: relative;
+	text-decoration : none !important;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_jishikucun').addClass('current');
+	$('#tab-goods').addClass('active');
+	
+	var ul = $("#announces ul"); 
+	 var scrtime; 
+	 if(ul.find('li').size()>1){
+	    $("#announces").hover(function(){ 
+	         clearInterval(scrtime);//停止滚动 
+	    },function(){ 
+	        scrtime = setInterval(function(){ 
+	                
+	                var liHeight = ul.find("li:last").height();//计算最后一个li元素的高度 
+	                ul.animate({marginTop : liHeight +"px"},500,function(){ 
+	                    ul.find("li:last").prependTo(ul) 
+	                    ul.find("li:first").hide(); 
+	                    ul.css({marginTop:0}); 
+	                    ul.find("li:first").fadeIn(500); 
+	                });         
+	        },3000); 
+	     }).trigger("mouseleave"); 
+	 }
+});
+</script>
+{%endblock%}

@@ -1,0 +1,10 @@
+{% load i18n %}
+<div>
+    {% if goods %}
+    <img src="{{goods.cover.url}}" style="width:790px;height:532px;">
+    {% else %}
+    <div>
+        <h3 style="text-align=center">{% trans '尚未上传图片' %}</h3>
+    </div>
+    {% endif %}
+</div>

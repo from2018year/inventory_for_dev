@@ -1,0 +1,299 @@
+{%extends parent_id|yesno:"inline_base.html,main_base.html"%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	{%if not parent_id%}
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+	{%endif%}		
+			
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5></h5>
+					{%if not parent_id%}
+					<div class="widget-title-option">
+						<a href="{%url 'customers' org.uid%}" class="btn btn-primary">{%trans '返回客户列表'%}</a>
+						{%if customer.pk > 0%}
+						<a href="javascript:void(0)" tag="{{customer.pk}}" tag_name="{{customer}}" id="del_customer" class="btn btn-warning">{%trans '删除'%}</a>
+						{%endif%}
+					</div>
+					{%endif%}
+				</div>
+				<div class="widget-content">
+					
+						<form class="form-horizontal form-min-horizontal" action="" method="POST">{%csrf_token%}
+							<div id="lresult" class="lresult"></div>
+							<table class="table table-striped noborderd mini-form-table" style="width: auto;">
+								<tr>
+									<td>
+										<div class="control-group {%if form.name.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.name.auto_id}}">{%if form.name.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.name.label}}</label>
+											<div class="controls">
+												{{form.name}}
+												<p class="help-block">
+													{{form.name.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+									<td>
+										<div class="control-group {%if form.abbreviation.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.abbreviation.auto_id}}">{%if form.abbreviation.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.abbreviation.label}}</label>
+											<div class="controls">
+												{{form.abbreviation}}
+												<p class="help-block">
+													{{form.abbreviation.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+									<td>
+										<div class="control-group {%if form.status.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.status.auto_id}}">{%if form.status.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{% trans '启用' %}</label>
+											<div class="controls">
+												{{form.status}}
+												<p class="help-block">
+													{{form.status.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<div class="control-group {%if form.customer_type.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.customer_type.auto_id}}">{%if form.customer_type.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.customer_type.label}}</label>
+											<div class="controls">
+												{{form.customer_type}}
+												<p class="help-block">
+													{{form.customer_type.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="3">
+										<div class="control-group {%if form.address.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.address.auto_id}}">{%if form.address.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.address.label}}</label>
+											<div class="controls">
+												{{form.address}}
+												<p class="help-block">
+													{{form.address.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<td>
+										<div class="control-group {%if form.contact.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.contact.auto_id}}">{%if form.contact.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.contact.label}}</label>
+											<div class="controls">
+												{{form.contact}}
+												<p class="help-block">
+													{{form.contact.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+									<td>
+										<div class="control-group {%if form.email.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.email.auto_id}}">{%if form.email.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.email.label}}</label>
+											<div class="controls">
+												{{form.email}}
+												<p class="help-block">
+													{{form.email.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+									<td>
+										<div class="control-group {%if form.zip_code.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.zip_code.auto_id}}">{%if form.zip_code.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.zip_code.label}}</label>
+											<div class="controls">
+												{{form.zip_code}}
+												<p class="help-block">
+													{{form.zip_code.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<td>
+										<div class="control-group {%if form.tel.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.tel.auto_id}}">{%if form.tel.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.tel.label}}</label>
+											<div class="controls">
+												{{form.tel}}
+												<p class="help-block">
+													{{form.tel.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+									<td>
+										<div class="control-group {%if form.phone.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.phone.auto_id}}">{%if form.phone.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.phone.label}}</label>
+											<div class="controls">
+												{{form.phone}}
+												<p class="help-block">
+													{{form.phone.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+									<td>
+										<div class="control-group {%if form.fax.errors%}error{%endif%}">
+											<label class="control-label" for="{{form.fax.auto_id}}">{%if form.fax.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.fax.label}}</label>
+											<div class="controls">
+												{{form.fax}}
+												<p class="help-block">
+													{{form.fax.errors}}
+												</p>
+											</div>						
+										</div>
+									</td>
+								</tr>
+								<tr>
+								<td>
+								<div class="span3">
+			             	    <div class="control-group {%if form.sstatus.errors%}error{%endif%}">
+			             		<label class="control-label" for="{{form.remark.auto_id}}">备注：</label>
+			             		<div class="controls">
+			                            {{form.remark}}
+			                         </div> 
+			             	</div>
+			             </div>
+			             </td>
+								</tr>
+							</table>
+
+
+						
+							{%if not view%}
+							<div class="form-actions">
+									<button type="submit" class="btn btn-primary">{%trans '保存'%}</button>
+									<button type="reset" class="btn btn-success">{%trans '重置'%}</button>
+									<!--input type="hidden" name="neww" id="neww" value="0" />
+									<input type="button" class="btn btn-primary" onclick="$('#neww').val('1');$('#in_custome_form').submit();"  value="{%trans '保存并继续'%}" /-->
+							</div>
+							{%endif%}
+						</form>
+				</div>
+			</div>
+	{%if not parent_id%}
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include "parts/info_left_nav.html"%}
+		</div>
+	</div>
+	{%endif%}
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_kh').addClass('current');	
+	$('#tab-setting').addClass('active');
+
+	{%if success%}
+	$('#{{parent_id}}',parent.document).append("<option selected='selected' value='{{form.instance.pk}}'>{{form.instance.name}}</option>")
+	var index = parent.layer.getFrameIndex(window.name);
+	parent.layer.close(index);
+	{%endif%}
+
+	$('#del_customer').click(function(){
+		if(!confirm("{%trans '确定要删除'%}"+$(this).attr('tag_name')+"{%trans '，如果客户已有单据，将禁止删除？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'customer_delete' org.pk %}",
+			type:'POST',
+			data:{'del_customer_id':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					location.href="{%url 'customers' org.pk%}";
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+
+	strChineseFirstPY=null;
+	oMultiDiff=null;
+
+	$.getJSON('/static/js/pinyin.js',function(json){
+		strChineseFirstPY=json['strChineseFirstPY'];
+		oMultiDiff=json['oMultiDiff'][0];
+	});
+
+
+	$('#{{form.name.auto_id}}').focus(function(){
+		$('#lresult').hide();
+	}).blur(function(){
+		var str=$('#{{form.name.auto_id}}').val().trim();
+		var arrRslt=makePy(str);
+		$('#lresult').html("<div>&nbsp;" + arrRslt.join("</div><div>&nbsp;") +
+				"</div><div align='center'></div>").
+				css({'top':($('#{{form.abbreviation.auto_id}}').position().top+30),'left':$('#{{form.abbreviation.auto_id}}').position().left});
+
+		divs=$('#lresult div');
+		for(var i=0;i<divs.length;i++){
+			divs[i].className = i%2 ? "divShuang" : "divDan";
+			if(i>1){
+				$('#lresult').css({'display':'block'});
+			}
+		}
+		$('#{{form.abbreviation.auto_id}}').val(divs.eq(0).text());
+	});;
+	
+	$('#{{form.abbreviation.auto_id}}').click(function(){
+		if($('#lresult').is(":visible")){
+			$('#lresult').hide();
+			return;
+		}
+		var str=$('#{{form.name.auto_id}}').val().trim();
+		if(str=="") return;
+
+		var arrRslt=makePy(str);
+		$('#lresult').html("<div>&nbsp;" + arrRslt.join("</div><div>&nbsp;") +
+				"</div><div align='center'></div>").
+				css({'top':($(this).position().top+30),'left':$(this).position().left});
+
+		divs=$('#lresult div');
+		for(var i=0;i<divs.length;i++){
+			divs[i].className = i%2 ? "divShuang" : "divDan";
+			if(i>1){
+				$('#lresult').css({'display':'block'});
+			}
+		}
+		
+	}).blur(function(){$('#lresult').hide();});
+
+	$('#lresult').on('click','div',function(){
+		$('#{{form.abbreviation.auto_id}}').val($(this).text());
+		$('#lresult').hide();
+	});
+});
+</script>
+{%endblock%}

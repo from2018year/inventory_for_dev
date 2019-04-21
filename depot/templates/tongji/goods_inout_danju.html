@@ -1,0 +1,132 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%load extra_tags%}
+
+{%block title%}{%trans '物品出入明细查询'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			<form method="GET" action="" class="form-horizontal form-min-horizontal" >	
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '物品出入查询'%}</h5>
+					<div class="widget-title-option">
+						
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="row-fluid">
+		            	<div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_from.auto_id}}">{{form.date_from.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_from}}
+		                            <p class="help-block">{{form.date_from.help_text}}</p>
+									<p class="help-block">{{form.date_from.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_to.auto_id}}">{{form.date_to.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_to}}
+		                            <p class="help-block">{{form.date_to.help_text}}</p>
+									<p class="help-block">{{form.date_to.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.category.auto_id}}">{{form.category.label}}</label>
+		                         <div class="controls">
+		                            {{form.category}}
+		                            <p class="help-block">{{form.category.help_text}}</p>
+									<p class="help-block">{{form.category.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		        	</div>
+		        	<div class="row-fluid">
+		        		<div class="span span-inline">
+		                    <div class="control-group {%if form.inout.errors%}error{%endif%}">
+		                        <label class="control-label" for="{{form.inout.auto_id}}">{{form.inout.label}}</label>
+		                         <div class="controls">
+		                            {{form.inout}}
+		                            <p class="help-block">{{form.inout.help_text}}</p>
+									<p class="help-block">{{form.inout.errors}}</p>
+									<label for="id_inout_all" style="padding-left: 5px;"><input  class="inline"  id="id_inout_all" type="checkbox" tag='showall' >{%trans '全部'%}</label>
+		                         </div> 
+		                    </div>
+		                </div>
+		        	</div>
+		        	
+		        	<div class="form-actions no-margin">
+						<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+						<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+					</div>
+					
+					
+				</div>
+			</div>
+			
+			{%if post%}
+			<div class="alert alert-success">
+				<div class="pull-right"><a href="javascript:void(0)" onclick="javascript:location.href=location.href+'&exportExcel=1'">{%trans '导出为Excel'%}</a></div>
+				{%trans '特别提示：期初库存和期末库存为每天凌晨4点自动生成的数量快照，如果您的出入库操作过今天以外的单据，可能会照成期初库存+入库数量-出库数量不等于期末库存'%}     
+				<br/>{% trans '入库总金额为：' %}{{total_in}}；{% trans '出库总金额为：' %}{{total_out}}
+			</div>
+			<table class="table">
+			<thead><tr class="info"></tr><th>{%trans '物品'%}</th><th>{%trans '物品单位'%}</th><th>{%trans '期初库存'%}</th><th>{%trans '入库数量'%}</th><th>{%trans '出库数量'%}</th><th>{%trans '期末库存'%}</th><th>{%trans '入库总价'%}</th><th>{%trans '入库均价'%}</th><th>{%trans '出库总价'%}</th><th>{%trans '出库均价'%}</th></tr></thead>
+			{%for good_detail in good_details%}
+			<tr><td>{{good_detail.good__name}}</td><td>{{good_detail.good__unit__unit|default:'-'}}</td><td>{{good_detail.from_nums|floatformat:'2'}}</td><td>{{good_detail.in_num|floatformat:'2'}}</td><td>{{good_detail.out_num|floatformat:'2'}}</td><td>{{good_detail.to_nums|floatformat:'2'}}</td><td>{{good_detail.in_price|floatformat:'2'}}</td><td>{{good_detail.in_price|division:good_detail.in_num|floatformat:'2'}}</td><td>{{good_detail.out_price|floatformat:'2'}}</td><td>{{good_detail.out_price|division:good_detail.out_num|floatformat:'2'}}</td></tr>
+			{%endfor%}
+			{%endif%}
+			</table>
+			</form>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/tongji_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_search_goods_inout').addClass('current');
+	$('#tab-tongji').addClass('active');
+	
+	{%if not post%}
+	$('input[type="checkbox"]').prop('checked',true);
+	{%endif%}
+
+	$('#id_inout_all').click(function(){
+		var ischeck=$(this).prop('checked');
+		$('.body-main').find("input[type='checkbox']").each(function(){
+			if($(this).attr('tag') != 'showall')
+			{
+				$(this).prop('checked',ischeck);
+			}
+			
+		});
+	});
+});
+</script>
+{%endblock%}

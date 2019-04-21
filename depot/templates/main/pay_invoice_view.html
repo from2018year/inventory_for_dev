@@ -1,0 +1,67 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block body%}
+<div class="" id="check_msg"></div>
+<div class="container" style="margin-top:20px;">
+{% if invoice.invoice_type == 3000 %}
+<h4 class="text-center">{%trans '付款单'%}</h4>
+{% else %}
+<h4 class="text-center">{%trans '收款单'%}</h4>
+{% endif %}
+<div class="row-fluid clearfix">
+		<span class="span4 pull-left">{%trans '单号'%}:{{invoice.invoice_code}}</span>
+		<span class="span3 pull-left">{%trans '凭证号'%}:{{invoice.voucher_code|default:''}}</span>
+		<span class="pull-right">{%trans '时间'%}:{{invoice.event_date|date:'Y-n-j'}}</span>
+	</div>
+<div class="row-fluid clearfix">
+		<span class="span4 pull-left">{%trans '制单人'%}:{{invoice.charger}}</span>
+		<span class="span3 pull-left">{%trans '经办人'%}:{{invoice.user}}</span>
+		{% if invoice.invoice_type == 3000 %}
+		<span class="pull-right">{%trans '结款状态'%}:<span id="invoice_result_text">{{invoice.result|yesno:_('已付清,未付清')}}</span></span>
+		{% else %}
+		<span class="pull-right">{%trans '结款状态'%}:<span id="invoice_result_text">{{invoice.result|yesno:_('已收完,未收完')}}</span></span>
+		{% endif %}
+	</div>
+
+	<table class="table table-bordered">
+		<thead>
+			<tr><th>{%trans '序号'%}</th><th>{%trans '账户'%}</th><!--th>{%trans '规格'%}</th-->
+			{% if invoice.invoice_type == 3000 %}
+			<th>{%trans '付款金额'%}</th>
+			{% else %}
+			<th>{%trans '收款金额'%}</th>
+			{% endif %}
+			<th>{%trans '支付类型'%}</th>
+			{% if invoice.invoice_type == 3000 %}
+			<th>{%trans '付款时间'%}</th>
+			{% else %}
+			<th>{%trans '收款时间'%}</th>
+			{% endif %}
+			<th>{%trans '备注'%}</th></tr>
+		</thead>
+		<tbody>
+			{%for detail in invoice.payinvoicedetail_set.all%}
+			<tr>
+				<td>{{forloop.counter}}</td><td>{{detail.account.account_name}}</td><!--td>{{detail.good.standard|default:'-'}}</td--><td>{{detail.pay}}</td>
+				<td>{{detail.pay_type}}</td><td>{{detail.modify_time|date:'Y-n-j'}}</td><td>{{detail.remark}}</td>
+			</tr>
+			{%endfor%}
+		</tbody>
+		<tfoot>
+			<tr>
+			{% if invoice.invoice_type == 3000 %}
+			<td>{%trans '应付款'%}</td><td colspan="2">{{invoice.total_pay|floatformat:'2'}}</td><td>{%trans '已付款'%}</td><td>{{invoice.already_pay|floatformat:'2'}}</td><td>{%trans '未付款'%}</td><td>{{invoice.rest_pay|floatformat:'2'}}</td>
+			{% else %}
+			<td>{%trans '应收款'%}</td><td colspan="2">{{invoice.total_pay|floatformat:'2'}}</td><td>{%trans '已收款'%}</td><td>{{invoice.already_pay|floatformat:'2'}}</td><td>{%trans '未收款'%}</td><td>{{invoice.rest_pay|floatformat:'2'}}</td>
+			{% endif %}
+			</tr>
+
+			<tr><td>{%trans '备注'%}</td><td colspan="4">{{invoice.remark|default:'-'}}</td></tr>
+		</tfoot>
+	</table>
+</div>
+
+{%endblock%}

@@ -1,0 +1,11 @@
+*.pyc
+.svn
+.settings
+.project
+.pydevproject
+inventory/settings.py
+*.log
+*.DS_Store
+tags
+static/
+

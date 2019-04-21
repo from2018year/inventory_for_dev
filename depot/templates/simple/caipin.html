@@ -1,0 +1,231 @@
+{%extends 'main_base_simple.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '收银菜品表'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%if INDUSTRY == 'restaurant'%}{%trans '收银菜品列表'%}{%else%}{%trans '成本卡'%}{%endif%}</h5>
+					<div class="widget-title-option">
+						{%if not delete%}
+						<a id="sync_menuitem" class="btn btn-primary">{%if INDUSTRY == 'restaurant'%}{%trans '没有菜品？立即同步'%}{%else%}{%trans '没有收银商品？立即同步'%}{%endif%}</a>
+						<a href="javascript:void(0)" onclick="location.href=location.href" class="btn btn-primary">{%trans '刷新菜品'%}</a>
+						<a href="#" id="caipin_huishouzhan" class="btn btn-warning">{%trans '回收站'%}</a>
+						{%endif%}
+						
+						<div class="navbar-search pull-right" style="margin-top:-1px;margin-left:10px">
+					    	<input id="keyword" type="text" class="search-query" placeholder="{%trans '输入名称或助记码,回车查询'%}">
+					    </div>
+						
+					</div>
+				</div>
+				<div id="widget-content" class="widget-content endless_page_template">
+				<style type="text/css">  
+				.loading{  
+    				width:160px;  
+    				height:56px;  
+    				position: fixed;  
+    				top:30%;  
+    				left:50%;  
+    				line-height:56px;  
+    				color:#fff;  
+    				padding-left:60px;  
+   				    font-size:15px;  
+    				background: #000 url(images/loader.gif) no-repeat 10px 50%;  
+    				opacity: 0.7;  
+    				z-index:9999;  
+    				-moz-border-radius:20px;  
+    				-webkit-border-radius:20px;  
+    				border-radius:20px;  
+    				filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);  
+					}  
+				</style>  
+					
+					<div id="loading" class="loading">Loading...</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			<div class="zTreeDemoBackground left" style="margin-top:10px">
+				<ul id="tree" class="ztree ztree-category" style="overflow:scroll;height:850px;"></ul>
+			</div>
+		</div>
+	</div>
+	
+	<div id="update_date"  class="hide" style="height:562px;overflow-y:scroll">
+		<h5 class="text-center">{%trans '后台同步过程预计在2分钟之内完成，如果您之后依旧没有收到数据或者与收银软件不一致，请按下图操作'%}</h5>
+		<p class="text-center">{%trans '1,在收银软件登录界面打开检测工具'%}</p>
+		<p class="text-center">{%trans '2,重启Web报表服务，稍等2分钟后再刷新菜品'%}</p>
+		<img width="500px" style="margin:10px 131px" src="/static/images/update_data_new.png"/>
+	</div>
+</div>
+{%endblock%}
+
+{%block rel%}
+<link rel="stylesheet" href="/static/css/ztree/ztreestyle.css" type="text/css">
+<script src="/static/js/ztree/jquery.ztree.all-3.5.min.js"></script>
+<script src="/static/js/handsontable/jquery.handsontable.full.js"></script>
+{%endblock%}
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#tab-caipin').addClass('active');
+	$('body').css('overflow','hidden');
+
+	$("#caipin_huishouzhan").click(function(){
+		$("#widget-content").load("/depot/simple_list_delete_caipin/{{org.id}}"+"/{%if keyword%}?keyword={{keyword}}{%endif%}")
+	})
+	
+	$('#widget-content').load("/depot/simple_list_{{delete|yesno:'delete_,'}}caipin/{{org.id}}"+"/{%if keyword%}?keyword={{keyword}}{%endif%}");
+	
+	//加载离线物品数据，goods_json
+	goods_json=null;
+	{%if not delete%}
+	//load_id=layer.load("{%trans '加载离线物品数据，请稍候...'%}");
+	$.getScript("{%url 'get_goods_json' org.pk%}",function(data){
+		console.log(123)
+	});
+	{%endif%}
+	
+	$('#widget-content').click(function(e){
+		var $clicked = $(e.target);
+		if($clicked.hasClass('endless_page_link')){
+			$('#widget-content').load($clicked.attr('href'));
+			return false;
+		}
+	});
+	
+	$('#keyword').bind('keypress',function(event){
+        if(event.keyCode == 13)    
+        {
+            $('#widget-content').load("/depot/simple_list_{{delete|yesno:'delete_,'}}caipin/{{org.id}}"+"/?keyword="+$(this).val());
+        }
+    });
+	
+	var settings={
+			data:{
+				key:{
+					name:"name"
+				},
+				keep:{
+					parent:true
+				},
+				simpleData:{
+					enable:true,
+					pIdKey:'parent_id'
+				}
+			},
+			callback:{
+				onClick: onClick
+			}
+	};
+	
+	var zNodes=[{%for category in categorys%}{id:{{category.0}},parent_id:{{category.1|default:0}},name:"{{category.2|safe}}",isParent:true,open:true}{%if not forloop.last%},{%endif%}{%endfor%}];
+	$.fn.zTree.init($("#tree"), settings, zNodes);
+	
+	
+	$('#sync_menuitem').click(function(){
+		alert("操作已成功，请稍等几分钟后刷新页面，勿重复点击")
+		$.ajax({
+			url:"",
+			type:'POST',
+			data:{'action':'sync_menuitem'},
+			error:function(x,y,z){
+				alert("出错了");
+				
+			},
+			success:function(json){
+				$.layer({
+					type:1,
+					title:json.message,
+					//closeBtn:false,
+					offset:['50px','50%'],
+					area:['782px','600px'],
+					page:{dom:'#update_date'}
+				})
+			}
+		});
+	});
+	
+	$(document).on('click','.delete',function(e){
+		var tag=$(this).attr('tag');
+		var mid=$(this).attr('mid');
+		
+		var index=$.layer({
+		    shade: [0],
+		    area: ['auto','auto'],
+		    dialog: {
+		        msg: '自动出库时，放入回收站的菜品被直接忽略？',
+		        btns: 2,                    
+		        type: 4,
+		        btn: ['确定','取消'],
+		        yes: function(){
+		        	layer.close(index);
+		            $.ajax({
+		            	
+		            	type:'POST',
+		            	data:{'action':'delete','tag':tag,'mid':mid},
+		            	success:function(json){
+		            		if(json.success){
+		            			//window.$container.alter('remove_row',json.tag)
+		            			$('#widget-content').load(request_url);
+		            		}
+		            	}
+		            });
+		        },
+		        no:function(){layer.close(index)}
+		    }
+		});
+	});
+	
+	$(document).on('click','.recover',function(e){
+		var tag=$(this).attr('tag');
+		var mid=$(this).attr('mid');
+		
+		var index=$.layer({
+		    shade: [0],
+		    area: ['auto','auto'],
+		    dialog: {
+		        msg: '还原后可配置为自动出库的菜品？',
+		        btns: 2,                    
+		        type: 4,
+		        btn: ['确定','取消'],
+		        yes: function(){
+		        	layer.close(index);
+		            $.ajax({
+		            	url:"{%url 'recover_menuitem' org.uid%}",
+		            	type:'POST',
+		            	data:{'action':'recover','tag':tag,'mid':mid},
+		            	success:function(json){
+		            		$("#widget-content").load("/depot/simple_list_delete_caipin/{{org.id}}"+"/{%if keyword%}?keyword={{keyword}}{%endif%}")
+		            	},
+		            	error:function(){
+		            		console.log("error")
+		            	}
+		            });
+		        },
+		        no:function(){layer.close(index)}
+		    }
+		});
+	});
+	
+
+});
+
+
+function onClick(event ,treeId, treeNode){
+	var zTree = $.fn.zTree.getZTreeObj("tree");
+
+	$('#widget-content').load("/depot/simple_list_{{delete|yesno:'delete_,'}}caipin/{{org.id}}/"+treeNode.id+"/");
+}
+</script>
+{%endblock%}

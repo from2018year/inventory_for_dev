@@ -1,0 +1,64 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">										
+			<div style="position: relative;width: 750px;margin:0px auto;margin-top:20px;height: 600px;" class="clearfix">
+			
+				<a href="javascript:void(0)">
+				<img style="position: absolute;top:20px;left:0px;" alt="{%trans '设置收银菜品NLU'%}" height="150px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/1.png">
+				</a>
+				
+				<img style="position: absolute;top:50px;left:150px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/2.png">
+				
+				<a href="javascript:void(0)">
+				<img style="position: absolute;top:155px;left:210px;" alt="{%trans '收银日结'%}" height="60px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/5.png">
+				</a>
+				
+				<img style="position: absolute;top:200px;left:155px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/4.png">
+				
+				<a href="javascript:void(0)">
+				<img style="position: absolute;top:220px;left:0px;" alt="{%trans '设置库存物品编码'%}" height="150px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/7.png">
+				</a>
+				
+				<img style="position: absolute;top:85px;left:359px;" alt="" height="195px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/6.png">
+				
+				<a href="{%url 'cost_chukudan' org.pk%}">
+				<img style="position: absolute;top:20px;left:415px;" alt="{%trans '酒水自动出库'%}" height="150px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/3.png">
+				</a>
+				
+				<a href="{%url 'cost_profit' org.pk%}">
+				<img style="position: absolute;top:220px;left:415px;" alt="{%trans '计算菜品利润'%}" height="150px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/8.png">
+				</a>
+				
+				
+				<!--img style="position: absolute;top:400px;left:2px;" alt="{%trans '注意事项'%}" height="230px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/2-2/9.png"-->
+				
+				
+				
+				
+			</div>
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/chengben_left_nav.html'%}
+		</div>
+	</div>
+
+	
+	
+</div>
+<script>
+$(document).ready(function(){
+	$('#tab-chengben').addClass('active');
+});
+</script>
+{%endblock%}

@@ -1,0 +1,35 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="row-fluid" style="margin-top: 20px;">
+	<h4>{%trans '原始数据'%}</h4>
+	{{his.raw_str}}
+	<h4>{%trans '分析后'%}</h4>
+	{%for seq in his.seqs.all%}
+	{%trans '日期'%}--{{seq.zdate|date:'Y-m-d'}}
+	<table class="table">
+		<thead><tr><th>{%trans '名称'%}</th><th>{%trans '原料'%}</th><!--th>{%trans 'NLU'%}</th--><th>{%trans '单位'%}</th><th>{%trans '数量'%}</th><th>{%trans '单价'%}</th><th>{%trans '总价'%}</th><tr></thead>
+		<tbody>
+		{%for detail in seq.details.all%}
+		<tr><td>{{detail.item_name}}</td><td>{{detail.goods_text}}<!--td>{{detail.nlu}}</td--><td>{{detail.unit}}</td><td>{{detail.num}}</td><td>{{detail.price}}</td><td>{{detail.total_price}}</td></tr>
+		{%endfor%}
+		</tbody>
+	</table>
+	{%endfor%}
+</div>
+
+
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	{%if success%}
+	parent.layer.close(index);
+	{%endif%}
+});
+</script>
+{%endblock%}

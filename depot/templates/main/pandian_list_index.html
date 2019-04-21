@@ -1,0 +1,33 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 15 snapshotWarehouses %}
+{% get_pages %}
+<table class="table">
+	<thead>
+		<tr data="head"><th>{%trans '单据号'%}</th><th>{%trans '单据状态'%}</th><th>{%trans '盘点日期'%}</th><th>{%trans '盘点仓库'%}</th><th>{%trans '制单人'%}</th><th>{%trans '审核人'%}</th></tr>
+	</thead>
+	{%for snapshotWarehouse in snapshotWarehouses%}
+		<tr><td><span pk="{{snapshotWarehouse.id}}" status="{{snapshotWarehouse.status}}"></span>{% if operms.depot.pandian_modify %}<a href="{{snapshotWarehouse.get_modify_url}}">{{snapshotWarehouse.id}}</a>{% else %}<span>{{snapshotWarehouse.id}}</span>{% endif %}</td><td>{{snapshotWarehouse.get_status_display}}</td><td>{{snapshotWarehouse.created_time|date:'Y-n-j'}}</td><td>{{snapshotWarehouse.warehouse}}</td><td>{{snapshotWarehouse.created_user}}</td><td>{{snapshotWarehouse.confirm_user|default:''}}</td></tr>
+		
+	{%endfor%}
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}  {%trans '未审核单据'%} {{ unconfirmed_invoice }}{%trans '条'%} {%trans '共计未审核金额'%}{{unconfirmed_price.total_price__sum|default:0}}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

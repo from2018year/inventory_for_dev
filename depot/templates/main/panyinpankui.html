@@ -1,0 +1,115 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '盘盈盘亏'%}{%endblock%}
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">
+			<form class="form-horizontal form-min-horizontal" >	
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '查询盘盈盘亏单据'%}</h5>
+                    {% if operms.depot.panyingpankui_add %}
+					<div class="widget-title-option">
+						<a href="{%url 'pandian' org.uid%}" class="btn btn-primary">{%trans '新增盘盈盘亏单据'%}</a>
+					</div>
+                    {% endif %}
+				</div>
+				<div class="widget-content">
+
+				{% if operms.depot.panyingpankui_query %}
+					<div class="row-fluid">
+		            	<div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_from.auto_id}}">{%if form.date_from.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.date_from.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_from}}
+		                            <p class="help-block">{{form.date_from.help_text}}</p>
+									<p class="help-block">{{form.date_from.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_to.auto_id}}">{%if form.date_to.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.date_to.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_to}}
+		                            <p class="help-block">{{form.date_to.help_text}}</p>
+									<p class="help-block">{{form.date_to.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		             </div>
+		             
+		             <div class="row-fluid">
+		            	<div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.warehouse.auto_id}}">{%if form.warehouse.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.warehouse.label}}</label>
+		                         <div class="controls">
+		                            {{form.warehouse}}
+		                            <p class="help-block">{{form.warehouse.help_text}}</p>
+									<p class="help-block">{{form.warehouse.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.status.auto_id}}">{%if form.status.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.status.label}}</label>
+		                         <div class="controls">
+		                            {{form.status}}
+		                            <p class="help-block">{{form.status.help_text}}</p>
+									<p class="help-block">{{form.status.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		             </div>
+		             
+		        
+		            <div class="form-actions no-margin">
+						<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+						<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+					</div>
+				{% endif %}	
+				</div>
+				
+				
+			</div>
+				{% if operms.depot.panyingpankui_query %}
+				<div class="alert alert-success">
+					{%trans '共有单据'%}{{invoices.count}}，{%trans '金额'%}{{invoices_money|default:'0'|floatformat:'2'}}
+				</div>
+				
+				{%include page_template%}
+
+				{% endif %}
+			</form>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/main_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_panyinpankui').addClass('current');
+	$('#tab-warehouse').addClass('active');
+});
+</script>
+{%endblock%}

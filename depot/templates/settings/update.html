@@ -1,0 +1,74 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '系统升级'%}</h5>
+					<div class="widget-title-option">
+						
+					</div>
+				</div>
+				<div class="widget-content" style="background: #fff">
+					<div id="msg" class="alert alert-info">{%trans '您当前的系统版本为'%}<strong>{{VERSION}}</strong></div>
+					
+					<img id="loading" src="/static/images/loading.gif" />
+					
+					<iframe id="update_list" width="100%" frameborder="0"> </iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_xtsj').addClass('current');
+	$('#tab-setting').addClass('active');
+	
+	$.ajax({
+	    type : "GET",
+	    url :"http://www.gicater.com/inventory/{{LANGUAGE_CODE}}/version?ver={{VERSION}}&style={{STYLE}}",
+	    dataType :"jsonp",
+	    jsonp: false,
+	    jsonpCallback: "versionHandler",
+	    success : function(json){
+	    	$('#loading').remove();
+	    	if(json.current_version!="{{VERSION}}"){
+	    		$('#msg').append("{%trans ',当前最新版为'%}<strong>"+json.current_version+"</strong>,<a href='"+json.update_html+"'>{%trans '下载更新'%}</a>");
+				$('#update_list').attr('src',json.update_list).attr('height','400px');
+			}else{
+				$('#msg').append("{%trans '已经为最新版本'%}");
+				$('#update_list').attr('src',json.update_list).attr('height','400px');
+			}
+	    },
+	    error : function(httpReq,status,exception){
+	    	$('#loading').remove();
+	        $('#msg').append("{%trans '获取版本信息失败'%}");
+	    }
+	});
+	
+});
+</script>
+{%endblock%}

@@ -1,0 +1,179 @@
+{%extends 'api2_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '存货系统在线管理'%}{%endblock%}
+
+{%block body%}
+<div class="container content" style="margin-top:20px">
+	<form id="add_new_form" class="" method="POST">{%csrf_token%}
+        
+        <div class="input-group">
+        	<input class="form-control" id="keyword" name="keyword" value="{{keyword|default:''}}" placeholder="{%trans '支持用户名/店名/餐厅ID查询'%}">
+           	<span class="input-group-btn">
+            	<button class="btn-u btn-u-primary" type="submit">{%trans '查询'%}</button>
+            </span>
+        </div>
+	</form>
+	
+	<h5>{%trans '说明'%}</h5>
+	<ol>
+		<li>过期时间若未显示，则说明此商户从未活动过，如果登陆一次，会奖励3月的试用期（未注册）</li>
+	</ol>
+	
+	<table class="table table-striped">
+		<thead><tr><th>{%trans '商家名称'%}</th><th>{%trans '过期时间'%}</th><th>{%trans '仓库数'%}</th><th>{%trans '管理名'%}</th><th>{%trans '操作'%}</th></tr></thead>
+		<tbody>
+			{%for org in orgs%}
+			<tr tag="{{org.pk}}"><td>{{org.org_name}}</td><td>{{org.webkey.expired_date|date:'Y-m-d'|default:'-'}}</td><td>{{org.webkey.sites|default:'-'}}</td><td>{{org.get_charger}}</td>
+				<td>
+					
+					<div class="btn-group">
+						<a data-toggle="modal" data-target="newModal" class="btn btn-default mod_auth">{%trans '授权管理'%}</a>
+                        <a  class="btn btn-default dropdown-toggle" aria-expanded="false" data-toggle="dropdown">
+                        	&nbsp;<span class="caret"></span>&nbsp;
+                        </a>
+                        
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a data-toggle="modal" data-target="newModal" href="javascript:void(0)" tag="{{org.pk}}" class="mod_passwd"><i class="glyphicon glyphicon-user"></i> {%trans '修改管理账号密码'%}</a></li>
+                        </ul>
+                    </div>
+                   
+				</td>
+			</tr>
+		
+			{%endfor%}
+		</tbody>
+	</table>
+	
+<div class="modal fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="newModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h3 class="modal-title" id="newModalLabel">{%trans '修改'%} <span id="modal_title_mod"></span></h3>
+		    </div>
+			<div class="modal-body">
+				<form class="form-horizontal" action="">
+					<input type="hidden" name="mod_org" id="mod_org">
+					<div class="form-group">
+                    	<label for="qixian" class="col-lg-2 control-label">{%trans '授权期限'%}</label>
+                        <div class="col-lg-10">
+                            <select id="qixian" name="qixian" class="form-control">
+                            	<option value="0">{%trans '不变'%}</option>
+                            	<option value="1">{%trans '续一年'%}</option>
+                            	<option value="2">{%trans '续二年'%}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                    	<label for="fendian" class="col-lg-2 control-label">{%trans '分店数'%}</label>
+                        <div class="col-lg-10">
+                            <select id="fendian" name="fendian" class="form-control">
+                            	<option value="0">{%trans '不变'%}</option>
+                            	<option value="1">{%trans '加1店'%}</option>
+                            	<option value="2">{%trans '加2店'%}</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+			        	<button type="button" id="close_modal"  class="btn btn-default" data-dismiss="modal">{%trans '取消'%}</button>
+			        	<button type="button" id="submit_data" class="btn btn-primary">{%trans '确定'%}</button>
+			      	</div>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="passModal" tabindex="-1" role="dialog" aria-labelledby="passModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h3 class="modal-title" id="newModalLabel">{%trans '修改'%} <span id="modal_title_pass"></span></h3>
+		    </div>
+			<div class="modal-body">
+				<form class="form-horizontal" action="">
+					<input type="hidden" name="passwd_mod_org" id="passwd_mod_org">
+					<div class="form-group">
+				        <label for="passwd" class="col-lg-2 control-label">新密码</label>
+				        <div class="col-lg-10">
+				        	<input class="form-control" id="passwd" name="passwd" type="text">
+				        </div>
+				      </div>
+                    
+                    <div class="modal-footer">
+			        	<button type="button"  class="btn btn-default" data-dismiss="modal">{%trans '取消'%}</button>
+			        	<button type="button" id="submit_pass" class="btn btn-primary">{%trans '确定'%}</button>
+			      	</div>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$newModal=$('#newModal');
+	$modal_title=$('#modal_title_mod');
+	
+	$passModal=$('#passModal');
+	$modal_title_pass=$('#modal_title_pass');
+	$passModal.on('shown.bs.modal', function () {
+		  $('#passwd').focus()
+	})
+	
+	$('.mod_auth').click(function(){
+		var $tr=$(this).parent().parent().parent();
+		$modal_title.text($tr.find('td:first').text());
+		$('#mod_org').val($tr.attr('tag'));
+		$newModal.modal({backdrop:'static'});
+		
+	});
+	
+	$('#submit_data').click(function(){
+		$.ajax({
+			method:'POST',
+			data:{'mod_org':$('#mod_org').val(),'qixian':$('#qixian option:selected').val(),'fendian':$('#fendian option:selected').val()},
+			success:function(json){
+				if(json.success){
+					$('#add_new_form').submit();
+				}
+			}
+		});
+	});
+	
+	$('.mod_passwd').click(function(){
+		var $tr=$(this).parent().parent().parent().parent().parent();
+		$modal_title_pass.text($tr.find('td:first').text());
+		$('#passwd_mod_org').val($tr.attr('tag'));
+		$passModal.modal({backdrop:'static'});
+	});
+	
+	$('#submit_pass').click(function(){
+		var passwd=$.trim($('#passwd').val());
+		if(!passwd){
+			alert('请填写新密码');
+			$('#passwd').focus()
+			return false;
+		}
+		$.ajax({
+			method:'POST',
+			data:{'passwd_mod_org':$('#passwd_mod_org').val(),'passwd':passwd},
+			success:function(json){
+				$passModal.modal('hide');
+				alertify.alert(json.message);
+			}
+		});
+	});
+});
+</script>
+{%endblock%}

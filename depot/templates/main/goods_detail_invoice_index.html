@@ -1,0 +1,32 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 20 invoices %}
+{% get_pages %}
+<table class="table table-hover table-condensed">
+	<thead>
+		<tr><th class="visible-large" width="120px">{%trans '单据号'%}</th><th width="100px">{%trans '仓库'%}</th><th width="80px">{%trans '单据类型'%}</th><th width="70px">{%trans '数量'%}</th><th width="70px">{%trans '原单价'%}</th><th width="100px">{%trans '相关单位'%}</th><th width="70px">{%trans '经办人'%}</th><th width="70px">{%trans '审核人'%}</th><th width="70px">{%trans '日期'%}</th><th width="70px">{%trans '总价'%}</th></tr>
+	</thead>
+	{%for invoice in invoices%}
+	<tr><td class="visible-large"><a class="layer" width="800px" height="600px" title="{%trans '查看'%}{{invoice.invoice_code}}{%trans '详情'%}" href="{{invoice.get_absolute_url}}">{{invoice.invoice_code|default:'-'}}</a></td><td>{{invoice.warehouse_root}}</td><td>{{invoice.get_invoice_type_display}}</td><td>{{invoice.get_num_prefix}}{{invoice.goods_sum|floatformat:'2'}}</td><td>{{invoice.goods_price|floatformat:'2'}}</td><td>{{invoice.get_invoice_rel|default:'-'}}</td><td>{{invoice.user}}</td><td>{{invoice.confirm_user}}</td><td>{{invoice.event_date|date:'Y-m-j'}}</td><td>{{invoice.total_price|floatformat:'2'}}</td></tr>
+	{%endfor%}
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

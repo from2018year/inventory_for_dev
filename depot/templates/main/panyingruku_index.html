@@ -1,0 +1,36 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 15 invoices %}
+{% get_pages %}
+<table class="table">
+	<thead>
+		<tr data="head"><th>{%trans '单据号'%}</th><th>{%trans '时间'%}</th><th>{%trans '入库仓库'%}</th><th>{%trans '制单人'%}</th><th>{%trans '经办人'%}</th><th>{%trans '审核人'%}</th><th>{%trans '单据来源'%}</th><th>{%trans '备注'%}</th></tr>
+	</thead>
+	{%for invoice in invoices%}
+		<tr><td><span pk="{{invoice.id}}" status="{{invoice.status}}"></span>{% if operms.depot.panying_query %}<a
+		 href="{{invoice.get_absolute_url}}"  class="layer" width="800px" height="600px" title="{%trans '查看'%}{{invoice.invoice_code}}{%trans '详情'%}">{{invoice.invoice_code}}</a>{% else %}<span>{{invoice.invoice_code}}</span>{% endif %}</td><td>{{invoice.event_date|date:'Y-n-j'}}</td><td>{{invoice.warehouse}}</td><td>{{invoice.charger}}</td><td>{{invoice.user}}</td><td>{{invoice.confirm_user}}</td><td><a {% if operms.depot.pandian_query %} href="{{invoice.pandian_relate.get_modify_url}}">{{invoice.pandian_relate.id}}</a>{% else %}
+		 <span>{{invoice.pandian_relate.id}}</span>{% endif %}</td><td>{{invoice.remark}}</td></tr>
+		
+	{%endfor%}
+</table>
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

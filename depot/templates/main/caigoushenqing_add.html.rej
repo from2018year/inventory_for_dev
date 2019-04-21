@@ -1,0 +1,9 @@
+diff a/depot/templates/main/caigoushenqing_add.html b/depot/templates/main/caigoushenqing_add.html	(rejected hunks)
+@@ -197,7 +197,6 @@
+ 					{data:3,type:'numeric',renderer:hiddenRightBorderRender,validator: /^[\d\.]*$/},
+ 					{data:4,editor:'unitselect',selectOptions:[]},
+ 					{data:5,type:'numeric',format: '0.00',validator: /^[\d\.]*$/},
+-					{data:6,type:'numeric',renderer:totalPriceRender,format: '$0.00',language: 'zh-cn'},
+ 					{data:6,type:'numeric',format: '0.00',validator: /^[\d\.]*$/},
+ 					{data:7,type:'numeric',renderer:totalPriceRender,format: '$0.00',language: 'zh-cn'},
+ 					

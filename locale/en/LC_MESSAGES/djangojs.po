@@ -1,0 +1,304 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-15 11:03+0800\n"
+"PO-Revision-Date: 2016-01-05 15:52+0800\n"
+"Last-Translator: huang <woxuanhu@126.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en\n"
+"X-Generator: Poedit 1.8.6\n"
+
+#: .\inventory\static\js\jquery.formset.js.c:163
+#: .\static\js\jquery.formset.js.c:163
+msgid "新增"
+msgstr "Add"
+
+#: .\inventory\static\js\jquery.formset.js.c:164
+#: .\static\js\jquery.formset.js.c:164
+msgid "移除"
+msgstr "Delete"
+
+#: .\inventory\static\js\charts\modules\exporting.js.c:1
+#: .\inventory\static\js\charts\modules\exporting.src.js.c:109
+#: .\static\js\charts\modules\exporting.js.c:1
+#: .\static\js\charts\modules\exporting.src.js.c:109
+msgid "打印图表"
+msgstr "Print"
+
+#: .\inventory\static\js\charts\modules\exporting.js.c:1
+#: .\inventory\static\js\charts\modules\exporting.src.js.c:120
+#: .\static\js\charts\modules\exporting.js.c:1
+#: .\static\js\charts\modules\exporting.src.js.c:120
+msgid "另存为图像"
+msgstr "save as image"
+
+#: .\inventory\static\js\charts\modules\exporting.js.c:1
+#: .\inventory\static\js\charts\modules\exporting.src.js.c:136
+#: .\static\js\charts\modules\exporting.js.c:1
+#: .\static\js\charts\modules\exporting.src.js.c:136
+msgid "另存为PDF"
+msgstr "save as PDF"
+
+#: .\inventory\static\js\charts\modules\exporting.js.c:1
+#: .\inventory\static\js\charts\modules\exporting.src.js.c:143
+#: .\static\js\charts\modules\exporting.js.c:1
+#: .\static\js\charts\modules\exporting.src.js.c:143
+msgid "另存为SVG"
+msgstr "save as SVG"
+
+#: .\inventory\static\js\common\common.js.c:165
+#: .\static\js\common\common.js.c:165
+msgid "本机未安装或需要升级!"
+msgstr ""
+"Fail to detect print control in this computer, please install a print "
+"control or update the software."
+
+#: .\inventory\static\js\common\common.js.c:402
+#: .\static\js\common\common.js.c:402
+msgid "函数makePy需要字符串类型参数!"
+msgstr "Function makePy needs parameters of string."
+
+#: .\inventory\static\js\handsontable\customerh.js.c:494
+#: .\inventory\static\js\handsontable\customerh.js.c:526
+#: .\static\js\handsontable\customerh.js.c:494
+#: .\static\js\handsontable\customerh.js.c:526
+msgid "未知物品"
+msgstr "Unkonw item"
+
+#: .\inventory\static\js\handsontable\customerh.js.c:572
+#: .\static\js\handsontable\customerh.js.c:572
+msgid "请先修正单据中红色提示部分再保存"
+msgstr "Please modify the part in red before saving the report."
+
+#: .\inventory\static\js\handsontable\customerh.js.c:581
+#: .\static\js\handsontable\customerh.js.c:581
+msgid "正在提交单据数据，请稍候..."
+msgstr "Submitting..."
+
+#: .\inventory\static\js\handsontable\customerh.js.c:590
+#: .\static\js\handsontable\customerh.js.c:590
+msgid "保存单据成功，您可以继续编辑"
+msgstr "Saved successfully. You can edit it again, or edit other reports. "
+
+#: .\inventory\static\js\layer\layer.js.c:164
+#: .\inventory\static\js\layer\layer.min.js.c:20
+#: .\static\js\layer\layer.js.c:164 .\static\js\layer\layer.min.js.c:20
+msgid "信息"
+msgstr "Info"
+
+#: .\inventory\static\js\layer\layer.js.c:173
+#: .\inventory\static\js\layer\layer.min.js.c:20
+#: .\static\js\layer\layer.js.c:173 .\static\js\layer\layer.min.js.c:20
+msgid "确定"
+msgstr "OK"
+
+#: .\inventory\static\js\layer\layer.js.c:173
+#: .\inventory\static\js\layer\layer.min.js.c:20
+#: .\static\js\layer\layer.js.c:173 .\static\js\layer\layer.min.js.c:20
+msgid "取消"
+msgstr "Cancel"
+
+#: .\inventory\static\js\ztree\jquery.ztree.all-3.5.min.js.c:148
+#: .\static\js\ztree\jquery.ztree.all-3.5.min.js.c:148
+msgid "删除"
+msgstr "Delete"
+
+#: .\inventory\static\js\ztree\jquery.ztree.all-3.5.min.js.c:148
+#: .\static\js\ztree\jquery.ztree.all-3.5.min.js.c:148
+msgid "编辑"
+msgstr "Edit"
+
+#: .\static\admin\js\SelectFilter2.js.c:45
+#, c-format
+msgid "Available %s"
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:46
+#, c-format
+msgid ""
+"This is the list of available %s. You may choose some by selecting them in "
+"the box below and then clicking the \"Choose\" arrow between the two boxes."
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:53
+#, c-format
+msgid "Type into this box to filter down the list of available %s."
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:57
+msgid "Filter"
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:61
+msgid "Choose all"
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:61
+#, c-format
+msgid "Click to choose all %s at once."
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:67
+msgid "Choose"
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:69
+msgid "Remove"
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:75
+#, c-format
+msgid "Chosen %s"
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:76
+#, c-format
+msgid ""
+"This is the list of chosen %s. You may remove some by selecting them in the "
+"box below and then clicking the \"Remove\" arrow between the two boxes."
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:80
+msgid "Remove all"
+msgstr ""
+
+#: .\static\admin\js\SelectFilter2.js.c:80
+#, c-format
+msgid "Click to remove all chosen %s at once."
+msgstr ""
+
+#: .\static\admin\js\actions.js.c:18 .\static\admin\js\actions.min.js.c:1
+msgid "%(sel)s of %(cnt)s selected"
+msgid_plural "%(sel)s of %(cnt)s selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\static\admin\js\actions.js.c:109 .\static\admin\js\actions.min.js.c:5
+msgid ""
+"You have unsaved changes on individual editable fields. If you run an "
+"action, your unsaved changes will be lost."
+msgstr ""
+
+#: .\static\admin\js\actions.js.c:121 .\static\admin\js\actions.min.js.c:6
+msgid ""
+"You have selected an action, but you haven't saved your changes to "
+"individual fields yet. Please click OK to save. You'll need to re-run the "
+"action."
+msgstr ""
+
+#: .\static\admin\js\actions.js.c:123 .\static\admin\js\actions.min.js.c:6
+msgid ""
+"You have selected an action, and you haven't made any changes on individual "
+"fields. You're probably looking for the Go button rather than the Save "
+"button."
+msgstr ""
+
+#: .\static\admin\js\calendar.js.c:26
+msgid ""
+"January February March April May June July August September October November "
+"December"
+msgstr ""
+
+#: .\static\admin\js\calendar.js.c:27
+msgid "S M T W T F S"
+msgstr ""
+
+#: .\static\admin\js\collapse.js.c:8 .\static\admin\js\collapse.js.c:19
+#: .\static\admin\js\collapse.min.js.c:1
+msgid "Show"
+msgstr ""
+
+#: .\static\admin\js\collapse.js.c:15 .\static\admin\js\collapse.min.js.c:1
+msgid "Hide"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:49
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:85
+msgid "Now"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:53
+msgid "Clock"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:81
+msgid "Choose a time"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:86
+msgid "Midnight"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:87
+msgid "6 a.m."
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:88
+msgid "Noon"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:92
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:204
+msgid "Cancel"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:144
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:197
+msgid "Today"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:148
+msgid "Calendar"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:195
+msgid "Yesterday"
+msgstr ""
+
+#: .\static\admin\js\admin\DateTimeShortcuts.js.c:199
+msgid "Tomorrow"
+msgstr ""
+
+#~ msgid "打印控件未安装!点击这里"
+#~ msgstr "Click here to install print control."
+
+#~ msgid "执行安装"
+#~ msgstr "Install"
+
+#~ msgid "安装后请刷新页面或重新进入。"
+#~ msgstr "Please refresh the page or re-login."
+
+#~ msgid "打印控件需要升级!点击这里"
+#~ msgstr "Print control needs to be updated! Click here."
+
+#~ msgid "执行升级"
+#~ msgstr "Upgrade"
+
+#~ msgid "升级后请重新进入。"
+#~ msgstr "Refresh the page after update."
+
+#~ msgid ""
+#~ "（注意：如曾安装过Lodop旧版附件npActiveXPLugin,请在【工具】->【附加组件】-"
+#~ ">【扩展】中先卸它）"
+#~ msgstr ""
+#~ "(Note: if you have installed the old version of annex npActiveXPLugin of "
+#~ "Lodop, please first uninstall it through [tools] - > [components "
+#~ "additional tools] - > [expansion]."
+
+#~ msgid "(如果此前正常，仅因浏览器升级或重安装而出问题，需重新执行以上安装）"
+#~ msgstr ""
+#~ "(If it went well before, and just broke down due to browser update or re-"
+#~ "installation, please install the print control again.)"
+
+#~ msgid "添加新物品"
+#~ msgstr "Add new item"

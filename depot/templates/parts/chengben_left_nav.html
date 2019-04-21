@@ -1,0 +1,13 @@
+{%load i18n%}
+{%load url from future%}
+
+			<div class="left-sub-menu">
+				<strong><i class="icon-list-alt"></i> {%trans '成本卡'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="li_cost_logs"><a href="{%url 'cost_logs' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '收银同步日志'%}</a></li>
+					<li id="li_cost_chukudan"><a href="{%url 'cost_chukudan' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '酒水自动出库'%}</a></li>	
+					<li id="li_cost_profit"><a href="{%url 'cost_profit' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '菜品关系表'%}</a></li>
+				</ul>
+				
+				
+			</div>

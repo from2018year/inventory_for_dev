@@ -1,0 +1,36 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%block body%}
+<div class="container" style="margin-top: 20px;margin-left: 50px;">
+	<div id="lresult" class="lresult"></div>
+	<form class="form-horizontal form-min-horizontal" style="height:200px" method="post">{%csrf_token%}
+		<div class="tab-content">
+			<div id="base" class="tab-pane fade active in center">
+				<div class="row-fluid">
+						<div class="control-group {%if form.non_field_errors or form.account_name.errors%}error{%endif%}">
+							<div class="controls">
+							<label class="control-label" for="{{form.name.auto_id}}" style="margin-right: 12px;">{%if form.name.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.name.label}}</label>
+							{{form.name}}
+							<p class="help-block">{{form.name.errors}}</p>
+							</div>						
+						</div>
+						</div>
+
+		<div class="form-actions">
+			<input type="submit" id="submit" class="btn btn-primary" value="{%trans '确定'%}"/>
+			<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" />			
+		</div>
+	</form>
+</div>
+<script src="/static/js/common/jquery.form.js" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+
+})
+</script>
+{% endblock %}

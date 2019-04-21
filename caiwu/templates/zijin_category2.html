@@ -1,0 +1,60 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="container" style="margin-top: 20px;">
+	<div class="alert">
+		{%trans '打*号的分类为已有账目的分类，禁止删除'%}
+	</div>
+					
+	<form class="form-horizontal" method="post" action="">{%csrf_token%}
+		{{ formset.management_form }}
+		<table class="table table-condensed" style="margin-top:10px;" id='ta'>
+			<thead><tr><th>{%trans '分类名称'%}</th><th width="180px">{%trans '数据来源'%}</th><th width="40px">{%trans '删除'%}</th></tr></thead>
+	 		<tbody>
+	 		{%for form in formset%}
+	 		<tr {%if form.instance.pk and form.instance.count or form.instance.status == 0 %}class="hide_delete"{%endif%} {%if form.errors%}class="error"{%endif%}>
+	 		<td>{{form.name}}{%if form.instance.pk and form.instance.count%}*{%endif%}{{form.errors}}</td>
+	 		<td>{{form.ftype}}</td>
+	 		<td>{{form.DELETE}}
+	 		<div class="hide">{{form.status}}{{form.parent}}{{form.org}}{{form.id}}</div></td></tr>
+			{%endfor%}
+			</tbody>
+		</table>
+		
+		<div class="form-actions">
+			<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+			<input id="close_box" type="button" class="btn btn-warning" value="{%trans '关闭'%}" />
+		</div>
+	</form>
+</div>
+
+
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/jquery.formset.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	{%if success%}
+	parent.location=parent.location;
+	{%endif%}
+
+	$('#close_box').click(function(){
+		parent.layer.close(index);
+	});
+
+	$('#ta tbody tr').formset({
+		prefix: '{{formset.prefix}}',
+		removed:function(row){
+	
+		},
+		added:function(row){
+			row.find('.org').val('{{org.pk}}');
+		}
+	});
+});
+</script>
+{%endblock%}

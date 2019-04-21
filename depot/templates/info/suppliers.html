@@ -1,0 +1,136 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '供货商名片'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'supplier_group' org.uid%}" class="btn btn-primary">{%trans '供货商分类'%}</a>
+						<a href="{%url 'add_supplier' org.uid%}" class="btn btn-primary">{%trans '新增供货商'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="row-fluid">
+					{%if suppliers%}
+					{%for supplier in suppliers%}
+            			{%ifchanged supplier.group%}
+            			
+            			{%if forloop.first%}
+            			<h3>{{supplier.group|default:_('未分组')}}</h3>
+            			<ul class="thumbnails">
+            			{%else%}
+            			</ul>
+            			<h3>{{supplier.group|default:_('未分组')}}</h3>
+            			<ul class="thumbnails">
+            			{%endif%}
+            			{%endifchanged%}
+            			
+         				<li id="s{{supplier.pk}}" class="span4">
+							<div class="thumbnail">
+								<div class="options">
+            						<a href="{%url 'mod_supplier' org.pk supplier.pk%}" title="{%trans '编辑'%}"><i class="icon icon-pencil"></i></a>
+            						<a href="javascript:void(0)" tag="{{supplier.pk}}" class="del_supplier" tag_name="{{supplier}}" title="{%trans '删除'%}"><i class="icon icon-remove"></i></a>
+            					</div>
+	            				<h4 class="text-center">{{supplier}}</h4>
+	            				<p class="text-center"><i class="icon icon-user"></i> <strong>{{supplier.contact|default:_('未填写联系人')}} <i class="icon icon-headphones"></i> {{supplier.phone|default:_('未填写电话')}}</strong></p>
+	            				<p class="text-center">{{supplier.remark|default:_('未填写备注')}}</p>
+	            				{%if supplier.address%}
+	            				<p>
+		            				<address>
+		                        	<strong>{%trans '地址'%}</strong>
+		                                {{supplier.address|default:_('未填写地址信息')}}
+		                            </address>
+	                            </p>
+	                            {%endif%}
+	            			</div>
+						</li>
+	            		
+	            		{%if forloop.counter and forloop.counter|divisibleby:'3'%}
+	            		</ul>
+            			<ul class="thumbnails">
+	            		{%endif%}
+	            		
+	            		{%if forloop.last%}
+	            		</ul>
+	            		{%endif%}
+            		{%endfor%}
+					{%else%}
+					<div class="alert alert-info">{%trans '还没有供货商'%},<a href="{%url 'add_supplier' org.uid%}">{%trans '立即创建'%}</a></div>
+					{%endif%}
+					
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include "parts/info_left_nav.html"%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block rel%}
+<style>
+.thumbnail {
+	position: relative;
+}
+.thumbnail .options {
+	position:absolute;
+	top:2px;
+	right:3px;
+	display: none;
+}
+.thumbnail:hover .options {
+	display: block;
+}
+.thumbnail:hover:hover, .thumbnail:hover:focus {
+    border-color: #08C;
+}
+</style>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_ghs').addClass('current');	
+	$('#tab-setting').addClass('active');
+
+	$('.del_supplier').click(function(){
+		if(!confirm("{%trans '确定要删除'%}"+$(this).attr('tag_name')+"{%trans '，如果供货商已有单据，将禁止删除？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'supplier_delete' org.pk %}",
+			type:'POST',
+			data:{'del_supplier_id':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					$('#s'+text).remove();
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+});
+</script>
+{%endblock%}

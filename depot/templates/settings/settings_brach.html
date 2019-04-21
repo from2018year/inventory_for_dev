@@ -1,0 +1,149 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '分部列表'%},{%trans '您当前共允许使用'%}{{request.session.sites}}{%trans '分部'%}<small><a target="_blank" href="/register/">{%trans '升级许可'%}</a></small></h5>
+					<div class="widget-title-option">
+						<a href="{%url 'org_new' org.pk%}" class="btn btn-primary">{%trans '创建分部'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					{%for group,orgs in org_groups.items%}
+					
+						<h3>{{group|default:'未分组'}}</h3>
+						<ul class="thumbnails">
+							{%with parent=org%}
+							{%for org in orgs%}
+							<li class="span" id="org{{org.pk}}">
+								<div class="thumbnail" tag={{org.pk}} tag_name={{org}}>
+									{%if org.parent%}
+									<div class="option-tools"> <a title="{%trans '修改'%}" href="{%url 'org_modify' parent.pk org.pk%}"><i class="icon-pencil"></i></a> <a title="{%trans '进入'%}" href="{%url 'main' org.pk%}"><i class="icon-screenshot"></i></a> <a class="del_org" title="{%trans '删除'%}"><i class="icon-remove"></i></a></div>
+									{%else%}
+									<div class="option-tools"> <a title="{%trans '修改'%}" href="{%url 'org_modify' parent.pk org.pk%}"><i class="icon-pencil"></i></a> <a title="{%trans '进入'%}" href="{%url 'main' org.pk%}"><i class="icon-screenshot"></i></a> </div>
+									{%endif%}
+									<div class="caption">
+										<strong>{{org}}</strong> 
+										<p>
+											<dl class="dl-horizontal" title="{%trans '单击切换到查看详情'%}">
+												<dt>{%trans '负责人'%}</dt><dd>{{org.get_charger}}</dd>
+												<dt>{%trans '类型'%}</dt><dd>{{org.get_orgs_type_display}}</dd>
+												<dt>{%trans '电话'%}</dt><dd>{{org.phone|default:_('未指定')}}</dd>
+												<dt>{%trans '属组'%}</dt><dd>{{org.org_group|default:_('未指定')}}</dd>
+												<dt>{%trans '地址'%}</dt><dd>{{org.stores_address}}</dd>
+											</dl>
+										</p>
+									</div>
+								</div>
+							</li>
+							{%endfor%}
+							{%endwith%}
+						</ul>
+				
+					{%empty%}
+					<div class="well">
+					{%trans '还未创建分部'%},<a href="{%url 'org_new' org.pk%}">{%trans '立即创建'%}</a>
+					</div>
+					{%endfor%}
+				</div>
+			</div>								
+			
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_gb').addClass('current');
+	$('#tab-setting').addClass('active');
+
+	$('.thumbnail').hover(function(){
+		$(this).addClass('focus');
+		$(this).find('.option-tools').show();
+	},function(){
+		$(this).removeClass('focus');
+		$(this).find('.option-tools').hide();
+	}).click(function(event){
+		location.href=$(this).find('.option-tools').find('a').eq(1).attr('href');
+	});
+
+	$('.del_org','.thumbnails').click(function(){
+		var $org=$(this).parent().parent();
+		
+		if(!confirm("{%trans '您正在删除分部'%}"+$org.attr('tag_name')+"{%trans '如果分部有相关单据,将禁止删除，是否继续？'%}" )){
+			return false;
+		}
+		
+		$.ajax({
+			url:"{%url 'org_delete' org.pk %}",
+			type:'POST',
+			data:{'del_org_id':$(this).parent().parent().attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					$('#org'+text).remove();
+				}else{
+					alert(text);
+				}
+			}
+		});
+		
+		return false;
+	});
+});
+</script>
+{%endblock%}
+
+{%block rel%}
+<style>
+.dl-horizontal dt  {
+	width: 60px;
+}
+.dl-horizontal dd  {
+	margin-left: 70px;
+}
+.thumbnail {
+	width:200px;
+	position: relative;
+}
+.focus {
+border-color: rgba(82, 168, 236, 0.8);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  outline: 0;
+  outline: thin dotted \9;
+  background-color: #eee;
+}
+.option-tools {
+	position: absolute;
+	right:2px;
+	top:8px;
+	display: none;
+}
+</style>
+{%endblock%}

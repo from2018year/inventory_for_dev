@@ -1,0 +1,75 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%block body%}
+<div class="container" style="margin-top: 20px;margin-left: 150px;">
+	<div id="lresult" class="lresult"></div>
+	<form class="form-horizontal form-min-horizontal" style="height:600px" method="post">{%csrf_token%}
+		<div class="tab-content">
+			<div id="base" class="tab-pane fade active in center">
+				<div class="row-fluid">
+						<div class="control-group {%if form.non_field_errors or form.account_name.errors%}error{%endif%}">
+							<div class="controls">
+							<label class="control-label" for="{{form.account_name.auto_id}}" style="margin-right: 12px;">{%if form.account_name.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.account_name.label}}</label>
+							{{form.account_name}}
+							<p class="help-block">{{form.account_name.errors}}</p>
+							</div>						
+						</div>
+						</div>
+
+
+
+				<div class="row-fluid">
+						<div class="control-group {%if form.non_field_errors or form.account_num.errors%}error{%endif%}">
+							<div class="controls" style="margin-left: 90px;">
+							<label class="control-label" for="{{form.account_num.auto_id}}" style="margin-right: 12px;">{%if form.account_num.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.account_num.label}}</label>
+							{{form.account_num}}
+							<p class="help-block">{{form.account_num.help_text}}</p>
+							<p class="help-block">{{form.account_num.errors}}</p>
+							</div>						
+					</div>
+					</div>
+
+
+				<div class="row-fluid">
+
+						<div class="control-group {%if form.non_field_errors or form.bank_deposit.errors%}error{%endif%}">
+							<div class="controls">
+							<label class="control-label" for="{{form.bank_deposit.auto_id}}" style="margin-right: 12px;">{%if form.bank_deposit.field.required%}<i class="icon icon-asterisk" ></i>{%endif%}{{form.bank_deposit.label}}</label>
+							{{form.bank_deposit}}
+							<!--<p class="help-block">{{staff_form.user_levels.help_text}}</p>-->
+							<p class="help-block">{{form.bank_deposit.errors}}</p>
+							</div>						
+
+					</div>
+				</div>
+
+				<div class="row-fluid">
+
+						<div class="control-group {%if form.non_field_errors or form.status.errors%}error{%endif%}">
+							<div class="controls" style="margin-left: 90px;">
+							<label class="control-label" for="{{form.status.auto_id}}" style="margin-right: 20px;">{%if form.status.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.status.label}}</label>
+							{{form.status}}
+							
+							<p class="help-block">{{form.status.errors}}</p>
+							</div>						
+					</div>
+				</div>
+
+		<div class="form-actions">
+			<input type="submit" id="submit" class="btn btn-primary" value="{%trans '确定'%}"/>
+			<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" />			
+		</div>
+	</form>
+</div>
+<script src="/static/js/common/jquery.form.js" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+
+})
+</script>
+{% endblock %}

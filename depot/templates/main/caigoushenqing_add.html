@@ -1,0 +1,418 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '新增采购申请单'%}{%endblock%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">
+			<form id="invoice_form" class="form-horizontal form-min-horizontal" method="post" action="{%url 'caigoushenqing_add' org.uid%}">{%csrf_token%}		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '编辑采购申请单据'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'caigoushenqing_view' org.uid%}" class="btn btn-primary">{%trans '返回单据列表'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+						<div class="row-fluid">
+			            	<div class="span3">
+			                    <div class="control-group {%if form.invoice_code.errors%}error{%endif%}">
+			                        <label class="control-label" for="{{form.invoice_code.auto_id}}">{%if form.invoice_code.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.invoice_code.label}}</label>
+			                         <div class="controls">
+			                            {{form.invoice_code}}
+			                            <p class="help-block">{{form.invoice_code.help_text}}</p>
+										<p class="help-block">{{form.invoice_code.errors}}</p>
+			                         </div> 
+			                    </div>
+			                </div>
+			                <div class="span3">
+			                    <div class="control-group {%if form.voucher_code.errors%}error{%endif%}">
+			                        <label class="control-label" for="{{form.voucher_code.auto_id}}">{%if form.voucher_code.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.voucher_code.label}}</label>
+			                         <div class="controls">
+			                            {{form.voucher_code}}
+			                            <p class="help-block">{{form.voucher_code.help_text}}</p>
+										<p class="help-block">{{form.voucher_code.errors}}</p>
+			                         </div> 
+			                    </div>
+			                </div>
+			                <div class="span3">
+			                    <div class="control-group {%if form.event_date.errors%}error{%endif%}">
+			                        <label class="control-label" for="{{form.event_date.auto_id}}">{%if form.event_date.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.event_date.label}}</label>
+			                         <div class="controls">
+			                            {{form.event_date}}
+			                            <p class="help-block">{{form.event_date.help_text}}</p>
+										<p class="help-block">{{form.event_date.errors}}</p>
+			                         </div> 
+			                    </div>
+			                </div>
+			                <div class="span3">
+			                    <div class="control-group {%if form.user.errors%}error{%endif%}">
+			                        <label class="control-label" for="{{form.user.auto_id}}">{%if form.user.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.user.label}}</label>
+			                         <div class="controls">
+			                            {{form.user}}
+			                            <p class="help-block">{{form.user.help_text}}</p>
+										<p class="help-block">{{form.user.errors}}</p>
+			                         </div> 
+			                    </div>
+			                </div>
+			             </div>
+			             <div class="row-fluid">
+			             	<div class="span3">
+			                    <div class="control-group {%if form.rels.errors%}error{%endif%}">
+			                        <label class="control-label" for="{{form.rels.auto_id}}">{%if form.rels.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.rels.label}}</label>
+			                         <div class="controls" style="position: relative;">
+			                            {{form.rels}}&nbsp;<abbr title="{%trans '点击新增供货商'%}"><i id="new_org_cus" class="icon-plus" style="position:absolute;top:7px;right:-20px;"></i></abbr>
+			                            <p class="help-block">{{form.rels.help_text}}</p>
+										<p class="help-block">{{form.rels.errors}}</p>
+			                         </div> 
+			                    </div>
+			                </div>
+			                <div class="span3">
+			                    <div class="control-group {%if form.warehouse_root.errors%}error{%endif%}">
+			                        <label class="control-label" for="{{form.warehouse_root.auto_id}}">{%if form.warehouse_root.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.warehouse_root.label}}</label>
+			                         <div class="controls">
+			                            {{form.warehouse_root}}
+			                            <p class="help-block">{{form.warehouse_root.help_text}}</p>
+										<p class="help-block">{{form.warehouse_root.errors}}</p>
+			                         </div> 
+			                    </div>
+			                </div>
+			                <!--<div class="span3">
+			                    <div class="control-group {%if form.result.errors%}error{%endif%}">
+			                        <label class="control-label" for="{{form.result.auto_id}}">{%if form.result.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.result.label}}</label>
+			                         <div class="controls">
+			                            {{form.result}}
+			                            <p class="help-block">{{form.result.help_text}}</p>
+										<p class="help-block">{{form.result.errors}}</p>
+			                         </div> 
+			                    </div>
+			                </div>-->
+
+			                <div class="span3">
+			             	<div class="control-group {%if form.sstatus.errors%}error{%endif%}">
+			             		<label class="control-label" for="{{form.remark.auto_id}}">{% trans '备注：' %}</label>
+			             		<div class="controls">
+			                            {{form.remark}}
+			                         </div> 
+			             	</div>
+			             </div>
+
+
+			                <!--<div class="span3">
+			                    <div class="control-group {%if form.sstatus.errors%}error{%endif%}">
+			                        <label class="control-label" for="{{form.sstatus.auto_id}}">{%if form.sstatus.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.sstatus.label}}</label>
+			                         <div class="controls">
+			                            {{form.sstatus}}
+			                            <p class="help-block">{{form.sstatus.help_text}}</p>
+										<p class="help-block">{{form.sstatus.errors}}</p>
+			                         </div> 
+			                    </div>
+			                </div> -->
+			             </div>
+			             
+			           
+			             <hr></hr>
+			             
+			             
+			             
+			            <table class="table no-margin">
+			             	<thead><tr><th width="40px"></th><th width="50px">{% trans '序号' %}</th><th>{%trans '物品'%}</th><th width="85px" style="text-align: right">{%trans '数量&单位'%}</th><th width="85px" style="text-align: right">{%trans '采购价'%}</th><th width="85px" style="text-align: right">{%trans '总价'%}</th><th width="85px" style="text-align: right">{% trans '当前库存' %}</th><th width="85px" style="text-align: right">{% trans '库存下限' %}</th><th width="85px" style="text-align: right">{% trans '物品类别' %}</th><th width="85px" style="text-align: right">{% trans '备注' %}</th></tr></thead>
+			             </table>
+			             <div id="invocie-body" style="width:100%;overflow: visible"></div>
+			         
+			       	<div class="form-actions no-margin">
+						<input type="button" id="submit"  class="btn btn-primary" value="{%trans '确定'%}"
+						 {% if invoice.status == 2 %} style="display: none;" {% endif %}/>
+
+						{% if invoice.status == 2%}
+						<img src="/static/images/icons/is_confirm.png" />
+						{% endif %}
+					</div>
+			    </div>
+			</div>
+			
+			
+			</form>
+			<input type="hidden" id="cellTotal" value="0" />
+		</div>
+			
+	</div>
+
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/main_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+	<div id="goods_layer" class="xubox_layer hide" style="z-index:500;width:800px;height:500px;left:50%;top:50%;margin-left:-400px;margin-top:-250px; ">
+
+	    <div class="xubox_main" style="background-color: #FFF;z-index: 500;width:800px;height: 500px;">
+	        <div class="xubox_page">
+	        	<iframe id="select_goods_frame" src="" width="800px" height="500px" scrolling="no" frameborder="0"></iframe>
+	        </div>
+	        <a class="xubox_close xulayer_png32 xubox_close0 xubox_close1 goods_layer_close" href="javascript:;"></a>
+	        <span class="xubox_botton"></span>
+	    </div>
+    	<div class="" style="position: absolute;border-radius: 5px;z-index: 49; background-color: #000; opacity: 0.3;filter:alpha(opacity=30);-moz-opacity:0.5; top: -2px; left: -2px; width: 804px; height: 504px;"></div>
+		<div style="background-color: #666;width: 100%;height: 100%;left: 0px;top: 0px;opacity: 0.5;filter:alpha(opacity=50);-moz-opacity:0.5;z-index: 1;position: fixed !important;"></div>
+	</div>
+	
+</div>
+<style type="text/css">
+.span3{
+	transform:translateY(30%)
+}
+.container-fluid{
+    overflow-X:hidden
+}
+</style>
+{%endblock%}
+
+{%block rel%}
+<link href="/static/js/handsontable/jquery.handsontable.full.css" rel="stylesheet">
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script src="/static/js/layer/layer.min.js"></script>
+<script src="/static/js/handsontable/jquery.handsontable.full.js?v=20181109"></script>
+<script src="/static/js/handsontable/customerh.js?v=20181109"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_caigoushenqing').addClass('current');
+	$('#tab-warehouse').addClass('active');
+
+	$("#submit").click(function(){
+		alert("{% trans '单据已提交，请等待处理勿重复提交,若单据有红色部分请先修复后再次提交' %}")
+	})
+	
+	$goods_layer=$('#goods_layer');
+	NEW_SRC="{%url 'add_goods' org.pk%}?callback=1";
+
+	var datas={{datas|safe|default:'[]'}};
+	for(var i=0;i<datas.length;i++){
+		datas[i].splice(1,0,'');
+	}
+
+	//超过6个就做处理，否则显示不出来
+	var extraData = []
+	while(datas.length>5){
+		var item = datas.pop()
+		extraData.push(item)
+	}
+
+	extraData.reverse()
+
+	var columns=[
+		 			{data:0,renderer: hiddenRenderer},
+		 			{data:1,renderer: safeHtmlRenderer,readOnly:'true'},
+					{data:2,renderer:'autocompletefind',editor:'autocompletefind',type:'autocomplete',layer_id:'goods_layer',
+						source: function(query,process){
+							//var items=$.grep(goods_json,function(n,i){return (n.code.indexOf(query)>-1)||(n.abbreviation.indexOf(query)>-1)||(n.name.indexOf(query)>-1)})
+							var query=query.toUpperCase().trim();
+							process($.map(goods_json,function(n){return ((n.code.indexOf(query)>-1)||(n.abbreviation.indexOf(query)>-1)||(n.name.indexOf(query)>-1))?n.name:null}));
+						}
+					},
+					
+					{data:3,type:'numeric',validator: /^[\d\.]*$/,format:'0.00'},
+					{data:4,editor:'unitselect',selectOptions:[]},
+					{data:5,type:'numeric',format: '0.00',validator: /^[\d\.]*$/},
+					{data:6,type:'numeric',renderer:totalPriceRender,format: '$0.00',language: 'zh-cn'},
+					{data:7,renderer: hiddenRenderer},
+					{data:8,type:'numeric',readOnly:true,validator: /^(-)?[\d\.]*$/,format:'0.00'},
+					{data:9,readOnly:true},
+					{data:10,readOnly:true},
+					{data:11,readOnly:true}
+
+					
+
+				];
+
+
+	$("#invocie-body").handsontable({
+		data:datas,
+		minRows: 6,
+		minSpareRows: 1,
+		//colHeaders: [null,"单位","单位备注"],
+		rowHeaders: true,
+		colWidths :[50,$('.widget-content').width()-800,50,50,100,100,100,100,100,100,1,1],
+		columns:columns,
+		contextMenu:{
+			items:{
+				'row_above':{name:"{%trans '上行插入行'%}"},
+				'row_below':{name:"{%trans '下行插入行'%}"},
+				'remove_row':{name:"{%trans '删除行'%}"},
+			}
+		},
+		afterInit:function(){
+			var rows = this.countRows()
+			for(var i=0;i<rows-1;i++){
+				this.setDataAtCell(i,1,"<img class='add' src='/static/images/icons/add2.png' style='width:10px;height:10px;margin-left:5px;cursor:pointer;' /><img src='/static/images/icons/delete2.png'  class='minus' style='width:9px;height:9px;margin-left:10px;margin-top:1px;cursor:pointer;' />")
+            }
+
+            for(var i=0;i<extraData.length;i++){
+            	this.alter("insert_row")
+            	this.setDataAtCell(this.countRows()-2,0,extraData[i][0])
+            	this.setDataAtCell(this.countRows()-2,2,extraData[i][2])
+            	this.setDataAtCell(this.countRows()-2,4,extraData[i][4])
+            	this.setDataAtCell(this.countRows()-2,3,extraData[i][3])
+            	this.setDataAtCell(this.countRows()-2,5,extraData[i][5])
+            	this.setDataAtCell(this.countRows()-2,8,extraData[i][8])
+            	this.setDataAtCell(this.countRows()-2,9,extraData[i][9])
+            	this.setDataAtCell(this.countRows()-2,10,extraData[i][10])
+            	this.setDataAtCell(this.countRows()-2,11,extraData[i][11])
+            }
+
+		},
+		afterRender:function(){
+			var that = this
+			$(".add").on("click",function(){
+				var rows = that.countRows()
+        	    that.alter('insert_row',that.getSelected()[0]+1)
+        	    that.setDataAtCell(that.getSelected()[0]+1,1,"<img class='add' src='/static/images/icons/add2.png' style='width:10px;height:10px;margin-left:5px;cursor:pointer;' /><img src='/static/images/icons/delete2.png'  class='minus' style='width:9px;height:9px;margin-left:10px;margin-top:1px;cursor:pointer;' />")
+			})
+			$(".minus").on("click",function(){  	
+        	    that.alter('remove_row',that.getSelected()[0])
+        	    var rows = that.countRows()
+        	    if(rows == 6){
+        	    	that.setDataAtCell(4,1,"<img class='add' src='/static/images/icons/add2.png' style='width:10px;height:10px;margin-left:5px;cursor:pointer;' /><img src='/static/images/icons/delete2.png'  class='minus' style='width:9px;height:9px;margin-left:10px;margin-top:1px;cursor:pointer;' />")
+        	    }
+			})
+		},
+		afterCreateRow:function(){
+			var rows = this.countRows()
+			if(rows > 6){
+				this.setDataAtCell(rows-2,1,"<img class='add' src='/static/images/icons/add2.png' style='width:10px;height:10px;margin-left:5px;cursor:pointer;' /><img src='/static/images/icons/delete2.png'  class='minus' style='width:9px;height:9px;margin-left:10px;margin-top:1px;cursor:pointer;' />")
+			}
+		}
+	});
+
+	$container = $("#invocie-body").handsontable('getInstance');
+
+	$('#{{form.warehouse_root.auto_id}}').change(function(){
+		location.href="?warehouse_id="+$(this).val();
+	});
+	
+	if(getParameterByName('warehouse_id')){
+		$('#{{form.warehouse_root.auto_id}}').val(getParameterByName('warehouse_id'))
+	}
+	$('#select_goods_frame').attr('src',"{%url 'select_goods' org.pk%}?warehouse_id="+$('#{{form.warehouse_root.auto_id}}').val());
+});
+function getParameterByName(name) {  
+    var match = RegExp('[?&]' + name + '=([^&]*)')  
+                    .exec(window.location.search);  
+    return match && decodeURIComponent(match[1].replace(/\+/g, ' '));  
+} 
+$(window).load(function(){
+	$('#new_org_cus').click(function(){
+		$.layer({
+			type:2,
+			title:"{%trans '添加新供货商'%}",
+			iframe:{src:"{%url 'add_supplier' org.uid%}?parent_id={{form.rels.auto_id}}"},
+			area:["900px","550px"],
+			offset : ['50px','']
+		});
+	});
+	//加载离线物品数据，goods_json
+	load_id=layer.load("{%trans '加载离线物品数据，请稍候...'%}");
+	$.getScript("{%url 'get_goods_json' org.pk%}?use=1&warehouse_id="+$('#{{form.warehouse_root.auto_id}}').val(),function(){
+		layer.close(load_id);
+	});
+	var resizeTimer;
+	window.onresize = function(){
+	    if (resizeTimer){
+	        clearTimeout(resizeTimer);
+	    } 
+	    resizeTimer = setTimeout(function(){
+	    	$container.updateSettings({'colWidths':[50,$('.widget-content').width()-800,50,50,100,100,100,100,100,100,1,1]});
+	        }, 100);
+	};
+});
+
+function updateRow(cur_row,change_value,batch_code){
+	if(!change_value){
+		change_value=$container.getDataAtCell(cur_row,1);
+	}
+
+	var items=$.grep(goods_json,function(n,i){return n.name===change_value||n.code===change_value});
+	if(!items.length){
+		return;
+	}
+	
+	var item=items[0];
+	$container.setDataAtCell(cur_row,0,item.pk);
+	$container.setDataAtCell(cur_row,2,item.name);
+	$container.setDataAtCell(cur_row,3,1);
+	//$container.setDataAtCell(cur_row,3,'');
+	$container.setDataAtCell(cur_row,5,item.price_ori||'');
+	$container.setDataAtCell(cur_row,8,item.nums);
+	$container.setDataAtCell(cur_row,9,item.min_warning);
+	$container.setDataAtCell(cur_row,10,item.category);
+	$container.setDataAtCell(cur_row,11,item.remark);
+	
+	if(item.unit){
+		var units=[item.unit];
+		$container.setDataAtCell(cur_row,4,item.unit);
+		if(item.auxiliary_unit){
+			for(var k=0;k<item.auxiliary_unit.length;k++){
+				units.push(item.auxiliary_unit[k].unit);
+			}
+		}
+		$container.setCellMeta(cur_row,4,'selectOptions',units);
+
+	}else{
+		$container.setDataAtCell(cur_row,4,'');
+		$container.setCellMeta(cur_row,4,'selectOptions',[]);
+	}
+
+	/*if(item.is_batchs){
+		
+		if(batch_code){
+			var batches=$.grep(item.batches,function(n){return n.batch_code==batch_code});
+			$container.setDataAtCell(cur_row,2,batches?batches[0].batch_code:'');
+			$container.setDataAtCell(cur_row,4,batches?batches[0].unit1__unit:'');
+			
+			if(!(batches?(batches[0].unit1__unit||''):'')){
+				$container.setDataAtCell(cur_row,5,batches?item.sale_price:'');
+			}else{
+				var units=$.map(item.auxiliary_unit,function(n){return (n.unit==batches[0].unit1__unit)?n:null});
+				if(units.length){
+					$container.setDataAtCell(cur_row,5,units[0].sale_price||'');
+				}else{
+					$container.setDataAtCell(cur_row,5,item.sale_price||'');
+				}
+			}
+			
+			
+		}else{
+			var batch=item.batches.length?item.batches[0]:null;
+			$container.setDataAtCell(cur_row,2,batch?batch.batch_code:'');
+			$container.setDataAtCell(cur_row,4,batch?batch.unit1__unit:'');
+			if(!(batch?(batch.unit1__unit||''):'')){
+				$container.setDataAtCell(cur_row,5,batch?item.sale_price:'');
+			}else{
+				var units=$.map(item.auxiliary_unit,function(n){return (n.unit==batch.unit1__unit)?n:null});
+				console.log(units)
+				if(units.length){
+					$container.setDataAtCell(cur_row,5,units[0].price||'');
+				}else{
+					$container.setDataAtCell(cur_row,5,item.sale_price||'');
+				}
+			}
+		}
+	} */
+}
+</script>
+{%endblock%}

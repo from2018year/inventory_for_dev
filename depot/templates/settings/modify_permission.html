@@ -1,0 +1,355 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{% block body %}
+
+<div class="container-fluid" style="padding-top: 0">
+	<form method="post" action="{% url 'modify_permission_role' org.uid role.id %}">{%csrf_token%}
+	<div style="margin-left:20px;margin-top: 20px;">
+	<a class="btn btn-primary" id="select_all" style="margin-right: 15px;">{%trans '全选'%}</a>
+	<button type="submit" class="btn btn-primary" >{%trans '保存'%}</button><input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" style="margin-left: 20px;" />	
+	</div>
+				<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '系统设置权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.config_permissions}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+					
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '采购申请单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content invoice_wrap">
+
+					    <table class="form-table">
+					   {{permissionform.caigoushenqing_perms}}
+					    </table>
+
+				</div>
+				
+			</div>		
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '采购入库单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.caigouruku_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '初始入库单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.chushiruku_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '采购退货单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.caigoutuihuo_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '销售出库单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.xiaoshouchuku_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>	
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '领用出库单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.lingyongchuku_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>	
+
+
+			<!--<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '退仓入库单权限'%}</h5>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.tuicangruku_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '报损出库单权限'%}</h5>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.baosunchuku_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div> -->
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '盘点单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.pandian_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '盘盈单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.panying_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '盘亏单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.pankui_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '回收站权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.huishouzhan_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '收款单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.shoukuandan_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '付款单权限'%}</h5>
+					<div class="widget-title-option" >
+					<span style="vertical-align: middle;">{% trans '全选该部分：' %}</span><input type="checkbox" class="select_part_check" style="margin-right: 200px;" />
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="widget-content">
+
+					    <table class="form-table">
+					    {{permissionform.fukuandan_perms}}
+					    </table>
+
+				</div>
+				</div>
+				
+			</div>
+
+			<input type="hidden" name="user_level" id="user_level"/>						
+			
+		</form>
+
+
+
+</div>
+
+<style type="text/css">
+.widget-box{
+    border: 1px solid #CDCDCD;
+}
+.widget-content{
+	border-bottom: none;
+}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".invoice").parent().parent().css({"float":"left","marginLeft":"30px","marginBottom":"30px"})
+	$(".invoice").parent().css("fontSize","16px")
+	$(".config").parent().parent().css({"float":"left","marginLeft":"30px"})
+	$(".config").parent().css("fontSize","16px")
+
+	var index = parent.layer.getFrameIndex(window.name);
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+
+	var jsondata= {{jsondata|safe}}
+
+	for(var i in jsondata){
+		$("input[value=" + jsondata[i] + "]").prop('checked','checked')
+	}
+
+	var select_all = false
+	$("#select_all").click(function(){
+		select_all = !select_all
+		$(".widget-content").find("input").prop("checked",select_all)
+
+	})
+	$(".select_part_check").click(function(){
+		$(this).parent().parent().siblings("div").find("input").prop("checked",$(this).prop("checked"))
+	})
+})
+
+
+</script>
+{% endblock %}

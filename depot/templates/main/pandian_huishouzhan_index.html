@@ -1,0 +1,37 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 15 invoices %}
+{% get_pages %}
+<table class="table">
+	<thead>
+		<tr data="head"><th>{%trans '单据号'%}</th><th>{%trans '制单人'%}</th><th>{%trans '经办人'%}</th><th>{%trans '时间'%}</th></tr>
+	</thead>
+	{%for invoice in invoices%}
+		<tr><td style="display: none;"><span pk="{{invoice.pk}}"></span></td><td>{{invoice.id}}</td><td>{{invoice.created_user}}</td><td>{{invoice.user}}</td><td>{{invoice.created_time|date:'Y-n-j'}}</td></tr>
+	{%endfor%}
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+<style type="text/css">
+.table td{
+	border: none;
+}
+</style>

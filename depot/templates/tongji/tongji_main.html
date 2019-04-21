@@ -1,0 +1,221 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">										
+			
+			<table class="table" style="width:500px;margin:50px auto;">
+				<tbody>
+					<tr><td>
+						<!--<a href="/depot/tongji_search_danju/{{org.pk}}/?date_from=2016-01-01&date_to=2016-06-16&warehouse_root=&invoice_type=1001&refer=&result=0&invoice_code=&voucher_code=&remark=&min_price=&max_price=">{%trans '未结采购单据'%}</a>--><span>{%trans '未结采购入库单据'%}</span>
+						</td><td>{{weijie.caigou|default:'0'}}</td></tr>
+					<tr><td>
+						<!--<a href="/depot/tongji_search_danju/{{org.pk}}/?date_from=2016-01-01&date_to=2016-06-16&warehouse_root=&invoice_type=2002&refer=&result=0&invoice_code=&voucher_code=&remark=&min_price=&max_price=">{%trans '未结销售单据'%}</a>--><span>{%trans '未结销售出库单据'%}</span>
+						</td><td>{{weijie.xiaoshou|default:'0'}}</td></tr>
+					<tr><td>{%trans '本月采购成本'%}</td><td>{{benyue.caigou|default:'0'|floatformat:'2'}}</td></tr>
+					<tr><td>{%trans '本月销售金额'%}</td><td>{{benyue.xiaoshou|default:'0'|floatformat:'2'}}</td></tr>
+					<!--<tr><td><a href="">{%trans '数量下限警告'%}</a></td><td>{{min_warning|length|default:'0'}}</td></tr>-->
+				</tbody>
+			</table>
+			
+	
+			
+			
+		</div>
+		
+		
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/tongji_left_nav.html'%}
+		</div>
+	</div>
+
+	<div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+		
+		<div class="right-wrap">
+			
+		</div>
+	</div>
+	
+</div>
+<script type="text/javascript" src="/static/js/charts/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#tab-tongji').addClass('active');
+
+	{%if STYLE == "agile--"%}
+	var chart=new Highcharts.Chart({
+		chart:{
+			renderTo:'container',
+			events:{
+				load:function(){
+					var ren = this.renderer,
+        				colors = Highcharts.getOptions().colors,
+        				rightArrow = ['M', 0, 0, 'L', 130, 0, 'L', 125, 5, 'M', 130, 0, 'L', 125, -5],
+        				leftArrow = ['M', 130, 0, 'L', 0, 0, 'L', 5, 5, 'M', 0, 0, 'L', 5, -5];
+
+
+					ren.label("{%trans '基本单据查询'%}", 50, 50)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'tongji_search_danju' org.pk%}";
+	                }).shadow(true);
+	                
+					ren.path(rightArrow)
+                    .attr({
+                        'stroke-width': 2,
+                        stroke: colors[6]
+                    })
+                   .translate(155, 74)
+                   .add();
+
+					ren.label("{%trans '按条件查找符合条件的单据'%}", 285, 60)
+                    .attr({
+                        fill: colors[1],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 5,
+                        r: 10
+                    }).css({
+                        color: 'white'
+                    }).add().shadow(true);
+
+
+					ren.label("{%trans '部门领料查询'%}", 50, 130)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'tongji_lingyong_danju' org.pk%}";
+	                }).shadow(true);
+
+					ren.path(rightArrow)
+                    .attr({
+                        'stroke-width': 2,
+                        stroke: colors[6]
+                    })
+                   .translate(155, 154)
+                   .add();
+
+					ren.label("{%trans '查询各个部门的领料情况'%}", 285, 140)
+                    .attr({
+                        fill: colors[1],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 5,
+                        r: 10
+                    }).css({
+                        color: 'white'
+                    }).add().shadow(true);
+
+
+					ren.label("{%trans '供货信息查询'%}", 50, 210)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'tongji_gonghuoshang_danju' org.pk%}";
+	                }).shadow(true);
+
+					ren.path(rightArrow)
+                    .attr({
+                        'stroke-width': 2,
+                        stroke: colors[6]
+                    })
+                   .translate(155, 234)
+                   .add();
+
+					ren.label("{%trans '查询各个供应商的供货数量及价格'%}", 285, 220)
+                    .attr({
+                        fill: colors[1],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 5,
+                        r: 10
+                    }).css({
+                        color: 'white'
+                    }).add().shadow(true);
+
+					ren.label("{%trans '物品出入查询'%}", 50, 290)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'tongji_goods_inout_danju' org.pk%}";
+	                }).shadow(true);
+
+					ren.path(rightArrow)
+                    .attr({
+                        'stroke-width': 2,
+                        stroke: colors[6]
+                    })
+                   .translate(155, 314)
+                   .add();
+
+					ren.label("{%trans '查询物品的进出情况，包时间段内的均价数量'%}", 285, 300)
+                    .attr({
+                        fill: colors[1],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 5,
+                        r: 10
+                    }).css({
+                        color: 'white'
+                    }).add().shadow(true);
+				}
+			}
+		},
+		title: {
+            text: "{%trans '统计功能简介'%}"
+        },
+        {%if LANGUAGE_CODE == "zh-cn"%}
+        credits:{
+			href:"{{CREDIT_HREF}}",
+			text:"{{CREDIT_TEXT}}"
+		}
+        {%else%}
+        credits:{
+			href:"",
+			text:""
+		}
+        {%endif%}
+	});
+	{%endif%}
+});
+</script>
+{%endblock%}

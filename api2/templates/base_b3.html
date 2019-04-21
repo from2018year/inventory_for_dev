@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{%block title%}bootstrap v3 test{%endblock%}</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/> 
+	    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+		<!--link rel="stylesheet" href="/static/bootstrap3/css/docs.css"-->
+		<!--[if lt IE 9]>
+        <script src="/static/bootstrap3/js/html5shiv.min.js"></script>
+        <script src="/static/bootstrap3/js/respond.min.js"></script>
+    	<![endif]-->
+    	{%block rel%}
+    	{%endblock%}
+	</head>
+	
+	<body>
+		{%block content%}
+		{%endblock%}
+		<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+		<script src="/static/js/common/common.js"></script>
+		{%block endrel%}
+		{%endblock%}
+	</body>
+</html>

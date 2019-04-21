@@ -1,0 +1,247 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%load mptt_tags%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{{warehouse_display_name}}{%trans '列表'%}<small><a href="{%url 'warehouses_list' org.uid%}">{%trans '仓库列表'%}</a>{%for w in parent_warehouses%}{%if forloop.first%} > {%endif%}<a href="{{w.get_absolute_url}}">{{w}}</a>{%if not forloop.last%} > {%endif%}{%endfor%}</small></h5>
+					<div class="widget-title-option">
+						{%if parent_warehouse%}
+						<a href="{%url 'shelf_new' org.pk parent_warehouse.pk%}" class="btn btn-primary">{%trans '创建'%}{{warehouse_display_name}}</a>
+						{%else%}
+						<a href="{%url 'warehouses_new' org.uid%}" class="btn btn-primary">{%trans '创建'%}{{warehouse_display_name}}</a>
+						{%endif%}
+					</div>
+				</div>
+				<div class="widget-content">
+					{%if not parent_warehouse%}
+					<div class="alert alert-info">{%trans '您当前共允许使用'%}{{request.session.sites}}{%trans '库存'%}
+					<a href="{%if SITE_MARK == 'online'%}{%url 'org_import_auth' org.uid%}{%else%}/register/{%endif%}"><strong>{%trans '升级许可'%}</strong></a></div>
+					{%endif%}
+					{%for warehouse in warehouses%}
+					{%if forloop.first%}
+					<ul class="thumbnails">
+					{%endif%}
+						<li class="span" id="warehouse{{warehouse.pk}}">
+							<div class="thumbnail" tag="{{warehouse.pk}}" tag_name="{{warehouse}}">
+								{%if parent_warehouse%}
+								<div class="option-tools"><a href="{%url 'shelf_modify' org.uid parent_warehouse.pk warehouse.pk%}" title="{%trans '修改'%}" ><i class="icon-pencil"></i></a> <a href="{%url 'shelf_list' org.uid warehouse.pk%}" title="{%trans '进入'%}" ><i class="icon-screenshot"></i></a> <a href="javascript:void(0)" class="del_warehouse"><i title="{%trans '删除'%}" class="icon-remove"></i></a></div>
+								{%else%}
+								<div class="option-tools"><a href="{%url 'warehouses_modify' org.uid warehouse.pk%}" title="{%trans '修改'%}" ><i class="icon-pencil"></i></a> <a href="{%url 'shelf_list' org.uid warehouse.pk%}" title="{%trans '进入'%}" ><i class="icon-screenshot"></i></a> <a href="javascript:void(0)" title="{%trans '删除'%}" class="del_warehouse"><i class="icon-remove"></i></a></div>
+								{%endif%}
+								<div class="caption">
+									<strong>{{warehouse}}</strong> 
+									<p>
+										<dl class="dl-horizontal" title="{%trans '单击显示下级'%}">
+											<dt>{%trans '负责人'%}</dt><dd>{{warehouse.get_charger|default:_('未指定')}}</dd>
+											<!--dt>{%trans '共有分类'%}</dt><dd></dd-->
+											<dt>{%trans '共有物品'%}</dt><dd>{{warehouse.warehouse_value.1}}</dd>
+											<dt>{%trans '货物价值'%}</dt><dd>{{warehouse.warehouse_value.0|floatformat:'2'}}</dd>
+											<dt>{%trans '货架数量'%}</dt><dd>{{warehouse.get_children.count}}</dd>
+										</dl>
+										{%if not parent_warehouse%}
+										
+										<span class="text-error default-warehouse-show {%if not warehouse.oindex%}hide{%endif%}" tag="{{warehouse.pk}}"><i class="icon icon-ok-sign"></i>{%trans '自动出库仓库'%}</span>
+										<button class="btn btn-primary default-warehouse-set {%if warehouse.oindex%}hide{%endif%}" tag="{{warehouse.pk}}">{%trans '设置为默认出库仓库'%}</button>	
+										
+										{%endif%}
+									</p>
+								</div>
+							</div>
+						</li>
+					{%if forloop.last%}
+					</ul>
+					{%endif%}
+					{%empty%}
+					<div class="well">
+					{%if parent_warehouse%}
+					{%trans '还未创建'%}{{warehouse_display_name}},<a href="{%url 'shelf_new' org.uid parent_warehouse.pk%}">{%trans '立即创建'%}</a>
+					{%else%}
+					{%trans '还未创建'%}{{warehouse_display_name}},<a href="{%url 'warehouses_new' org.uid%}">{%trans '立即创建'%}</a>
+					{%endif%}
+					
+					</div>
+					{%endfor%}
+					
+				</div>
+			</div>								
+			
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<div class="f-right">
+		<div class="right-wrap">
+			<div class="alert alert-success">
+				<a id="clear_receipt" class="btn btn-danger" href="#"><i class="icon-trash icon-white"></i> {%trans '清空数据'%}</a><br/><br/>
+				<i class="icon icon-info-sign"></i><strong>{%trans '说明'%}</strong>:{%trans '可以清空单据和收支表重新来过，仅保留物品信息'%}
+			</div>
+			
+			<div class="alert alert-success">				
+				<i class="icon icon-info-sign"></i><strong>{%trans '提示'%}</strong>:{%trans '不同的仓库物品数量独立，您可以在仓库下新建任意级别的货架用于存放货物，您也可以不使用货架'%}
+			</div>
+			
+			<div class="alert alert-success">
+				<strong><i class="icon icon-eye-open"></i> {%if parent_warehouse%}{%trans '货位'%}{%else%}{%trans '仓库'%}{%endif%}{%trans '物理看结构示意图'%}</strong>
+				<div class="zTreeDemoBackground left">
+					<ul id="tree" class="ztree ztree-warehouse"></ul>
+				</div>	
+			</div>	
+				
+				
+		</div>
+	</div>
+	
+</div>
+{%endblock%}
+
+
+{%block endrel%}
+<script src="/static/js/ztree/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_chhw').addClass('current');
+	$('#tab-setting').addClass('active');
+
+	$('.thumbnail','.thumbnails').hover(function(){
+		$(this).addClass('focus');
+		//不显示修改工具栏
+		//$(this).find('.option-tools').show();
+	},function(){
+		$(this).removeClass('focus');
+		$(this).find('.option-tools').hide();
+	}).click(function(event){
+		//点击进入货架
+		//location.href=$(this).find('.option-tools').find('a').eq(1).attr('href');
+	});
+
+	$('.del_warehouse','.thumbnails').click(function(){
+		var $warehouse=$(this).parent().parent();
+		{%if parent_warehouse%}
+		if(!confirm("{%trans '您正在删除'%}"+$warehouse.attr('tag_name')+"{%trans '如果货架中有物品,物品将转移到父级，是否继续？'%}" )){
+			return false;
+		}
+		{%else%}
+		if(!confirm("{%trans '您正在删除仓库'%}"+$warehouse.attr('tag_name')+"{%trans '如果仓库中有物品,将禁止删除，是否继续？'%}" )){
+			return false;
+		}
+		{%endif%}
+		
+		$.ajax({
+			url:"{%url 'warehouses_delete' org.pk %}",
+			type:'POST',
+			data:{'del_warehouses_id':$(this).parent().parent().attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					$('#warehouse'+text).remove();
+				}else{
+					alert(text);
+				}
+			}
+		});
+		return false;
+	});
+
+
+	var setting = {
+			data:{
+				//simpleData:{
+				//	idKey:'id',
+				//	pIdKey:'pId'
+				//},
+				keep:{
+					parent:true
+				}
+			}
+		};
+
+		
+		
+	
+		var treeObj=$.fn.zTree.init($("#tree"), {},[{%for warehouse in warehouses%}{{warehouse.serialize_to_json|safe}}{%if not forloop.last%},{%endif%}{%endfor%}]);
+
+		$("#clear_receipt").click(function(){
+			if(!confirm("{%trans '该操作不可还原，请谨慎操作.将删除所有出入库单据以及收支，确定清空?'%}")){
+				return false;
+			}
+			$.ajax({
+				url:"{%url 'del_all_receipt' org.pk%}",
+				type:'post',
+				error:function(){
+					alert("{%trans '清除失败'%}");
+				},
+				success:function(text){
+					
+					alert("{%trans '清除成功'%}");
+				}
+			});
+		});
+		
+	$default_warehouse_set=$('.default-warehouse-set');
+	$default_warehouse_show=$('.default-warehouse-show');
+	
+	$('.default-warehouse-set').click(function(event){
+		
+		$.ajax({
+			type:'POST',
+			data:{'warehouse_id':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(json){
+				$default_warehouse_set.removeClass('hide').filter("[tag='"+json.warehouse_id+"']").addClass('hide');
+				$default_warehouse_show.addClass('hide').filter("[tag='"+json.warehouse_id+"']").removeClass('hide');
+			}
+		});
+		
+		return false;
+	});
+});
+</script>
+{%endblock%}
+
+{%block rel%}
+<style>
+.dl-horizontal dt  {
+	width: 60px;
+}
+.dl-horizontal dd  {
+	margin-left: 70px;
+}
+.thumbnail {
+	width:200px;
+	position: relative;
+}
+.focus {
+border-color: rgba(82, 168, 236, 0.8);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+  outline: 0;
+  outline: thin dotted \9;
+  background-color: #eee;
+}
+.option-tools {
+	position: absolute;
+	right:2px;
+	top:8px;
+	display: none;
+}
+</style>
+<link rel="stylesheet" href="/static/css/ztree/ztreestyle.css" type="text/css">
+{%endblock%}

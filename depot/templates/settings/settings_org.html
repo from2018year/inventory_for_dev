@@ -1,0 +1,69 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '基本信息'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'settings_org_modify' org.uid%}" class="btn btn-primary">{%trans '修改分部信息'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<table class="table table-bordered table-striped" style="width:auto;margin:auto;">
+						<tr><td>{{org_form.org_name.label}}</td><td style="min-width: 200px">{{org_form.org_name.value}}</td><td>{{org_form.org_group.label}}</td><td style="min-width: 200px">{{org_form.instance.org_group|default:_('无')}}</td></tr>
+						<tr><td>{{org_form.phone.label}}</td><td>{{org_form.phone.value}}</td><td>{{org_form.url.label}}</td><td>{{org_form.url.value}}</td></tr>
+						<tr><td>{{org_form.post_code.label}}</td><td>{{org_form.post_code.value}}</td><td>{{org_form.fax.label}}</td><td>{{org_form.fax.value}}</td></tr>
+						<tr><td>{{org_form.stores_address.label}}</td><td colspan="3">{{org_form.instance.province|default:''}}{{org_form.instance.city|default:''}}{{org_form.instance.district|default:''}}{{org_form.instance.area|default:''}}{{org_form.stores_address.value}}</td></tr>
+					</table>
+				</div>
+				
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '全局设置信息'%}</h5>
+				</div>
+				<div class="widget-content">
+					<table class="table table-bordered table-striped" style="width:auto;margin:auto;">
+						<tr><td>{{org_profile_form.neg_inv.label}}</td><td style="min-width: 200px">{{org_profile_form.neg_inv.value|yesno:_("是,否")}}</td><!-- 保质期显示<td>{{org_profile_form.warn_day.label}}</td><td style="min-width: 200px">{{org_profile_form.warn_day.value}}</td>--></tr>
+						<tr><td>{{org_profile_form.send_email.label}}</td><td>{{org_profile_form.send_email.value|yesno:_("是,否")}}</td><td>{{org_profile_form.email.label}}</td><td>{{org_profile_form.email.value|default:_('未填写')}}</td></tr>
+						<tr>
+						<td>{{org_profile_form.auto_out_stock_mode.label}}</td><td>{% if auto_mode == 0 %}{% trans '收银结账后同步' %}{% elif auto_mode == 1 %}{% trans '日结后同步' %}{% else %}{% trans '其它模式' %}{% endif %}</td>
+						</tr>
+						<!--tr><td>{{org_profile_form.cengji.label}}</td><td>{{org_profile_form.cengji.value}}</td><td></td><td></td></tr-->
+						
+					</table>
+				</div>
+			</div>								
+			
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_org').addClass('current');
+	$('#tab-setting').addClass('active');
+});
+</script>
+{%endblock%}

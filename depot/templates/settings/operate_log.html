@@ -1,0 +1,110 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{% block content %}
+<div class="container-fluid">
+	<div class="f-main">
+
+		<div class="main-wrap-no-right" style="min-height: 0">
+		<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '操作日志查询'%}</h5>
+				</div>
+				<form action="{% url 'operate_log' org.uid %}" method="post">{% csrf_token %}
+				<div class="widget-content">
+				<div class="row-fluid">
+		            	<div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_from.auto_id}}">{%if form.date_from.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.date_from.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_from}}
+		                            <p class="help-block">{{form.date_from.help_text}}</p>
+									<p class="help-block">{{form.date_from.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_to.auto_id}}">{%if form.date_to.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.date_to.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_to}}
+		                            <p class="help-block">{{form.date_to.help_text}}</p>
+									<p class="help-block">{{form.date_to.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+
+		                <div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.created_user.auto_id}}">{%if form.created_user.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.created_user.label}}</label>
+		                         <div class="controls">
+		                            {{form.created_user}}
+		                            <p class="help-block">{{form.created_user.help_text}}</p>
+									<p class="help-block">{{form.created_user.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+
+
+		                <div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.content.auto_id}}">{%if form.content.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{form.content.label}}</label>
+		                         <div class="controls">
+		                            {{form.content}}
+		                            <p class="help-block">{{form.content.help_text}}</p>
+									<p class="help-block">{{form.content.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+
+		             </div>
+
+		             <div class="form-actions no-margin">
+						<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+						<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+					</div>
+					</form>
+				</div>
+
+
+				
+			</div>	
+		</div>		
+
+
+		<div class="main-wrap-no-right">	
+		<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '操作日志列表'%}</h5>
+				</div>
+				<div class="widget-content">
+				{%include page_template%}
+				</div>
+				
+			</div>	
+		
+		</div>
+
+	</div>		
+
+
+
+
+<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+</div>
+
+
+</div>
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_perm_log').addClass('current');
+	$('#tab-setting').addClass('active');
+});
+</script>
+{% endblock %}

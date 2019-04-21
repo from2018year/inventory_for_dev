@@ -1,0 +1,92 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '供货组管理'%}</h5>
+					<div class="widget-title-option">
+	
+					</div>
+				</div>
+				<div class="widget-content">
+					<form class="form-horizontal" action="" method="post">{%csrf_token%}
+								{{formset.management_form}}
+								<table class="table table-condensed">
+									<thead>
+										<tr><th width="50px">{%trans '删除'%}</th>
+										<th width="300px">{%trans '供货组名称'%}</th>
+										<th>{%trans '备注'%}</th>
+										</tr>
+									</thead>
+									<tbody>
+										{%for form in formset%}
+										<tr>
+											<td>{%if form.instance.pk%}{{form.DELETE}}{%else%}
+														<script>
+															$(document).ready(function(){
+																$('#{{form.name.auto_id}}').attr('placeholder',"{%trans '新增组名'%}");
+															});
+														</script>{%endif%}</td>
+											<td>{{form.id}}
+												<div class="control-group {%if form.errors%}error{%endif%}">
+													<div class="controls" style="margin-left: 0;">
+														{{form.name}}{{form.id}}
+														{%if form.errors%}
+														<p class="help-block">{%trans '分组名称不能重复'%}</p>
+														{%endif%}
+													</div>						
+												</div>
+											</td>
+											<td>
+												<div class="control-group">
+													<div class="controls" style="margin-left: 0;">
+														<input id="{{form.remark.auto_id}}" name="{{form.remark.html_name}}" value="{{form.instance.remark|default:''}}" maxlength="200" width="100%" style="width: 100%;" type="text">
+													</div>						
+												</div>
+											</td>
+										</tr>
+										{%endfor%}
+									</tbody>
+									
+								</table>
+								
+						<div class="form-actions">
+							<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+							<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+						</div>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_ghs').addClass('current');	
+	$('#tab-setting').addClass('active');
+});
+</script>
+{%endblock%}

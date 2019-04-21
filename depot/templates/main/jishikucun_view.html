@@ -1,0 +1,161 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%block title%}{%trans '即时库存'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '仓库物品查看'%}</h5>
+					<div class="widget-title-option">
+						{%if warehouse and can_write%}
+						<a class="btn btn-primary" href="{%url 'cangkupandian' org.uid warehouse.pk%}">{%trans '仓库盘点'%}</a>
+						{%endif%}
+					</div>
+				</div>
+				<div id="widget-content" class="widget-content">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/warehouse_left_nav.html'%}
+		</div>
+	</div>
+
+	<div class="f-right">
+		<div class="right-wrap">
+			
+			<div class="alert alert-info no-padding" style="margin-top:16px;"><h5><i class="icon icon-search"></i>{%trans '分类筛选条件'%}</h5>
+				<div class="zTreeDemoBackground left">
+					<ul id="tree" class="ztree ztree-category"></ul>
+				</div>
+			</div>
+			
+			
+			<div class="alert alert-info no-padding" style="margin-top:16px;"><h5><i class="icon icon-search"></i>{%trans '位置筛选条件'%}</h5>
+				<div class="zTreeDemoBackground left">
+					<ul id="wtree" class="ztree ztree-warehouse"></ul>
+				</div>
+			</div>
+			
+			<div class="alert alert-success" style="margin-top:16px;">
+				    <form class="form-search">
+						<input type="text" id="keyword" class="span2 search-query" placeholder="{%trans '名称或编码或助查码'%}"><br/><br/>
+						<button type="button" id="search" class="btn btn-primary" >{%trans '查找'%}</button>
+				    </form>
+			</div>
+		</div>
+	</div>
+</div>
+{%endblock%}
+
+{%block rel%}
+<link rel="stylesheet" href="/static/css/ztree/ztreestyle.css" type="text/css">
+<script src="/static/js/ztree/jquery.ztree.all-3.5.min.js"></script>
+{%endblock%}
+
+{%block endrel%}>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_jishikucun').addClass('current');
+	$('#tab-goods').addClass('active');
+
+	var setting = {
+			async:{
+				enable:true,
+				autoParam:["id"],
+				dataType:"json",
+				url:getAsyncurl
+			},
+			data:{
+				simpleData:{
+					idKey:'id',
+					pIdKey:'pId'
+				},
+				keep:{
+					parent:true
+				}
+			},
+			callback:{
+				beforeAsync:beforeAsync,
+				onClick: onClick,
+				onAsyncSuccess: onAsyncSuccess
+			}
+		};
+		 
+	treeObj=$.fn.zTree.init($("#tree"), setting);
+	wtreeObj=$.fn.zTree.init($("#wtree"),
+			{
+				callback:{
+					onClick: onWClick
+				}
+			},
+			[{%for warehouse in warehouses%}{{warehouse.serialize_to_json|safe}}{%if not forloop.last%},{%endif%}{%endfor%}]);
+
+	$('#search').click(function(){
+		var treeNodes=treeObj.getSelectedNodes();
+		var treeNode=treeNodes.length?treeNodes[0]:treeObj.getNodes()[0];
+
+		var wtreeNodes=wtreeObj.getSelectedNodes();
+		var shelf_id=wtreeNodes.length?wtreeNodes[0].id:'';
+		
+		$('#widget-content').html('<src src="/static/images/loading.gif" />');
+		$('#widget-content').load("{%url 'list_goods_view' org.pk%}?warehouse_id={{warehouse.pk|default:''}}&category_id="+treeNode.id+'&shelf_id='+shelf_id+'&keyword='+encodeURIComponent($('#keyword').val()));
+	});
+
+	//重定向分页
+	$('#widget-content').click(function(e){
+		var $clicked = $(e.target);
+		if($clicked.hasClass('endless_page_link')){
+			$('#widget-content').load($clicked.attr('href'));
+			return false;
+		}
+	});
+});
+
+function onAsyncSuccess(event, treeId, treeNode, msg){
+	if(typeof(treeNode)=='undefined'){
+		var zTree = $.fn.zTree.getZTreeObj("tree");
+		var rootNode=zTree.getNodes()[0];
+		zTree.expandNode(rootNode, true, false, true);
+
+		$('#widget-content').load("{%url 'list_goods_view' org.pk%}?warehouse_id={{warehouse.pk|default:''}}&category_id="+rootNode.id);
+	}
+}
+
+function getAsyncurl(treeId,treeNode) {
+	return "{%url 'get_categorys' org.pk%}"
+}
+function beforeAsync(treeId, treeNode) {
+    return typeof(treeNode)=='undefined';
+    //return true
+}
+function onClick(event ,treeId, treeNode){
+	var zTree = $.fn.zTree.getZTreeObj("tree");
+	zTree.expandNode(treeNode, true, false, true);
+
+	var wtreeNodes=wtreeObj.getSelectedNodes();
+	var shelf_id=wtreeNodes.length?wtreeNodes[0].id:'';
+	
+	$('#widget-content').load("{%url 'list_goods_view' org.pk%}?warehouse_id={{warehouse.pk|default:''}}&category_id="+treeNode.id+'&shelf_id='+shelf_id);
+}
+function onWClick(event ,treeId, treeNode){
+	var zTree = $.fn.zTree.getZTreeObj("tree");
+	zTree.expandNode(treeNode, true, false, true);
+
+	var treeNodes=treeObj.getSelectedNodes();
+	var cNode=treeNodes.length?treeNodes[0]:treeObj.getNodes()[0];
+	
+	$('#widget-content').load("{%url 'list_goods_view' org.pk%}?warehouse_id={{warehouse.pk|default:''}}&category_id="+cNode.id+'&shelf_id='+treeNode.id);
+}
+
+</script>
+{%endblock%}

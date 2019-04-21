@@ -1,0 +1,250 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+<div class="f-main">
+<div class="main-wrap-no-right">	
+		<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '全局参数设置'%}</h5>
+				</div>
+				<form method="post" action="{% url 'settings_param' org.uid%}">{% csrf_token %}
+				<div class="widget-content">
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '参数名称'%}</th><th>{%trans '参数值'%}</th><th>{%trans '参数说明'%}</th></tr>
+	</thead>
+	<tr>
+		<td>{{org_profile_form.email.label}}</td>
+		<td>{{org_profile_form.email}}</td>
+		<td>{{org_profile_form.email.help_text}}</td>
+		</tr>
+		<tr style="display: none;">
+		<td>{{org_profile_form.warn_day.label}}</td>
+		<td>{{org_profile_form.warn_day}}</td>
+		<td>{{org_profile_form.warn_day.help_text}}</td>
+		</tr>
+		<tr>
+		<td>{{org_profile_form.symbol.label}}</td>
+		<td>{{org_profile_form.symbol}}</td>
+		<td>{{org_profile_form.symbol.help_text}}</td>
+		</tr>
+		<tr style="display: none;">
+		<td>{{org_profile_form.send_email.label}}</td>
+		<td>{{org_profile_form.send_email}}</td>
+		<td>{{org_profile_form.send_email.help_text}}</td>
+		</tr>
+		<tr><td>{{org_profile_form.neg_inv.label}}</td>
+			<td>{{org_profile_form.neg_inv}}</td>
+			<td>{{org_profile_form.neg_inv.help_text}}</td>
+		</tr>
+</table>
+				</div>
+				
+			</div>	
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '菜品配置'%}</h5>
+				</div>
+
+
+				<div class="widget-content">
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '参数名称'%}</th><th>{%trans '参数值'%}</th><th>{%trans '参数说明'%}</th></tr>
+	</thead>
+		<tr><td>{{org_profile_form.max_item.label}}</td>
+			<td>{{org_profile_form.max_item}}</td>
+			<td>{{org_profile_form.max_item.help_text}}</td>
+		</tr>
+</table>
+				</div>
+
+
+				</div>
+
+
+        <div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '采购申请单配置'%}</h5>
+				</div>
+
+
+				<div class="widget-content">
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '参数名称'%}</th><th>{%trans '参数值'%}</th><th>{%trans '参数说明'%}</th></tr>
+	</thead>
+	    <tr><td>{{org_profile_form.auto_confirm_caigoushenqing.label}}</td>
+			<td>{{org_profile_form.auto_confirm_caigoushenqing}}</td>
+			<td>{{org_profile_form.auto_confirm_caigoushenqing.help_text}}</td>
+		</tr>
+		<tr><td>{{org_profile_form.is_auto_caigouruku.label}}</td>
+			<td>{{org_profile_form.is_auto_caigouruku}}</td>
+			<td>{{org_profile_form.is_auto_caigouruku.help_text}}</td>
+		</tr>
+</table>
+				</div>
+
+
+				</div>
+
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '采购入库单配置'%}</h5>
+				</div>
+
+
+				<div class="widget-content">
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '参数名称'%}</th><th>{%trans '参数值'%}</th><th>{%trans '参数说明'%}</th></tr>
+	</thead>
+		
+
+		<tr><td>{{org_profile_form.auto_confirm_caigouruku.label}}</td>
+			<td>{{org_profile_form.auto_confirm_caigouruku}}</td>
+			<td>{{org_profile_form.auto_confirm_caigouruku.help_text}}</td>
+		</tr>
+</table>
+				</div>
+
+
+				</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '销售出库单配置'%}</h5>
+				</div>
+
+
+<div class="widget-content">
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '参数名称'%}</th><th>{%trans '参数值'%}</th><th>{%trans '参数说明'%}</th></tr>
+	</thead>
+
+
+		<tr><td>{{org_profile_form.auto_confirm_xiaoshouchuku.label}}</td>
+			<td>{{org_profile_form.auto_confirm_xiaoshouchuku}}</td>
+			<td>{{org_profile_form.auto_confirm_xiaoshouchuku.help_text}}</td>
+		</tr>
+</table>
+				</div>
+
+
+				</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '领用出库单配置'%}</h5>
+				</div>
+
+
+<div class="widget-content">
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '参数名称'%}</th><th>{%trans '参数值'%}</th><th>{%trans '参数说明'%}</th></tr>
+	</thead>
+		<tr><td>{{org_profile_form.auto_confirm_lingyongchuku.label}}</td>
+			<td>{{org_profile_form.auto_confirm_lingyongchuku}}</td>
+			<td>{{org_profile_form.auto_confirm_lingyongchuku.help_text}}</td>
+		</tr>
+</table>
+				</div>
+
+
+				</div>
+
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '采购退货单配置'%}</h5>
+				</div>
+
+
+<div class="widget-content">
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '参数名称'%}</th><th>{%trans '参数值'%}</th><th>{%trans '参数说明'%}</th></tr>
+	</thead>
+		<tr><td>{{org_profile_form.auto_confirm_caigoutuihuo.label}}</td>
+			<td>{{org_profile_form.auto_confirm_caigoutuihuo}}</td>
+			<td>{{org_profile_form.auto_confirm_caigoutuihuo.help_text}}</td>
+		</tr>
+</table>
+				</div>
+
+
+				</div>
+
+
+		<!--	<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '盘点单配置'%}</h5>
+				</div>
+
+
+<div class="widget-content">
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '参数名称'%}</th><th>{%trans '参数值'%}</th><th>{%trans '参数说明'%}</th></tr>
+	</thead>
+		<tr><td>{{org_profile_form.auto_confirm_pandian.label}}</td>
+			<td>{{org_profile_form.auto_confirm_pandian}}</td>
+			<td>{{org_profile_form.auto_confirm_pandian.help_text}}</td>
+		</tr>
+</table>
+				</div>
+
+
+				</div> --> 
+
+
+
+
+			<div class="form-actions">
+				<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+				<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+			</div>
+							
+			</form>
+		</div>
+
+	</div>
+
+
+
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	</div>
+</div>
+
+<style type="text/css">
+.table td{
+	width: 33%
+}
+</style>
+{% endblock %}

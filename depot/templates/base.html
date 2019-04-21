@@ -1,0 +1,99 @@
+{%load i18n%}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
+	    <title>{%block title%}base{%endblock%}</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+	    
+	    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>
+	    <!--[if lt IE 9]>
+	    <script src="/static/js/respond.min.js"></script>
+		<script src="/static/js/bootstrap/html5shiv.js"></script>
+		<![endif]-->
+		
+	    <link href="/static/css/bootstrap{{ONLINE}}.css" rel="stylesheet">
+		<link href="/static/css/bootstrap-responsive{{ONLINE}}.css" rel="stylesheet">
+		<link href="/static/css/common{{ONLINE}}.css" rel="stylesheet">
+	    
+		<script src="/static/js/common/jquery{{ONLINE}}.js" type="text/javascript"></script>
+		<!--[if lt IE 9]>
+		<script src="/static/js/compatible/jquery.pseudo.js"></script>
+		<![endif]-->
+		
+		{%block rel%}
+		{%endblock%}
+    </head>
+    
+    
+    <body>
+    	<div class="body-wrap">
+    		<div class="body-main">
+	    	{%block body%}
+			{%endblock%}
+			</div>
+		</div>
+		
+{%block footer%}
+<div class="footer">
+	<div class="container">
+		
+		<p>@2014-2017 {%trans '库存管理软件'%}</p>
+		
+	</div>
+</div>
+{%endblock%}
+
+
+
+		<script src="/static/js/jquery.lazyload{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/common/common{{ONLINE}}.js" charset="utf8"></script>
+    	<script src="/static/js/bootstrap/bootstrap-tab{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/bootstrap/bootstrap-alert{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/bootstrap/bootstrap-dropdown{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/bootstrap/bootstrap-modal{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/common/hogan-2.0.0.js" type="text/javascript"></script>
+		<script src="/static/js/common/typeahead{{ONLINE}}.js" type="text/javascript"></script>
+  		<script src="/static/js/layer/layer.min.js"></script>
+  		{%block endrel%}
+		{%endblock%}
+		
+<script type="text/javascript">
+comment_prifix="{{comment_prifix|default:''}}"
+$(document).ready(function(){
+	var comment_prifix="{{comment_prifix|default:''}}" || '';
+	var comment_url="{{OSSI_URL}}";
+	
+	if(comment_prifix && comment_url && $('#comment_link').size()){
+
+		$('#comment_link').click(function(){
+			$.layer({
+				type:2,
+				title: "",
+				//closeBtn:false,
+				offset:['50px','50%'],
+				area:['782px','505px'],
+				iframe:{src:"/ossi/"+comment_prifix+".html"}
+			})
+			
+		
+		});
+		
+		$.ajax({
+			url:comment_url+'/count?uri=%2Fossi%2F'+comment_prifix+'.html/',
+			success:function(json){
+				if(json){
+					$('#comment_link').find('i').remove().end().find('span').text(json);
+					
+				}
+			}
+		})
+	}
+});
+</script>
+    </body>
+</html>

@@ -1,0 +1,42 @@
+{%extends 'main_base_simple.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box" id="main-wrap">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '库存物品列表'%}</h5>
+					<div class="widget-title-option">
+						
+					</div>
+				</div>
+				<div class="widget-content">
+					{%include page_template%}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left" style="overflow:scroll;height:800px;">
+		<div class="left-wrap">
+			
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/endless_pagination/js/endless-pagination.js?v=2016"></script>
+{%endblock%}

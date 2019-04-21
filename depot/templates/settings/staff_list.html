@@ -1,0 +1,78 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<div class="widget-title-option"><a href="{%url 'add_staff' org.uid%}" class="btn btn-primary layer" title="{% trans '增加员工' %}" width="800px" height="600px">{% trans '新增员工' %}</a></div>
+					<h5>{%trans '员工列表'%}</h5>
+				</div>
+				<div class="widget-content">
+					<table class="table table-bordered">
+						<thead><tr><th>{%trans '序号'%}</th><th>{%trans '启用状态'%}</th><th>{%trans '账号'%}</th><th>{%trans '员工姓名'%}</th><th>{%trans '工作岗位'%}</th><th>{%trans '权限等级'%}</th><th>{%trans '创建时间'%}</th><th>{%trans '操作'%}</th></tr></thead>
+						<tbody>
+							{%for user in users%}
+							<tr><td>{{forloop.counter}}</td>
+							<td>{{user.is_active}}</td>
+							<td>{{user.username}}</td>
+							<td>{{user.first_name}}</td>
+							<td>{{user.position|default:""}}</td>
+							{% if user.is_superior %}
+							<td>{% trans '超级管理员' %}</td>
+							{% else %}
+							<td>
+							{% for re in user.user_levels.all %}
+							{{re.name}}
+							{% endfor %}
+							</td>
+							{% endif %}
+							<td>{{user.date_joined|date:'Y-m-d'}}</td><td>
+							<a href="{% url 'staff_modify' org.uid user.pk%}" class="layer" title="{% trans '修改员工' %}" width="800px" height="600px" style="margin-right: 10px;">{% trans '修改' %}</a>
+							{% if not user.is_superior %}
+							<a href="{% url 'staff_delete' org.uid user.pk%}" style="margin-right: 10px;" onclick="if(confirm("{% trans '确定删除?' %}")==false)return false;">{% trans '删除' %}</a>
+							{% endif %}
+							<a href="{% url 'reset_password' org.uid user.pk %}" style="margin-right: 10px;" class="layer" width="800px" height="600px" title="重置密码">{% trans '重置密码' %}</a>
+							{% if user.is_active == 1%}
+							<a href="{% url 'staff_deactivate' org.uid user.pk %}" onclick="if(confirm('{% trans "确定停用?" %}')==false)return false;">{% trans '停用' %}</a></td></tr>
+							{% else %}
+							<a href="{% url 'staff_deactivate' org.uid user.pk %}" onclick="if(confirm('{% trans '确定启用?' %}')==false)return false;">{% trans '启用' %}</a></td></tr>
+							{% endif %}
+
+							{%endfor%}
+						</tbody>
+					</table>
+				
+				</div>
+
+				
+			</div>								
+			
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_userlevels').addClass('current');
+	$('#tab-setting').addClass('active');
+});
+</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block body%}
+<div class="container no-margin">
+<form class="form-search form-horizontal form-min-horizontal"  style="margin-top: 20px;border-bottom: 1px solid #ddd;">
+	<div class="row-fluid" >
+		<div class="inline-span5">
+			
+				<label class="control-label" for="{{form.category.auto_id}}">{{form.event_date.label}}</label>
+				<div class="controls">
+					{{form.event_date}}
+				</div>
+			
+		</div>  
+	 	<div class="inline-span5">
+			<div class="control-group {%if form.keyword.errors%}error{%endif%}">
+				<label class="control-label" for="{{form.keyword.auto_id}}">{{form.keyword.label}}</label>
+				<div class="controls">
+					{{form.keyword}}
+				</div>
+			</div>
+		</div>
+		<div class="inline-span2">
+			<input type="hidden" name="supplier_id" value="{{supplier_id|default:''}}" />
+			<input type="hidden" name="warehouse_id" value="{{warehouse_id|default:''}}" />
+			
+	   		<button type="submit" class="btn btn-primary" style="margin-left:20px;"><i class="icon-search icon-white"></i> {%trans '搜索单据'%}</button>
+	   	</div>
+	</div>
+	
+	<div style="height: 370px;min-height: 370px;overflow-y:auto;">
+		{%include page_template%}
+	</div>
+	
+	
+</form>
+<div style="text-align: center;">
+		<!-- <input id="mult_select" type="button" class="btn btn-primary" value="{%trans '选择'%}" /> -->
+		<input id="close_frame" type="button" class="btn" value="{%trans '关闭'%}" />
+	</div>
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/endless_pagination/js/endless-pagination.js"></script>
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$table=$('.table');
+
+	$('#close_frame').click(function(){
+		window.parent.jQuery('.xubox_close').click();
+	});
+
+	$table.find('.icon-ok').click(function(e){
+		var $dom = window.parent.jQuery("#id_invoice_from")
+		$dom.val($(this).parent().siblings(".invoice_code").text())
+		window.parent.jQuery('.xubox_close').click();
+	});
+
+	$table.find('tr').click(function(e){
+		$(this).toggleClass('info');
+		if(!$(e.target).val()){
+			$(this).find('input[type="checkbox"]').prop('checked',$(this).find('input[type="checkbox"]').prop('checked')?false:true);
+			e.stopPropagation();
+		}
+	});
+
+	$('#mult_select').click(function(){
+		arr=[];
+		$table.find('input[name="gcheck"]').each(function(){
+			if(this.checked){
+				arr.push([$(this).val(),$(this).attr('batch_id')||null]);
+			}
+		});
+		$table.find('tr').removeClass('info').find("input[name='gcheck']").attr('checked',false);
+		window.parent.setNewGoodsByPK.apply(this,arr);
+	});
+});
+</script>
+{%endblock%}

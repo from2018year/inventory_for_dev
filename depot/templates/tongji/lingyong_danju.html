@@ -1,0 +1,128 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%load extra_tags%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			<form method="GET" action="" class="form-horizontal form-min-horizontal" >	
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '部门领用查询'%}</h5>
+					<div class="widget-title-option">
+						
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="row-fluid">
+		            	<div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_from.auto_id}}">{{form.date_from.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_from}}
+		                            <p class="help-block">{{form.date_from.help_text}}</p>
+									<p class="help-block">{{form.date_from.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_to.auto_id}}">{{form.date_to.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_to}}
+		                            <p class="help-block">{{form.date_to.help_text}}</p>
+									<p class="help-block">{{form.date_to.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.category.auto_id}}">{{form.category.label}}</label>
+		                         <div class="controls">
+		                            {{form.category}}
+		                            <p class="help-block">{{form.category.help_text}}</p>
+									<p class="help-block">{{form.category.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.conDepartment.auto_id}}">{{form.conDepartment.label}}</label>
+		                         <div class="controls">
+		                            {{form.conDepartment}}
+		                            <p class="help-block">{{form.conDepartment.help_text}}</p>
+									<p class="help-block">{{form.conDepartment.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		        	</div>
+		        	
+		        	<div class="row-fluid">
+		            	<div class="span span-inline">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.warehouse.auto_id}}">{%if form.warehouse.field.required%}<i class="icon icon-asterisk"></i>{%endif%}备注：</label>
+		                         <div class="controls">
+		                            {{form.remark}}
+		                         </div> 
+		                    </div>
+		                </div>
+		            </div>
+		            
+		        	<div class="form-actions no-margin">
+						<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+						<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+					</div>
+					
+					
+				</div>
+			</div>
+			
+			{%if post%}
+			<div class="alert alert-success">
+				<div class="pull-right"><a href="javascript:void(0)" onclick="javascript:location.href=location.href+'&exportExcel=1'">{%trans '导出为Excel'%}</a></div>
+				{%trans '共有物品种类'%}{{goods_count}},{%trans '金额'%}{{goods_money|default:'0'|floatformat:'2'}}
+			</div>
+			<table class="table">
+			<thead><tr class="info"></tr><th>{%trans '物品'%}</th>{%if not conDepartment_type%}<th>{%trans '部门'%}</th>{%endif%}<th>{%trans '领用数量'%}</th><th>{%trans '物品单位'%}</th><th>{%trans '总价'%}</th></tr></thead>
+			{%for total,details in total_detail%}
+			<tr><td width="100px">{{total.good__name}}</td><td width="100px"></td><td>{{total.num|floatformat:'2'}}</td><td>{{total.good__unit__unit|default:'-'}}</td><td>{{total.sum|floatformat:'2'}}</td></tr>
+			{%if not conDepartment_type%}
+			{%for detail in details%}
+			<tr class="warning"><td></td><td>{{con_dict|get:detail.invoice__object_id}}</td><td>{{detail.num|floatformat:'2'}}</td><td>{{detail.good__unit__unit|default:'-'}}</td><td>{{detail.sum|floatformat:'2'}}</td></tr>
+			{%endfor%}
+			{%endif%}
+			{%endfor%}
+			{%endif%}
+			</table>
+			</form>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/tongji_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_search_lingyong').addClass('current');
+	$('#tab-tongji').addClass('active');
+});
+</script>
+{%endblock%}

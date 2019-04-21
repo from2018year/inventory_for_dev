@@ -1,0 +1,42 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 20 menus %}
+{% get_pages %}
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '序号'%}</th><th>{%trans '菜品名称'%}</th><th>{%trans '菜品编号'%}</th><th>{%trans '单价'%}</th><th>{%trans '单个成本'%}</th><th>{%trans '销售数量'%}</th><th>{%trans '单位'%}</th><th>{%trans '利润率'%}</th><th>{%trans '总利润'%}</th><th>{%trans '总价'%}</th></tr>
+	</thead>
+	{%for menu in menus%}
+		<tr><td>{{forloop.counter}}</td>
+			<td>{{menu.item_name}}</td>
+			<td>{{menu.item_id}}</td>
+			<td>{{menu.price}}</td>
+			<td>{{menu.cost}}</td>
+			<td>{{menu.sale_num}}</td>
+			<td>{{menu.unit}}</td>
+			<td>{{menu.profit_rate}}</td>
+			<td>{{menu.profit}}</td>
+			<td>{{menu.total_price}}</td>
+		</tr>
+	{%endfor%}
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,33 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 50 invoices %}
+{% get_pages %}
+<table class="table table-hover table-condensed">
+	<thead>
+		<tr><th width="100px">{%trans '编号'%}</th><th>{%trans '凭证号'%}</th><th width="50px">{%trans '日期'%}</th><th>{%trans '备注'%}</th><th width="50px">{%trans '制单人'%}</th><th width="50px">{%trans '经办人'%}</th><th width="50px">{%trans '审核人'%}</th><th>{%trans '单选'%}</th></tr>
+	</thead>
+	{%for invoice in invoices%}
+	<tr good_id="{{invoice.pk}}"><td class="invoice_code">{{invoice.invoice_code|default:'-'}}</td><td><span class="good_name">{{invoice.voucher_code|default:''}}</span></td>
+	<td>{{invoice.event_date|date:'Y-n-j'}}</td><td>{{invoice.remark|default:''}}</td><td>{{invoice.charger}}</td><td>{{invoice.user}}</td><td>{{invoice.confirm_user}}</td><td width="30px"><i class="icon icon-ok" style="cursor: pointer;"></i></td></tr>
+	{%endfor%}
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

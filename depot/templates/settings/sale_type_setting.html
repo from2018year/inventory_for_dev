@@ -1,0 +1,56 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '销售类型设置'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">										
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '销售类型列表'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'add_sale_type' org.uid %}" class="btn btn-primary layer" width="800px" height="600px" title="{% trans '添加新类型' %}">{% trans '添加新类型' %}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<table class="table table-bordered">
+						<thead><th>{%trans '序号'%}</th><th>{%trans '销售类型名称'%}</th><th>{%trans '操作'%}</th></thead>
+						<tbody>
+						{%for sale_type in sale_types%}
+						<tr><td>{{forloop.counter}}</td><td>{{sale_type.name}}</td>
+						<td><a href="{%url 'modify_sale_type' org.uid sale_type.id%}" class="layer" width="800px" height="600px" title="{% trans '修改类型' %}">{% trans '修改' %}</a><a href="{%url 'delete_sale_type' org.uid sale_type.id%}" style="margin-left: 30px">{% trans '删除' %}</a>
+						</td>
+						</tr>
+						{% endfor %}		
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	
+	
+</div>
+
+<script>
+$(document).ready(function(){
+	$('#tab-setting').addClass('active');
+	$('#settings_xslx').addClass('current');
+});
+</script>
+{%endblock%}

@@ -1,0 +1,74 @@
+{%load i18n%}
+{%load url from future%}
+
+			<div class="left-sub-menu">
+				
+				
+				
+				<!--<strong><i class="icon-list-alt"></i> {%trans '出入库单据'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="li_panyinpankui"><a href="{%url 'panyinpankui' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '盘盈盘亏'%}</a></li>
+					
+					<li id="li_tuiliaoruku"><a href="{%url 'tuiliaoruku' org.pk%}" class="app ctext"><i class="icon-th"></i> {%trans '退料入库'%}</a></li-->
+					
+					
+					
+					
+					<!--li id="li_classes"><a href="" class="app ctext"><i class="icon-th"></i> {%trans '库位调拨'%}</a></li-->
+					<!--li id="li_classes"><a href="" class="app ctext"><i class="icon-th"></i> {%trans '部门直播'%}</a></li-->
+				</ul>
+				
+				
+
+				
+
+
+				<strong><i class="icon-list-alt"></i> {%trans '入库单据'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="li_caigoushenqing"><a href="{%url 'caigoushenqing_view' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '采购申请单'%}</a></li>
+					<li id="li_caigouruku"><a href="{%url 'caigouruku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '采购入库单'%}</a></li>
+					<li id="li_chushiruku"><a href="{%url 'chushiruku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '初始入库单'%}</a></li>
+					
+				</ul>
+
+				<strong><i class="icon-list-alt"></i> {%trans '出库单据'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="li_xiaoshouchuku"><a href="{%url 'xiaoshouchuku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '销售出库单'%}</a></li>
+					<li id="li_lingyongchuku"><a href="{%url 'lingyongchuku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '领用出库单'%}</a></li>
+					<li id="li_caigoutuihuo"><a href="{%url 'caigoutuihuo' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '采购退货单'%}</a></li>
+					
+				</ul>
+
+				<strong><i class="icon-list-alt"></i> {%trans '盘点单据'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="li_cangkupandian"><a href="{%url 'pandian_view' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '盘点单'%}</a></li>
+					<li id="li_panyingruku"><a href="{%url 'panyingruku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '盘盈单'%}</a></li>
+					<li id="li_pankuichuku"><a href="{%url 'pankuichuku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '盘亏单'%}</a></li>
+				</ul>
+
+
+
+				<strong><i class="icon-list-alt"></i> {%trans '财务单据'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="li_shoukuandan"><a href="{%url 'shoukuandan_view' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '收款单'%}</a></li>
+					<li id="li_fukuandan"><a href="{%url 'fukuandan_view' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '付款单'%}</a></li>
+				</ul>
+
+				 <strong><i class="icon-list-alt"></i> {%trans '其他操作'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<!-- <li id="li_kuweidiaobo"><a href="{%url 'kuweidiaobo' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '库位调拨'%}</a></li> -->
+					<li id="li_zijin_fenxi"><a href="{%url 'zijin_fenxi' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '月资金使用分析'%}</a></li>
+					<li id="li_lirun_fenxi"><a href="{%url 'lirun_fenxi' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '物品利润分析'%}</a></li>
+					<!--<li id="li_caipin_fenxi"><a href="{%url 'menu_item_analysis' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '菜品利润分析'%}</a></li> -->
+				</ul>
+
+                
+                {% if operms.depot.huishouzhan_query %}
+				<strong><i class="icon-list-alt"></i> {%trans '回收站'%}</strong>
+				<ul id="left-sub-menu-ul">
+					<li id="li_huishouzhan"><a href="{%url 'huishouzhan' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '库存单据'%}</a></li>
+					<li id="li_pay_huishouzhan"><a href="{%url 'pay_huishouzhan' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '财务单据'%}</a></li>
+					<li id="li_pandian_huishouzhan"><a href="{%url 'pandian_huishouzhan' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '盘点单据'%}</a></li>
+				</ul>
+				{% endif %}
+			</div>

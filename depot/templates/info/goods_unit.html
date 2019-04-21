@@ -1,0 +1,72 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '管理物品单位'%}</h5>
+				</div>
+				<div class="widget-content">
+					<div class="alert">
+						<i class="icon icon-lock"></i> {%trans '号的单位为已有物品使用的单位，删除需谨慎(使用此单位的物品将清除单位)'%}
+					</div>
+					<form class="form-horizontal" action="" method="post">{%csrf_token%}
+					{{ formset.management_form }}
+					<table class="table table-condensed" style="margin-top:10px;width:40%;min-width:500px;" id='ta'>
+						<thead><tr><th>{%trans '单位'%}</th><th>{%trans '单位备注'%}</th><th>{%trans '状态'%}</th><th>{%trans '删除'%}</th></tr></thead>
+				 		<tbody>
+				 		{%for unit in global_units%}
+				 		<tr><td>{{unit}}</td><td></td><td></td><td></td></tr>
+				 		{%endfor%}
+				 		{%for form in formset%}
+				 		<tr {%if form.errors%}class="error"{%endif%}><td>{{form.unit}}{%if form.instance.pk and form.instance.goods_set.count%}<i class="icon icon-lock"></i>{%endif%}{{form.unit.errors}}</td><td>{{form.des}}</td><td>{{form.status}}</td><td>{{form.DELETE}}{{ form.id }}</td></tr>
+						{%endfor%}
+						</tbody>
+					</table>
+					
+					<div class="form-actions">
+						<input type="submit" class="btn btn-primary" value="{%trans '确定'%}"/>
+						<button type="reset" class="btn btn-warning">{%trans '重置'%}</button>
+					</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/info_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/jquery.formset.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_wpdw').addClass('current');
+	$('#tab-setting').addClass('active');
+
+	$('.table tbody tr').formset({
+		prefix: '{{formset.prefix}}',
+		added:function(row){
+			row.find('td').eq(2).find('input').prop("checked",true);
+		}
+	});
+});
+</script>
+{%endblock%}

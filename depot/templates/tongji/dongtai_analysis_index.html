@@ -1,0 +1,36 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 20 invoices %}
+{% get_pages %}
+<table class="table table-hover ">
+	<thead>
+		<tr><th>{%trans '菜品分类'%}</th><th>{%trans '菜品名称'%}</th><th>{%trans '单位'%}</th><th>{%trans '单价'%}</th><th>{%trans '销售金额'%}</th><th>{%trans '数量'%}</th><th>{%trans '单位动态成本'%}</th><th>{%trans '销售动态成本'%}</th><th>{%trans '销售利润'%}</th><th>{%trans '利润率'%}</th></tr>
+	</thead>
+	{%for invoice in invoices%}
+		<tr><td>{{invoice.0|default:''}}</td><td>{{invoice.1}}</td><td>{{invoice.2|default:''}}</td><td>{{invoice.3|floatformat:'-2'|default:0}}</td><td>{{invoice.4|floatformat:'-2'|default:0}}</td><td>{{invoice.5|floatformat:'-2'|default:0}}</td>
+		<td>{{invoice.6|floatformat:'-2'|default:0}}</td>
+		<td>{% widthratio invoice.6 1 invoice.5%}</td><td>{{invoice.7|floatformat:'2'|default:0}}</td><td>{{invoice.8|floatformat:'2'|default:0}}</td>
+		</tr>
+	{%endfor%}
+	<tr style="background-color:rgb(242,242,242); "><td>{%trans '合计：'%}</td><td></td><td></td><td></td><td>{{all_price|floatformat:'-2'|default:0}}</td><td>{{all_num|floatformat:'-2'|default:0}}</td><td></td><td></td><td>{{all_profit|floatformat:'-2'|default:0}}</td><td></td></tr>
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

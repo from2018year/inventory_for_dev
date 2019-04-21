@@ -1,0 +1,193 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 20 goods %}
+{% get_pages %}
+
+
+
+ <div id="wupin" style="width:100%;height:100%;overflow: scroll"></div>
+
+
+
+<div class="row-fluid" style="margin-top:20px">
+	<div class="span12">
+		{% get_pages %}
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{%block rel%}
+<link href="/static/js/handsontable/jquery.handsontable.full.css" rel="stylesheet">
+<style>
+.handsontable .htDimmed {
+	color:black;
+	background-color: #fff;
+}
+.htCenter {background-color: #ccc;}
+.pager {margin:0}
+.selectedRow{
+	background-color: red;
+}
+</style>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+var request_url="{{request.get_full_path|safe}}";
+$(document).ready(function(){
+	$('#wupin').css('height',$(window).height()-260);
+	window.start_index={{pages.current_start_index}};
+	
+	order_list=[null,'name',null,'nums',null,'last_in_num','price','last_in_time','last_out_num','sale_price','last_out_time',
+		            'last_month_out_num','last_month_out_avg','last_30days_out_num','last_30days_out_avg','sale_price_ori','price_ori','profit','percent2','code','category']
+	
+	function hiddenRenderer(instance, td, row, col, prop, value, cellProperties){
+		$(td).css({display:'none'});
+	}
+	function firstRowRenderer(instance, td, row, col, prop, value, cellProperties) {
+		  Handsontable.renderers.TextRenderer.apply(this, arguments);
+		  td.style.background = '#eee';
+		  td.style.textAlign = 'center';
+		  td.style.height = '40px';
+	}
+	
+	function baseRenderer(instance, td, row, col, prop, value, cellProperties) {
+		  Handsontable.renderers.TextRenderer.apply(this, arguments);
+		  td.style.background = '#81C2D6';
+	}
+	function rukuRenderer(instance, td, row, col, prop, value, cellProperties) {
+		  Handsontable.renderers.TextRenderer.apply(this, arguments);
+		  td.style.background = '#8192D6';
+	}
+	
+	function chukuRenderer(instance, td, row, col, prop, value, cellProperties) {
+		  Handsontable.renderers.TextRenderer.apply(this, arguments);
+		  td.style.background = '#D9B3E6';
+	}
+	
+	function lirunRenderer(instance, td, row, col, prop, value, cellProperties) {
+		  Handsontable.renderers.TextRenderer.apply(this, arguments);
+		  td.style.background = '#DCF7A1';
+	}
+
+	function selectedRenderer(instance, td, row, col, prop, value, cellProperties) {
+		  Handsontable.renderers.TextRenderer.apply(this, arguments);
+		  td.style.background = 'red';
+	}
+	
+	var datas=[
+["{%trans '编号'%}","{%trans '物品名称'%}","{%trans '单位'%}",
+ "{%trans '当前数量'%}",
+ "{%trans '最近入库数量'%}","{%trans '最近入库价格'%}","{%trans '最近入库时间'%}",
+ "{%trans '最近出库数量'%}","{%trans '最近出库价格'%}","{%trans '最近出库时间'%}",
+ "{%trans '编码'%}",{%if INDUSTRY == 'restaurant'%}"{%trans '成本卡'%}"{%else%}{%endif%},
+ "{%trans '操作'%}"],
+		{%for good in goods%}
+		[{{pages.current_start_index|add:forloop.counter0}},
+		 '<span>{% if good.cover %}<a class="layer" width="800px" height="600px" title="{%trans '物品图片' %}" href="{% url 'goods_img' good.id %}">{{good.name}}</a>{% else %}{{good.name}}{% endif %}</span>',"{{good.unit|default:''}}",
+		 '<a class="layer" width="800px" height="550px" title="{%trans '快速出入库'%}" href="{%url 'in_out_simple' org.id%}?gid={{good.id}}&tag={{pages.current_start_index|add:forloop.counter0}}">{{good.nums|floatformat:'-2'}}</a>',
+		 "{{good.last_in_num|floatformat:'-2'}}{{good.last_in_unit|default:''}}","{{good.price|floatformat:'2'}}{{symbol|default:''}}","{{good.last_in_time|date:'Y-m-d'}}",
+		 "{{good.last_out_num|floatformat:'-2'}}{{good.last_out_unit|default:''}}","{{good.sale_price|floatformat:'2'}}{{symbol|default:''}}","{{good.last_out_time|date:'Y-m-d'}}",
+		 "{{good.code}}",
+		  {%if INDUSTRY == 'restaurant'%}"{%for detail in good.item_detail.all%}<a href='{%url "caipin" org.pk%}?keyword={{detail.menuItem.nlu}}' target='_blank'>{{detail.menuItem}}{%if detail.menuItem.unit%}({{detail.menuItem.unit|default:''}}){%endif%}<a><br/> {%endfor%}"{%else%}""{%endif%},
+		 "<a class='layer' title='{%trans "编辑物品信息"%}' href='{%url "add_goods" org.id%}?goods_id={{good.id}}&category_id={{good.category_id}}' width='800px' height='600px' href='javascript:void(0)'>{%trans '编辑'%}</a> \
+		 {%if good.unit%}<a class='layer' title='{%trans "物品辅助单位"%}' href='{%url "auxiliary_unit" org.id good.id%}' width='800px' height='550px' href='javascript:void(0)'>{%trans '辅助单位'%}</a>  {%endif%} \
+		 <a class='delete' gid='{{good.id}}' tag='{{pages.current_start_index|add:forloop.counter0}}' href='javascript:void(0)'>{%trans '删除'%}</a> "
+		 ],
+		{%endfor%}
+	];
+	var columns=[
+				{data:0},{data:1,renderer:'html'},{data:2},{data:3,renderer:'html'},{data:4},
+				{data:5},{data:6},{data:7},
+				{data:8},{data:9},{data:10},
+				{data:11,renderer:'html'},{data:12,renderer:'html'}
+			];
+	$("#wupin").handsontable({
+		data:datas,
+		colWidths :[50,200,100,100,100,100,100,100,100,100,100,{%if INDUSTRY == 'restaurant'%}150{%else%}1{%endif%},150],
+		fixedColumnsLeft: 2,
+		fixedRowsTop: 1,
+		
+		columns:columns,
+		currentRowClassName:"selectedRow",
+		//contextMenu:{
+		//	items:{
+		//		'remove_row':{name:"{%trans '放入回收站'%}"},
+		//	}
+		//},
+		cells:function (row, col, prop){
+    		var cellProperties = {};
+    		cellProperties.readOnly = true;
+    		if(col == 0 || row == 0){
+    			cellProperties.renderer=firstRowRenderer;
+    			if(0<col && col<4){
+            		cellProperties.renderer=baseRenderer;
+            	}else if(3<col && col<7){
+            		cellProperties.renderer=rukuRenderer;
+            	}else if(6<col && col<10){
+            		cellProperties.renderer=chukuRenderer;
+            	}else if(9<col && col<14){
+            		cellProperties.renderer=lirunRenderer;
+            	}
+        	}
+    		return cellProperties;
+  		},
+  		afterOnCellMouseDown:function(event, coords,td) {
+  			
+            if(coords.row==0){
+            	if(order_list[coords.col]){
+            		 setProductOrder(order_list[coords.col]);
+            		 
+            	}
+            }
+            
+
+            $(".selectedRow").parent().siblings("tr").find("td").css("background","")
+            $(".selectedRow").parent().siblings("tr").find("td:first-child").css("background","rgb(238,238,238)")
+           
+            for(var i in $(".selectedRow")){
+            	$(".selectedRow")[i].style.background = "rgb(223,240,136)"
+            }
+
+  		}
+	});
+	window.$container = $("#wupin").handsontable('getInstance');
+	
+	var order_index=$.inArray("{{order}}".replace('-',''),order_list);
+	var prefix=("{{order}}".substr(0,1)=='-')?'↓':'↑'
+	$container.setDataAtCell(0,order_index,prefix+$container.getDataAtCell(0,order_index));
+	
+	
+	var resizeTimer;
+	window.onresize = function(){
+	    if (resizeTimer){
+	        clearTimeout(resizeTimer);
+	    } 
+	    resizeTimer = setTimeout(function(){
+	    	$('#wupin').css('height',$(window).height()-260);
+
+	    	$container.updateSettings({'colWidths' :[50,200,100,100,100,100,100,100,100,100,100,{%if INDUSTRY == 'restaurant'%}150{%else%}1{%endif%},150],});
+	        }, 100);
+	};
+	
+	window.onresize();
+});
+
+
+</script>
+{%endblock%}

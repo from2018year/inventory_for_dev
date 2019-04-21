@@ -1,0 +1,108 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{{goods}}{%trans '相关'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{{goods}}{%trans '相关'%}</h5>
+					<div class="widget-title-option">
+						
+					</div>
+				</div>
+				<div class="widget-content">
+					<ul class="media-list">
+						<li class="media">
+							{%if goods.cover%}
+							<a class="pull-left" href="#">
+								<img class="media-object" height="60px" src="{{goods.cover.thumb_big_url}}">
+							</a>
+							{%endif%}
+							<div class="media-body">
+								<div class="media">
+									<div class="row-fluid">
+										<div class="span4"><strong>{%trans '库存数量'%}</strong>:{{sum|floatformat:'2'}}</div>
+										<div class="span4"><strong>{%trans '单位'%}</strong>:{{goods.unit}}{%for u in goods.units%}{%if forloop.first%}({%endif%}{%if not forloop.first%}/{%endif%}{{u}}{%if forloop.last%}){%endif%}{%endfor%}</div>
+										<div class="span4"><strong>{%trans '保质期'%}</strong>:{%if goods.shelf_life%}{{goods.shelf_life}}{{goods.get_shelf_life_type_display}}{%endif%}</div>
+									</div>
+									<div class="row-fluid">
+										<div class="span4"><strong>{%trans '均价'%}</strong>:{{goods.refer_price|floatformat:'2'}}</div>
+										<div class="span4"><strong>{%trans '最近价格'%}</strong>:{{goods.price|floatformat:'2'}}</div>
+										<div class="span4"><strong>{%trans '累计数量'%}</strong>:{{goods.add_nums|floatformat:'2'}}</div>
+									</div>
+									<div class="row-fluid">
+										<div class="span4"><strong>{%trans '物品编号'%}</strong>:{{goods.code|default:'-'}}</div>
+										<div class="span4"><strong>{%trans '规格'%}</strong>:{{goods.standard|default:'-'}}</div>
+										<div class="span4"><strong>{%trans '品牌'%}</strong>:{{goods.brand|default:'-'}}</div>
+									</div>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+			
+			<div class="alert alert-success">
+				<i class="icon-exclamation-sign"></i>{%trans '列表中的数量为转化为主单位后的数量，单价为原始单位的价格'%}
+			</div>
+			{%include page_template%}
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/main_left_nav.html'%}
+		</div>
+	</div>
+
+	<div class="f-right">
+		<div class="right-wrap">
+			{%if goods.is_batchs%}
+			<div class="alert">
+				<h5>{%trans '库存分布'%}<small>{%trans '共计'%}{{batches.count}}{%trans '批次'%}</small></h5>
+				
+				<ul>
+				{%for batch in batches%}
+					<li>{{batch.warehouse}},{%trans '数量'%}{{batch.last_nums|floatformat:'2'}}</li>
+				{%endfor%}
+				</ul>
+				
+			</div>
+			{%endif%}
+			
+			<div class="alert">
+				<h5>{%trans '采购价格'%}</h5>
+				{%if min_price%}
+				<p>{%trans '最低采购价格为'%}{{min_price.avg_price|floatformat:'2'}}
+				{%trans '发生于'%}{{min_price.invoice.event_date|date:'Y-m-j'}}<br/>
+				{%trans '单号'%}：<a class="layer" width="800px" height="600px" title="{%trans '查看'%}{{min_price.invoice.invoice_code}}{%trans '详情'%}" href="{{min_price.invoice.get_absolute_url}}">{{min_price.invoice.invoice_code}}</a>
+				</p>
+				{%endif%}
+				{%if max_price%}
+				<p>{%trans '最高采购价格为'%}{{max_price.avg_price|floatformat:'2'}}
+				{%trans '发生于'%}{{max_price.invoice.event_date|date:'Y-m-j'}}<br/>
+				{%trans '单号'%}：<a class="layer" width="800px" height="600px" title="{%trans '查看'%}{{max_price.invoice.invoice_code}}{%trans '详情'%}" href="{{max_price.invoice.get_absolute_url}}">{{max_price.invoice.invoice_code}}</a>
+				</p>
+				{%endif%}
+			</div>
+		</div>
+	</div>
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_jishikucun').addClass('current');
+	$('#tab-warehouse').addClass('active');
+	
+});
+</script>
+{%endblock%}

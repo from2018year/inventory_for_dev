@@ -1,0 +1,196 @@
+{%load i18n%}
+{%load url from future%}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"/> 
+	    <title>{%block title%}base{%endblock%}</title>
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <meta name="description" content="">
+	    <meta name="author" content="">
+	    
+	    <script type="text/javascript" src="{% url 'django.views.i18n.javascript_catalog' %}"></script>
+	    <!--[if lt IE 9]>
+	    <script src="/static/js/respond.min.js"></script>
+		<script src="/static/js/bootstrap/html5shiv.js"></script>
+		<![endif]-->
+		
+	    <link href="/static/css/bootstrap{{ONLINE}}.css" rel="stylesheet">
+		<link href="/static/css/bootstrap-responsive{{ONLINE}}.css" rel="stylesheet">
+		<link href="/static/css/common{{ONLINE}}.css" rel="stylesheet">
+	    <link href="/static/js/handsontable/jquery.handsontable.full.css" rel="stylesheet">
+		<script src="/static/js/common/jquery{{ONLINE}}.js" type="text/javascript"></script>
+		<!--[if lt IE 9]>
+		<script src="/static/js/compatible/jquery.pseudo.js"></script>
+		<![endif]-->
+		
+		{%block rel%}
+		{%endblock%}
+    </head>
+    
+    
+    <body>
+	
+		<div id="example1" style="width:80%;margin:350px 200px"></div>
+		
+		
+		<input type="button" value="Save" id="read" style="" />
+		
+		<div id="goods_layer" class="xubox_layer hide" style="z-index: 50 width: 800px; height: 600;left:50%;top:50%;margin-left:-400px;margin-top:-300px; ">
+
+	    <div class="xubox_main" style="background-color: #FFF;z-index: 50;width:800px;height: 600px;">
+	        <div class="xubox_page">
+	        	<iframe id="select_goods_frame" src="http://www.baidu.com" width="800px" height="600px" frameborder="0"></iframe>
+	        </div>
+	        <a class="xubox_close xulayer_png32 xubox_close0 xubox_close1 goods_layer_close" href="javascript:;"></a>
+	        <span class="xubox_botton"></span>
+	    </div>
+    	<div id="xubox_border2" class="xubox_border" style="z-index: 49; background-color: #000; opacity: 0.3;filter:alpha(opacity=30);-moz-opacity:0.5; top: -2px; left: -2px; width: 804px; height: 604px;"></div>
+		<div style="background-color: #666;width: 100%;height: 100%;left: 0px;top: 0px;opacity: 0.5;filter:alpha(opacity=50);-moz-opacity:0.5;z-index: 1;position: fixed !important;"></div>
+	</div>
+<script>
+
+$(document).ready(function(){
+	(function (Handsontable) {
+
+		  var clonableWRAPPER = document.createElement('DIV');
+		  clonableWRAPPER.className = 'htAutocompleteFindWrapper';
+
+		  var clonableARROW = document.createElement('DIV');
+		  clonableARROW.className = 'htAutocompleteFindArrow';
+		  clonableARROW.appendChild(document.createTextNode('\u25BC'));
+		//this is faster than innerHTML. See: https://github.com/handsontable/jquery-handsontable/wiki/JavaScript-&-DOM-performance-tips
+
+		  var wrapTdContentWithWrapper = function(TD, WRAPPER){
+		    WRAPPER.innerHTML = TD.innerHTML;
+		    Handsontable.Dom.empty(TD);
+		    TD.appendChild(WRAPPER);
+		  };
+
+		  /**
+		   * Autocomplete renderer
+		   * @param {Object} instance Handsontable instance
+		   * @param {Element} TD Table cell where to render
+		   * @param {Number} row
+		   * @param {Number} col
+		   * @param {String|Number} prop Row object property name
+		   * @param value Value to render (remember to escape unsafe HTML before inserting to DOM!)
+		   * @param {Object} cellProperties Cell properites (shared by cell renderer and editor)
+		   */
+		  var AutocompleteFindRenderer = function (instance, TD, row, col, prop, value, cellProperties) {
+
+		    var WRAPPER = clonableWRAPPER.cloneNode(true); //this is faster than createElement
+		    var ARROW = clonableARROW.cloneNode(true); //this is faster than createElement
+
+		    Handsontable.renderers.TextRenderer(instance, TD, row, col, prop, value, cellProperties);
+
+		    TD.appendChild(ARROW);
+		    Handsontable.Dom.addClass(TD, 'htAutocompleteFind');
+
+
+		    if (!TD.firstChild) { //http://jsperf.com/empty-node-if-needed
+		      //otherwise empty fields appear borderless in demo/renderers.html (IE)
+		      TD.appendChild(document.createTextNode('\u00A0')); //\u00A0 equals &nbsp; for a text node
+		      //this is faster than innerHTML. See: https://github.com/handsontable/jquery-handsontable/wiki/JavaScript-&-DOM-performance-tips
+		    }
+
+		    if (!instance.acArrowListener) {
+		      //not very elegant but easy and fast
+		      instance.acArrowListener = function () {
+		        $('#'+cellProperties.layer_id).show();
+		      };
+
+		      instance.rootElement.on('mousedown.htAutocompleteFindArrow', '.htAutocompleteFindArrow', instance.acArrowListener); //this way we don't bind event listener to each arrow. We rely on propagation instead
+
+		      //We need to unbind the listener after the table has been destroyed
+		      instance.addHookOnce('afterDestroy', function () {
+		        this.rootElement.off('mousedown.htAutocompleteFindArrow');
+		      });
+
+		    }
+		  };
+
+		  Handsontable.AutocompleteFindRenderer = AutocompleteFindRenderer;
+		  Handsontable.renderers.AutocompleteFindRenderer = AutocompleteFindRenderer;
+		  Handsontable.renderers.registerRenderer('autocompletefind', AutocompleteFindRenderer);
+		})(Handsontable);
+
+	$('.goods_layer_close').click(function(){
+		$('#goods_layer').hide();
+	});
+	
+	var hiddenRenderer=function(instance, td, row, col, prop, value, cellProperties){
+		//Handsontable.renderers.TextRenderer.apply(this, arguments);
+		$(td).css({display:'none'});
+	}	
+
+	
+	
+	$("#example1").handsontable({
+		  
+			startRows: 10,
+			startCols: 3,
+			minSpareRows: 1,
+			//colHeaders: ["单位编号","单位","单位备注"],
+			rowHeaders: true,
+
+			
+			columns:[
+				{data:0,renderer: hiddenRenderer},
+				{data:1,editor: 'select',selectOptions: ["Kia", "Nissan", "Toyota", "Honda"]},
+				{data:2},
+				{renderer:'autocompletefind',layer_id:'goods_layer'}
+			],
+		});
+	
+	var $container = $("#example1");
+	var handsontable = $container.data('handsontable');
+	
+	var oriData=null;
+	$.ajax({
+		url:"{%url 'get_units'%}",
+		dataType:'json',
+		success:function(res){
+			oriData=$.extend(true, [], res.data);
+			handsontable.loadData(res.data);
+		}
+	});
+
+	$('#read').click(function(){
+		alert(JSON.stringify({'data':oriData}));
+		alert(JSON.stringify({'data':handsontable.getData()}));
+		$.ajax({
+			url:"{%url 'set_units'%}",
+			data:JSON.stringify({'data':handsontable.getData()}),
+			dataType:'json',
+			type:'POST',
+			success:function(res){
+				alert(res.des)
+			}
+		});
+		
+	});
+});
+</script>
+
+
+
+
+		<script src="/static/js/jquery.lazyload{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/common/common{{ONLINE}}.js" charset="utf8"></script>
+    	<!--script src="/static/js/bootstrap/widgets.js" type="text/javascript"></script-->
+    	<script src="/static/js/bootstrap/bootstrap-tab{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/bootstrap/bootstrap-alert{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/bootstrap/bootstrap-dropdown{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/bootstrap/bootstrap-modal{{ONLINE}}.js" type="text/javascript"></script>
+    	<script src="/static/js/common/hogan-2.0.0.js" type="text/javascript"></script>
+		<script src="/static/js/common/typeahead{{ONLINE}}.js" type="text/javascript"></script>
+  		<script src="/static/js/layer/layer.min.js"></script>
+  		
+  		<script src="/static/js/handsontable/jquery.handsontable.full.js"></script>
+  		{%block endrel%}
+		{%endblock%}
+    </body>
+</html>

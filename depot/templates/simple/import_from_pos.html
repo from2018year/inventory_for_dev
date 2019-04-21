@@ -1,0 +1,134 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block body%}
+<div class="container">
+	<div style="margin-top:20px">
+		<div class="row-fluid">
+			<div class="span4"><h5 class="text-center">{%trans '收银分类'%}</h5></div>
+			<div class="span4"></div>
+			<div class="span4"><h5 class="text-center">{%trans '物品分类'%}</h5></div>
+		</div>
+		<div class="row-fluid">
+			<div class="span4" style="border:1px solid #ccc;border-radius:5px;height:400px;overflow-y: scroll;background-color: #f9f9f9">
+				<ul id="pos-category" class="ztree ztree-category"></ul>
+			</div>
+			<div class="span4">
+				<strong>{%trans '导入说明'%}</strong>
+			    <ol>
+			      <li>{%trans '选择左边的收银分类' %}</li>
+			      <li>{%trans '选择右边的菜品分类' %}</li>
+			      <li>{%trans '选择下面的导入选项' %}</li>
+			      <li>{%trans '点击确定' %}</li>
+			      <li>{%trans '注意！导入支持按住ctrl键多选类别且导入功能只能使用一次，之后若还需要导入请手工录入。' %}</li>
+			    </ol>
+			    <br/>
+			    <form class="form-horizontal">
+			    	<input type="hidden" name="from_pos_category" id="from_pos_category" />
+			    	<input type="hidden" name="to_category" id="to_category" />
+			    	
+			    	<label>{%trans '设置为酒水自动出库' %}</label>
+			    	<select name="auto_reduce" id="auto_reduce">
+    					<option value='1'>{%trans '按酒水设置为1:1的对应关系' %}</option>
+    					<option value='0'>{%trans '仅复制，不配置对应关系' %}</option>
+    				</select>
+    				<br/><br/>
+    				<label>{%trans '目录结构' %}</label>
+    				<select name="keep_tree" id="keep_tree">
+    					<option value='1'>{% trans '包含目录结构' %}</option>
+    					<option value='0'>{% trans '仅复制菜品，忽略目录' %}</option>
+    				</select>
+    				<br/><br/>
+    				 <button id="sync" type="button" class="btn btn-primary">{%trans '同步' %}</button>
+			    </form>
+			    
+			</div>
+			<div class="span4" style="border:1px solid #ccc;border-radius:5px;height:400px;overflow-y: scroll;background-color: #f9f9f9">
+				<ul id="category" class="ztree ztree-category"></ul>
+			</div>
+		</div>
+	</div>
+</div>
+{%endblock%}
+
+
+{%block endrel%}
+<link rel="stylesheet" href="/static/css/ztree/ztreestyle.css" type="text/css">
+<script src="/static/js/ztree/jquery.ztree.all-3.5.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('#close_frame').click(function(){
+		parent.layer.close(index);
+	});
+	
+	
+	var settings={
+			data:{
+				key:{
+					name:"name"
+				},
+				keep:{
+					parent:true
+				},
+				simpleData:{
+					enable:true,
+					pIdKey:'parent_id'
+				}
+			},
+			callback:{
+				onClick: onClick
+			}
+	};
+	
+	var zNodes=[{%for category in categorys%}{id:{{category.0}},parent_id:{{category.1|default:0}},name:"{{category.2|safe}}",isParent:true,open:true}{%if not forloop.last%},{%endif%}{%endfor%}];
+	var ZNodesPos=[{%for category in categorys_pos%}{id:{{category.0}},parent_id:{{category.1|default:0}},name:"{{category.2|safe}}",isParent:true,open:true}{%if not forloop.last%},{%endif%}{%endfor%}];
+	
+	$.fn.zTree.init($("#pos-category"), settings, ZNodesPos);
+	$.fn.zTree.init($("#category"), settings, zNodes);
+	
+	$('#sync').click(function(){
+		console.log($('#from_pos_category').val())
+		if(!$('#from_pos_category').val()){
+			alert("{%trans '请选择需要同步的收银菜品'%}");
+			return false;
+		}
+		
+		if(!$('#to_category').val()){
+			alert("{%trans '请选择同步到哪个物品分类'%}");
+			return false;
+		}
+		
+		$.ajax({
+			type:'POST',
+			data:{from_pos_category:$('#from_pos_category').val(),to_category:$('#to_category').val(),auto_reduce:$('#auto_reduce').val(),keep_tree:$('#keep_tree').val()},
+			success:function(json){
+				if(json.success){
+					parent.location.href="{%url 'wupin' org.id%}"+"?category_id="+json.category_id;
+				}else{
+					alert(json.message)
+				}
+			}
+		});
+	});
+	
+})
+function onClick(event ,treeId, treeNode){
+	var zTree = $.fn.zTree.getZTreeObj(treeId);
+	console.log(zTree.getSelectedNodes())
+	if(treeId=='pos-category'){
+		var arr = []
+		var selectedNodes = zTree.getSelectedNodes()
+		for(var i=0;i<selectedNodes.length;i++){
+			arr.push(selectedNodes[i].id)
+		}
+		console.log(arr)
+		$('#from_pos_category').val(arr);
+	}else{
+		$('#to_category').val(treeNode.id);
+	}
+}
+</script>
+{%endblock%}

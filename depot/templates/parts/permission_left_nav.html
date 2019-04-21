@@ -1,0 +1,10 @@
+{%load i18n%}
+{%load url from future%}
+			<div class="left-sub-menu">
+			<div class="list-group">
+			<h4 class="text-center">权限角色</h4>
+			{% for role in roles %}
+			<a href="" class="list-group-item btn btn-default layer" width="800px" height="600px" style="width:150px;margin-top: 20px;">{{role.name}}</a>
+			{% endfor %}
+			</div>
+			</div>

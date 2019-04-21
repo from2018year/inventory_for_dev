@@ -1,0 +1,161 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%load extra_tags%}
+
+{%block titel%}{%trans '物品数量明细'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			<form method="GET" action="" class="form-horizontal form-min-horizontal" >	
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '物品数量明细'%}</h5>
+					<div class="widget-title-option">
+						
+					</div>
+				</div>
+				<div class="widget-content">
+					<div class="row-fluid">
+		            	<!--div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_from.auto_id}}">{{form.date_from.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_from}}
+		                            <p class="help-block">{{form.date_from.help_text}}</p>
+									<p class="help-block">{{form.date_from.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div>
+		                <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="{{form.date_to.auto_id}}">{{form.date_to.label}}</label>
+		                         <div class="controls">
+		                            {{form.date_to}}
+		                            <p class="help-block">{{form.date_to.help_text}}</p>
+									<p class="help-block">{{form.date_to.errors}}</p>
+		                         </div> 
+		                    </div>
+		                </div-->
+		               
+		               <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="goods_name">{% trans '查看物品' %}</label>
+		                         <div class="controls">
+		                         	<input name="goods_name" id="goods_name" value="{{goods.name|default:''}}" type="text">
+		                            <input name="goods_id" id="goods_id" value="{{goods.id|default:''}}" type="hidden">
+		                         </div> 
+		                    </div>
+		                </div>
+		                
+		                <div class="span3">
+		                    <div class="control-group">
+		                        <label class="control-label" for="month">{% trans '选择月份' %}</label>
+		                         <div class="controls">
+		                         	<input id="month" name="month" value="{{mdate|default:today|date:'Y-m'}}" onclick="WdatePicker({dateFmt:'yyyy-MM'})" class="input" type="text">
+		                         </div> 
+		                    </div>
+		                </div>
+		        	</div>
+
+		        	
+		        	<div class="form-actions no-margin">
+						<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+						<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+					</div>
+					
+					
+				</div>
+			</div>
+			
+				{%if goods%}
+				<table class="table">
+					<thead><tr><td>{%trans '日期'%}</td><td>{%trans '数量'%}</td><td>{%trans '操作'%}</td></tr></thead>
+					<tbody>
+						{%for snap in snaps%}
+						<tr><td>{{snap.snap_date|date:'Y-m-d'}}</td><td>{%if snap.snap_date == today%}{{goods.nums}}{%else%}{{snap.nums}}{%endif%}</td>
+						<td>{%if snap.snap_date == today%}
+						<a href="{%url 'dppd' org.id goods.id%}" class="layer" title="{%trans '单品盘点'%}{{goods}}" width="500px" height="300px">{%trans '单品盘点'%}</a>
+						{%endif%}
+						<a href="{%url 'tongji_goods_inout_detail' org.pk%}?goods_id={{goods.id}}&goods_name={{goods.name}}&date_to={{snap.snap_date|date:'Y-m-d'}}" title="{%trans '查看出入库明细'%}">{% trans '月明细' %}</a>
+						</td></tr>
+						{%endfor%}
+					</tbody>
+				</table>
+				{%endif%}
+			</form>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/tongji_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block rel%}
+<link href="//cdn.bootcss.com/fullcalendar/2.8.0/fullcalendar.min.css" rel="stylesheet">
+<style>
+.fc-event {font-size: 14px}
+.repo-language {
+    font-style: normal;
+    font-size:14px;
+}
+.fc-day-grid-event .fc-content {
+    white-space: normal;
+}
+</style>
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script src="/static/js/layer/layer.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_search_goods_num_change').addClass('current');
+	$('#tab-tongji').addClass('active');
+	
+	$('.form-horizontal').submit(function(event){
+		//event.preventDefault();
+		if(!$('#goods_id').val()){
+			alert("{%trans '请选择需要查看的物品'%}");
+			$('#goods_name').focus();
+			return false;
+		}
+
+		if(!$('#month').val()){
+			alert("{%trans '请选择需要查看的物品的月份'%}")
+			return false;
+		}
+	});
+	
+	
+	
+	
+	$('#goods_name').typeahead({
+		name: 'twitter-oss',
+		remote: "?keyword=%QUERY",
+		template: [
+			'<p class="repo-language">{%trans "分类"%}:\{\{category\}\}</p>',
+			'<p class="repo-name">{%trans "名称"%}:\{\{name\}\}</p>',
+		].join(''),
+		valueKey:'name',
+		engine: Hogan 
+	}).on('typeahead:selected',function(event,selection){
+		var e = jQuery.Event("keydown");   
+		$('#goods_id').val(selection.id);
+	});
+});
+</script>
+{%endblock%}

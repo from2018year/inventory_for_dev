@@ -1,0 +1,118 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '盘点预览'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box" id="main-wrap">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{{snapshotWarehouse}}</h5>
+					<div class="widget-title-option">
+					{%if not edit%}
+					<div style="float: left;">
+					    <input type="text" name="good_name" id="good_name" placeholder="{% trans '搜索物品名称' %}" />
+					</div>
+					    <button class="btn btn-primary" type="submit" id="search_good">{% trans '搜索' %}</button>
+
+					 
+					 {% endif %}
+						<a id="print_pandian_table" class="btn btn-primary"><i class="icon-white icon-print"></i> {%trans '打印盘点单'%}</a>
+						{%if snapshotWarehouse.status != 2%}
+						<a id="delete_pandian_table" class="btn btn-primary"><i class="icon-white icon-remove"></i> {%trans '删除盘点单'%}</a>
+						{%endif%}
+						
+						<a class="btn" href="{%url 'pandian_view' org.pk%}">{%trans '返回盘点单列表'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					{%include page_template%}
+	
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/warehouse_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/endless_pagination/js/endless-pagination.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_cangkupandian').addClass('current');
+	$('#tab-goods').addClass('active');
+
+	//打印
+	$('#print_pandian_table').click(function(){
+		
+		LODOP=getLodop();  
+		LODOP.PRINT_INIT("pandian_view_print");
+		LODOP.ADD_PRINT_TEXT(21,300,151,30,"{{snapshotWarehouse}}\n");
+		LODOP.SET_PRINT_STYLEA(0,"FontSize",15);
+		LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+		LODOP.SET_PRINT_STYLEA(0,"Horient",2);
+		
+		LODOP.ADD_PRINT_TABLE(50,2,"100%","BottomMargin:50px","URL:http://{{request.META.SERVER_NAME}}:{{request.META.SERVER_PORT}}{%url 'pandian_view_print' org.pk snapshotWarehouse.pk%}");
+
+		LODOP.ADD_PRINT_TEXT("95%",37,144,22,"请您仔细核对原料数量");
+		LODOP.SET_PRINT_STYLEA(0,"ItemType",1);
+		LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
+		LODOP.ADD_PRINT_TEXT("95%",542,165,22,"第#页/共&页");
+		LODOP.SET_PRINT_STYLEA(0,"ItemType",2);
+		LODOP.SET_PRINT_STYLEA(0,"Horient",1);
+		LODOP.SET_PRINT_STYLEA(0,"Vorient",1);
+
+		//LODOP.PRINT();
+		LODOP.PREVIEW();		
+		
+	});
+
+	//删除盘点单
+	$('#delete_pandian_table').click(function(){
+		if(!confirm("{%trans '确认删除盘点单？'%}")){
+			return false;
+		}
+		/*
+		$.ajax({
+			url:"{%url 'delete_pandian_dan' org.pk snapshotWarehouse.pk%}",
+			data:{'pandian_id':'{{snapshotWarehouse.pk}}'},
+			type:'POST',
+			error:function(text){
+				alert(text);
+			},
+			success:function(text){
+				if(!isNaN(parseInt(text))){
+					location.href="{%url 'pandian_view' org.pk%}";
+				}else{
+					alert(text);
+				}
+			}
+		});*/
+		window.location.href = "{%url 'delete_pandian_dan' org.pk snapshotWarehouse.pk%}"
+	});
+
+	$("#search_good").click(function(){
+		var href = $("#good_name").val()
+		window.location.href = "{%url 'list_goods_pandian_preview' org.pk snapshotWarehouse.pk%}?good_name=" + href
+	})
+
+	
+});
+</script>
+{%endblock%}

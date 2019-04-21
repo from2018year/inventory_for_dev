@@ -1,0 +1,375 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			<form class="form-horizontal" method="post" action="">{%csrf_token%}	
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '编辑员工'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'orgs_users' org.uid%}" class="btn btn-primary">{%trans '返回用户列表'%}</a>
+						{%if mod_user%}
+						<a href="javascript:void(0)" id="del_user" tag="{{user.pk}}" tag_name="{{user.username}}" class="btn btn-warning">{%trans '删除'%}</a>
+						{%endif%}
+					</div>
+				</div>
+				<div class="widget-content">
+					
+								<table class="table table-striped noborderd mini-form-table" style="width: auto;">
+									<tr>
+										<td>
+											<div class="control-group {%if userForm.username.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.username.auto_id}}">{%if userForm.username.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{userForm.username.label}}</label>
+												<div class="controls">
+													{{userForm.username}}
+													<p class="help-block">
+														{{userForm.username.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.email.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.email.auto_id}}">{%if userForm.email.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{userForm.email.label}}</label>
+												<div class="controls">
+													{{userForm.email}}
+													<p class="help-block">
+														{{userForm.email.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.employee_id.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.employee_id.auto_id}}">{%if userForm.employee_id.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{userForm.employee_id.label}}</label>
+												<div class="controls">
+													{{userForm.employee_id}}
+													<p class="help-block">
+														{{userForm.employee_id.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										
+									</tr>
+									{%if not mod_user%}
+									<tr>
+										<td>
+											<div class="control-group {%if userForm.password.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.password.auto_id}}">{%if userForm.password.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{userForm.password.label}}</label>
+												<div class="controls">
+													{{userForm.password}}
+													<p class="help-block">
+														{{userForm.password.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.password_re.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.password_re.auto_id}}">{%if userForm.password_re.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{userForm.password_re.label}}</label>
+												<div class="controls">
+													{{userForm.password_re}}
+													<p class="help-block">
+														{{userForm.password_re.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td></td>
+									</tr>
+									{%endif%}
+									<tr>
+										<td>
+											<div class="control-group {%if userForm.sex.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.sex.auto_id}}">{{userForm.sex.label}}</label>
+												<div class="controls">
+													{{userForm.sex}}
+													<p class="help-block">
+														{{userForm.sex.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.position.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.position.auto_id}}">{{userForm.position.label}}</label>
+												<div class="controls">
+													{{userForm.position}}
+													<p class="help-block">
+														{{userForm.position.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td rowspan="1">
+											<div class="control-group {%if userForm.img.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.img.auto_id}}">{{userForm.img.label}}</label>
+												<div class="controls">
+													{{userForm.img}}
+													<p class="help-block">{{userForm.img.errors}}</p>
+												</div>					
+											</div>
+											<div style="position: relative;">
+												<div style="position: absolute;left:100px;">
+												{%if u.img%}
+												<img id="img_pre" src="{{u.img.url}}" width="200px" height="200px" />
+												{%else%}
+												<img id="img_pre" src="/static/images/img.jpg" width="200px" height="200px" />
+												{%endif%}
+												</div>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="control-group {%if userForm.phone.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.phone.auto_id}}">{{userForm.phone.label}}</label>
+												<div class="controls">
+													{{userForm.phone}}
+													<p class="help-block">
+														{{userForm.phone.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.tel.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.tel.auto_id}}">{{userForm.tel.label}}</label>
+												<div class="controls">
+													{{userForm.tel}}
+													<p class="help-block">
+														{{userForm.tel.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="control-group {%if userForm.birthday.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.birthday.auto_id}}">{{userForm.birthday.label}}</label>
+												<div class="controls">
+													{{userForm.birthday}}
+													<p class="help-block">
+														{{userForm.birthday.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.birth_type.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.birth_type.auto_id}}">{{userForm.birth_type.label}}</label>
+												<div class="controls">
+													{{userForm.birth_type}}
+													<p class="help-block">
+														{{userForm.birth_type.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="control-group {%if userForm.expiry_date.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.expiry_date.auto_id}}">{{userForm.expiry_date.label}}</label>
+												<div class="controls">
+													{{userForm.expiry_date}}
+													<p class="help-block">
+														{{userForm.expiry_date.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.choosed_language.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.choosed_language.auto_id}}">{{userForm.choosed_language.label}}</label>
+												<div class="controls">
+													{{userForm.choosed_language}}
+													<p class="help-block">
+														{{userForm.choosed_language.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="control-group {%if userForm.nation.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.nation.auto_id}}">{{userForm.nation.label}}</label>
+												<div class="controls">
+													{{userForm.nation}}
+													<p class="help-block">
+														{{userForm.nation.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.school.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.school.auto_id}}">{{userForm.school.label}}</label>
+												<div class="controls">
+													{{userForm.school}}
+													<p class="help-block">
+														{{userForm.school.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.post_code.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.post_code.auto_id}}">{{userForm.post_code.label}}</label>
+												<div class="controls">
+													{{userForm.post_code}}
+													<p class="help-block">
+														{{userForm.post_code.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<div class="control-group {%if userForm.credential_number.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.credential_number.auto_id}}">{{userForm.credential_number.label}}</label>
+												<div class="controls">
+													{{userForm.credential_number}}
+													<p class="help-block">
+														{{userForm.credential_number.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.credential_type.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.credential_type.auto_id}}">{{userForm.credential_type.label}}</label>
+												<div class="controls">
+													{{userForm.credential_type}}
+													<p class="help-block">
+														{{userForm.credential_type.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+										<td>
+											<div class="control-group {%if userForm.qq.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.qq.auto_id}}">{{userForm.qq.label}}</label>
+												<div class="controls">
+													{{userForm.qq}}
+													<p class="help-block">
+														{{userForm.qq.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="3">
+											<div class="control-group {%if userForm.address.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.address.auto_id}}">{{userForm.address.label}}</label>
+												<div class="controls">
+													{{userForm.address}}
+													<p class="help-block">
+														{{userForm.address.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="3">
+											<div class="control-group {%if userForm.remark.errors%}error{%endif%}">
+												<label class="control-label" for="{{userForm.remark.auto_id}}">{{userForm.remark.label}}</label>
+												<div class="controls">
+													{{userForm.remark}}
+													<p class="help-block">
+														{{userForm.remark.errors}}
+													</p>
+												</div>						
+											</div>
+										</td>
+									</tr>
+								</table>
+				</div>
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '设定员工权限'%}</h5>
+				</div>
+				<div class="widget-content">
+					<div class="row-fluid">
+						{%for level in levels%}
+							<div class="span2 offset1">
+							<label><input type="checkbox" id="{{userForm.user_levels.html_name}}{{level.pk}}" name="{{userForm.user_levels.html_name}}" value="{{level.pk}}" />&nbsp;<strong>{{level.name}}</strong></label>
+							</div>
+						{%endfor%}
+					</div>
+					<script>
+					$(document).ready(function(){
+						{%for value in userForm.user_levels.value%}
+						$('#{{userForm.user_levels.html_name}}{{value}}').attr('checked',true);;
+						{%endfor%}
+					});
+					</script>
+				</div>
+			</div>
+			<div class="form-actions">
+				<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+				<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+			</div>
+						
+			</form>
+		</div>
+		
+		
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script language="JavaScript" src="/static/js/common/DatePicker/WdatePicker.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_yh').addClass('current');
+	$('#tab-setting').addClass('active');
+
+	$('#del_user').click(function(){
+		if(!confirm("{%trans '您确定要删除用户'%}"+$(this).attr('tag_name')+"{%trans '，如果用户已有单据，将不能被删除？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'orgs_user_delete' org.pk%}",
+			type:'POST',
+			data:{'user_del_id':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					location.href="{%url 'orgs_users' org.pk%}";
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+});
+</script>
+{%endblock%}

@@ -1,0 +1,314 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			{%if STYLE == "agile--"%}								
+			<div id="container" style="width: 450px;margin:20px auto;min-height:500px;">
+			</div>
+			{%else%}
+
+			<div style="position: relative;width: 750px;margin:0 auto;margin-top: 20px;">
+				<a href="{%url 'goods_unit' org.pk%}">
+				<img style="position: absolute;top:10px;left:20px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/1.png">
+				</a>
+				
+				<img style="position: absolute;top:10px;left:113px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/2.png">
+				
+				<a href="{%url 'goods_brand' org.pk%}">
+				<img style="position: absolute;top:10px;left:153px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/3.png">
+				</a>
+				
+				<img style="position: absolute;top:10px;left:252px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/4.png">
+				
+				<a href="{%url 'goods_and_category' org.pk%}">
+				<img style="position: absolute;top:10px;left:290px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/5.png">
+				</a>
+				
+				
+				<img style="position: absolute;top:25px;left:393px;" alt="" width="50px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/6.png">
+				
+				<a href="{%url 'suppliers' org.pk%}">
+				<img style="position: absolute;top:110px;left:20px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/7.png">
+				</a>
+				
+				<img style="position: absolute;top:110px;left:112px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/2.png">
+				
+				<a href="{%url 'departments' org.pk%}">
+				<img style="position: absolute;top:110px;left:153px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/8.png">
+				</a>
+				
+				<img style="position: absolute;top:110px;left:252px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/4.png">
+				
+				<a href="{%url 'customers' org.pk%}">
+				<img style="position: absolute;top:110px;left:290px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/9.png">
+				</a>
+				
+				<a href="{%url 'main' org.pk%}">
+				<img style="position: absolute;top:55px;left:452px;" alt="" width="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/10.png">
+				</a>
+				
+				<!--img style="position: absolute;top:270px;left:0px;" alt="" width="750px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/11.png"-->
+				
+				
+			</div>
+			{%endif%}
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/info_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+		
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+</div>
+<script type="text/javascript" src="/static/js/charts/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#tab-info').addClass('active');
+
+	{%if STYLE == "agile"%}
+	var chart=new Highcharts.Chart({
+		chart:{
+			renderTo:'container',
+			events:{
+				load:function(){
+					var ren = this.renderer,
+        				colors = Highcharts.getOptions().colors,
+        				rightArrow = ['M', 0, 0, 'L', 30, 0, 'L', 25, 5, 'M', 30, 0, 'L', 25, -5],
+        				leftArrow = ['M', 30, 0, 'L', 0, 0, 'L', 5, 5, 'M', 0, 0, 'L', 5, -5],
+    					downArrow=['M', 0, 0, 'L', 0, 30, 'L', -5, 25, 'M', 0, 30, 'L', 5, 25];
+
+					ren.label("{%trans '设置单位'%}", 10, 90)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'goods_unit' org.pk%}";
+	                }).shadow(true);
+
+					ren.label("{%trans '设置品牌'%}", 10, 200)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'goods_brand' org.pk%}";
+	                }).shadow(true);
+
+					ren.path([ 'M', 95, 113,'L',110, 113,'C',110, 113,125, 113,125, 128,
+	       	               	   'L',125,208,'C',125,208,125,223,110,223,'L',95,223])
+                         .attr({
+                             'stroke-width': 2,
+                             stroke: colors[3]
+                         })
+                         .add();
+
+					ren.path(rightArrow)
+	                    .attr({
+	                        'stroke-width': 2,
+	                        stroke: colors[3]
+	                    })
+	                   .translate(125, 168)
+	                   .add();
+
+					//增加物品和分类
+	                ren.rect(158,90,260,156,5)
+	                    .attr({
+	                        //fill: colors[0],
+	                        stroke: '#cdcdcd',
+	                        'stroke-width': 2,
+	                        padding: 15,
+	                        r: 5
+	                    }).css({
+	                        color: 'white',
+	                    }).add()
+	                    .shadow(true);
+
+	                ren.label("{%trans '分类信息管理'%}", 173, 105)
+                    .attr({
+                        fill: colors[4],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'goods_and_category' org.pk%}";
+	                }).shadow(true);
+
+	                ren.label("{%trans '物品信息管理'%}", 295, 105)
+                    .attr({
+                        fill: colors[4],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'goods_and_category' org.pk%}";
+	                }).shadow(true);
+
+	                ren.label("{%trans '模板批量添加'%}", 173, 180)
+                    .attr({
+                        fill: colors[4],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'goods_and_category' org.pk%}";
+	                }).shadow(true);
+
+	                ren.label("{%trans '旧版数据导入'%}", 295, 180)
+                    .attr({
+                        fill: colors[4],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 15,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'goods_and_category' org.pk%}";
+	                }).shadow(true);
+
+	                ren.path(['M', 0, 270, 'L', 485, 270])
+                    .attr({
+                        'stroke-width': 2,
+                        stroke: 'silver',
+                        dashstyle: 'dash'
+                    })
+                    .add();
+
+	                ren.label("{%trans '设置供货商信息'%}", 10, 300)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 10,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'suppliers' org.pk%}";
+	                }).shadow(true);
+
+	                ren.label("{%trans '设置领用部门信息'%}", 160, 300)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 10,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'departments' org.pk%}";
+	                }).shadow(true);
+
+	                ren.label("{%trans '设置客户信息'%}", 310, 300)
+                    .attr({
+                        fill: colors[0],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 10,
+                        r: 5
+                    }).css({
+                        color: 'white',
+                        cursor:'pointer',
+                    }).add().on('click',function(){
+	                    location.href="{%url 'customers' org.pk%}";
+	                }).shadow(true);
+
+	                ren.path(downArrow)
+                    .attr({
+                        'stroke-width': 2,
+                        stroke: colors[3]
+                    })
+                   .translate(65, 340)
+                   .add();
+	                ren.path(downArrow)
+                    .attr({
+                        'stroke-width': 2,
+                        stroke: colors[3]
+                    })
+                   .translate(220, 340)
+                   .add();
+	                ren.path(downArrow)
+                    .attr({
+                        'stroke-width': 2,
+                        stroke: colors[3]
+                    })
+                   .translate(360, 340)
+                   .add();
+
+	                ren.label("{%trans '单据属性中必须的元素，也可在查找中做筛选条件，做更精细的统计'%}", 15, 375)
+                    .attr({
+                        fill: colors[1],
+                        stroke: 'white',
+                        'stroke-width': 2,
+                        padding: 5,
+                        r: 10
+                    }).css({
+                        color: 'white'
+                    }).add().shadow(true);
+				}
+			}
+		},
+		title: {
+            text: "{%trans '基本信息使用流程'%}"
+        },
+        {%if LANGUAGE_CODE == "zh-cn"%}
+        credits:{
+			href:"{{CREDIT_HREF}}",
+			text:"{{CREDIT_TEXT}}"
+		}
+        {%else%}
+        credits:{
+			href:"",
+			text:""
+		}
+        {%endif%}
+	});
+	{%endif%}
+});
+</script>
+{%endblock%}

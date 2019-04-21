@@ -1,0 +1,50 @@
+{%load i18n%}
+{%load url from future%}
+
+			<div class="left-sub-menu">		
+				<!-- <strong><i class="icon-list-alt"></i> {%trans '自动出库统计'%}</strong>
+				<ul>
+					<li id="li_search_goods_num_change"><a href="{%url 'tongji_goods_num_change' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '物品数量明细'%}</a></li>
+				</ul>
+					
+				<strong><i class="icon-list-alt"></i> {%trans '查询统计'%}</strong>
+				<ul>
+					
+					<li id="li_search_danju"><a href="{%url 'tongji_search_danju' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '基本单据查询'%}</a></li>
+					<li id="li_search_lingyong"><a href="{%url 'tongji_lingyong_danju' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '部门领料查询'%}</a></li>
+					<li id="li_search_gonghuoshang"><a href="{%url 'tongji_gonghuoshang_danju' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '供货信息查询'%}</a></li>
+					
+					
+					
+				</ul> -->
+				
+				<strong><i class="icon-list-alt"></i> {%trans '入库统计'%}</strong>
+				<ul>
+				<li id="li_rukumingxi"><a href="{%url 'search_ruku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '入库明细'%}</a></li>
+				<li id="li_tongjiruku"><a href="{%url 'tongji_ruku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '入库统计'%}</a></li>
+				<!--<li id="li_caigou_analysis"><a href="#" class="app ctext"><i class="icon-th"></i> {%trans '采购价格分析'%}</a></li> -->
+				</ul>
+
+				<strong><i class="icon-list-alt"></i> {%trans '出库统计'%}</strong>
+				<ul>
+				<li id="li_chukumingxi"><a href="{%url 'search_chuku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '出库明细'%}</a></li>
+				<li id="li_tongjichuku"><a href="{%url 'tongji_chuku' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '出库统计'%}</a></li>
+				</ul>
+
+				<strong><i class="icon-list-alt"></i> {%trans '成本统计'%}</strong>
+				<ul>
+				<!-- <li id="li_jingtaifenxi"><a href="#" class="app ctext"><i class="icon-th"></i> {%trans '成本卡静态分析'%}</a></li> -->
+				<li id="li_dongtaifenxi"><a href="{%url 'dongtai_analysis' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '成本卡动态分析'%}</a></li>
+				<li id="li_search_auto_stock_log"><a href="{%url 'tongji_auto_stock_log' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '自动出库日志'%}</a></li>
+				<li id="li_search_auto_stock_sum"><a href="{%url 'tongji_auto_stock_sum' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '自动出库总计'%}</a></li>
+				<li id="li_search_goods_inout"><a href="{%url 'tongji_goods_inout_danju' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '物品出入总计'%}</a></li>
+				<li id="li_search_goods_detail"><a href="{%url 'tongji_goods_inout_detail' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '物品出入明细'%}</a></li>
+				<li id="li_search_danju"><a href="{%url 'tongji_search_danju' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '基本单据查询'%}</a></li>
+				</ul>
+
+				<strong><i class="icon-list-alt"></i> {%trans '负库存统计'%}</strong>
+				<ul>
+				<li id="li_fukucun"><a href="{%url 'minus_stock_query' org.uid%}" class="app ctext"><i class="icon-th"></i> {%trans '负库存量查询'%}</a></li>
+				<!-- <li id="li_over_less_analysis"><a href="#" class="app ctext"><i class="icon-th"></i> {%trans '超储短缺分析'%}</a></li> -->
+				</ul>
+			</div>

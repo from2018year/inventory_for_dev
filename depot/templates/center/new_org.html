@@ -1,0 +1,45 @@
+{%extends 'base.html'%}
+{%load i18n%}
+{%block title%}{%trans '环境配置'%}{%endblock%}
+
+{%block body%}
+<div class="align-center">{%csrf_token%}
+	<div class="logo-big">
+		<a href="/"><img src="/static/images/logo-big-gicater-{{LANGUAGE_CODE|default:'zh-cn'}}.png" alt="" /></a>
+	</div>	
+	
+	<div>
+	<img src="/static/images/loading.gif" height="50px" />{%trans '正在为您创建环境，请稍候...'%}
+	</div>		
+</div>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$.ajax({
+		type:'POST',
+		dataType:'json',
+		error:function(a,b,c){
+			alert("{%trans '创建失败'%}");
+		},
+		success:function(json){
+			if(json.error){
+				alert(json.error)
+			}else if(json.next_url){
+				location.href=json.next_url;
+			}
+		}
+	});
+});
+</script>
+{%endblock%}
+
+{%block rel%}
+<style>
+.align-center{ 
+		position:absolute; top:50%; left:50%; margin:-46px 0 0 -147px; width:294px; height:93px;
+}
+</style>
+{%endblock%}

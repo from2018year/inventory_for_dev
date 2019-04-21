@@ -1,0 +1,37 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 15 invoices %}
+{% get_pages %}
+<table class="table">
+	<thead>
+	<tr data="head"><th>{%trans '单据号'%}</th><th>{%trans '制单人'%}</th><th>{%trans '经办人'%}</th><th>{%trans '修改时间'%}</th><th>{%trans '应收金额'%}</th><th>{%trans '已收金额'%}</th><th>{%trans '未收金额'%}</th><th>{%trans '单据状态'%}</th><th>{%trans '单据来源'%}</th></tr>
+	</thead>
+	{%for invoice in invoices%}
+	<tr><td style="display: none;"><span pk="{{invoice.pk}}" status="{{invoice.result}}"></span></td><td>{% if operms.depot.shoukuandan_modify %}<a href="{{invoice.get_modify_url}}">{{invoice.invoice_code}}</a>{% else %}<span>{{invoice.invoice_code}}</span>{% endif %}</td><td>{{invoice.charger}}</td><td>{{invoice.user}}</td><td>{{invoice.modify_time|date:'Y-n-j'}}</td><td>{{invoice.total_pay|floatformat:'2'}}</td><td>{{invoice.already_pay|floatformat:'2'}}</td><td>{{invoice.rest_pay|floatformat:"2"}}</td><td>{{invoice.result|yesno:_('已收完,未收完')}}</td><td>{% if operms.depot.xiaoshouchuku_query %}<a class="layer" width="800px" height="600px" title="{%trans '查看'%}{{invoice.invoice_from.invoice_code}}{%trans '详情'%}" href="{{invoice.invoice_from.get_absolute_url|default:'#'}}">{{invoice.invoice_from.invoice_code|default:''}}</a>{% else %}<span>{{invoice.invoice_from.invoice_code|default:''}}</span>{% endif %}</td></tr>
+	{%endfor%}
+</table>
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%} {%trans '未收完款单据'%} {{ unpay_invoice }}{%trans '条'%} {%trans '共计应收金额'%}{{unpay_total_price.total_pay__sum|default:0}} {%trans '共计未收金额'%}{{unpay_rest_price.rest_pay__sum|default:0}}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+<style type="text/css">
+.table td{
+	border: none;
+}
+</style>

@@ -1,0 +1,110 @@
+{%extends 'inline_base.html'%}
+{%load i18n%}
+{%load url from future%}
+{%block body%}
+<div class="container" style="margin-top: 20px;margin-left: 150px;">
+	<div id="lresult" class="lresult"></div>
+	<form class="form-horizontal form-min-horizontal" style="height:600px" method="post">{%csrf_token%}
+		<div class="tab-content">
+			<div id="base" class="tab-pane fade active in">
+				<div class="row-fluid">
+						<div class="control-group {%if staff_form.non_field_errors or staff_form.username.errors%}error{%endif%}">
+							<div class="controls">
+							<label class="control-label" for="{{staff_form.username.auto_id}}">{%if staff_form.username.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{staff_form.username.label}}</label>
+							{{staff_form.username}}
+							<p class="help-block">{{staff_form.username.errors}}</p>
+							</div>						
+						</div>
+
+
+
+				<div class="row-fluid">
+						<div class="control-group {%if staff_form.non_field_errors or staff_form.password.errors%}error{%endif%}">
+							<div class="controls" style="margin-left: 78px;">
+							<label class="control-label" for="{{staff_form.password.auto_id}}" style="margin-right: 12px;">{%if staff_form.password.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{staff_form.password.label}}</label>
+							{{staff_form.password}}
+							<p class="help-block">{{staff_form.password.help_text}}</p>
+							<p class="help-block">{{staff_form.password.errors}}</p>
+							</div>						
+					</div>
+					</div>
+
+				<div class="row-fluid">
+						<div class="control-group {%if staff_form.non_field_errors or staff_form.password.errors%}error{%endif%}">
+							<div class="controls">
+							<label class="control-label" for="{{staff_form.password_re.auto_id}}">{%if staff_form.password_re.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{staff_form.password_re.label}}</label>
+							{{staff_form.password_re}}
+							<p class="help-block">{{staff_form.password_re.help_text}}</p>
+							<p class="help-block">{{staff_form.password_re.errors}}</p>
+							</div>						
+					</div>
+					</div>
+
+				<div class="row-fluid">
+
+						<div class="control-group {%if staff_form.non_field_errors or staff_form.first_name.errors%}error{%endif%}">
+							<div class="controls">
+							<label class="control-label" for="{{staff_form.first_name.auto_id}}">{%if staff_form.first_name.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{% trans '员工姓名' %}</label>
+							{{staff_form.first_name}}
+							<p class="help-block">{{staff_form.first_name.help_text}}</p>
+							<p class="help-block">{{staff_form.first_name.errors}}</p>
+							</div>						
+
+					</div>
+				</div>
+
+				<div class="row-fluid">
+
+						<div class="control-group {%if staff_form.non_field_errors or staff_form.position.errors%}error{%endif%}">
+							<div class="controls" style="margin-left: 69px;">
+							<label style="margin-right: 20px;" class="control-label" for="{{staff_form.position.auto_id}}">{%if staff_form.position.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{{staff_form.position.label}}</label>
+							{{staff_form.position}}
+							<p class="help-block">{{staff_form.position.help_text}}</p>
+							<p class="help-block">{{staff_form.position.errors}}</p>
+							</div>						
+					</div>
+				</div>
+
+
+				<div class="row-fluid">
+
+						<div class="control-group {%if staff_form.non_field_errors or staff_form.is_active.errors%}error{%endif%}">
+							<div class="controls" style="margin-left: 90px;">
+							<label class="control-label" for="{{staff_form.is_active.auto_id}}" style="margin-right: 20px;">{%if staff_form.is_active.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{% trans '是否启用' %}</label>
+							{{staff_form.is_active}}
+							
+							<p class="help-block">{{staff_form.is_active.errors}}</p>
+							</div>						
+					</div>
+				</div>
+
+				<div class="row-fluid">
+
+						<div class="control-group {%if staff_form.non_field_errors or staff_form.user_levels.errors%}error{%endif%}">
+							<div class="controls">
+							<label class="control-label" for="{{staff_form.user_levels.auto_id}}">{%if staff_form.user_levels.field.required%}<i class="icon icon-asterisk"></i>{%endif%}{% trans '员工权限' %}</label>
+							{{staff_form.user_levels}}
+							<!--<p class="help-block">{{staff_form.user_levels.help_text}}</p>-->
+							<p class="help-block">{{staff_form.user_levels.errors}}</p>
+							</div>						
+
+					</div>
+				</div>
+
+		<div class="form-actions">
+			<input type="submit" id="submit" class="btn btn-primary" value="{%trans '确定'%}"/>
+			<input type="button" class="btn btn-warning close-layer" value="{%trans '关闭'%}" />			
+		</div>
+	</form>
+</div>
+<script src="/static/js/common/jquery.form.js" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	var index = parent.layer.getFrameIndex(window.name);
+	$('.close-layer').click(function(){
+		parent.layer.close(index);
+	});
+
+})
+</script>
+{% endblock %}

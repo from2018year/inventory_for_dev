@@ -1,0 +1,107 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">		
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '选择您要盘点的库存'%}</h5>
+					<div class="widget-title-option">
+					</div>
+				</div>
+				<div class="widget-content">
+					{%for warehouse in warehouses%}
+					{%if forloop.first%}
+					<ul class="thumbnails">
+						<!--li class="span" id="warehouse0">
+							<a href="{%url 'jishikucun_view_total' org.pk%}" class="thumbnail" tag="0" tag_name="">
+								<div class="caption">
+									<strong>{%trans '仓库合计'%}</strong> 
+									<p>
+										<dl class="dl-horizontal" title="{%trans '单击查看即时库存'%}">
+											<dt>{%trans '负责人'%}</dt><dd>{{warehouse.charger|default:_('未指定')}}</dd>
+											<dt>{%trans '共有分类'%}</dt><dd></dd>
+											<dt>{%trans '共有物品'%}</dt><dd></dd>
+											<dt>{%trans '价值'%}</dt><dd></dd>
+											<dt>{%trans '货架数量'%}</dt><dd></dd>
+										</dl>
+									</p>
+								</div>
+							</a>
+						</li-->
+					{%endif%}
+					
+						<li class="span" id="warehouse{{warehouse.pk}}">
+							<a href="{%url 'cangkupandian' org.pk warehouse.pk%}" class="thumbnail" tag="{{warehouse.pk}}" tag_name="{{warehouse}}">
+								<div class="caption">
+									<strong>{{warehouse}}</strong> 
+									<p>
+										<dl class="dl-horizontal" title="{%trans '单击查看即时库存'%}">
+											<dt>{%trans '负责人'%}</dt><dd>{{warehouse.charger|default:_('未指定')}}</dd>
+											<!--dt>{%trans '共有分类'%}</dt><dd></dd-->
+											<dt>{%trans '共有物品'%}</dt><dd>{{warehouse.get_goods.0}}</dd>
+											<dt>{%trans '价值'%}</dt><dd>{{warehouse.get_goods.1|floatformat:'2'}}</dd>
+											<dt>{%trans '货架数量'%}</dt><dd>{{warehouse.get_children.count}}</dd>
+										</dl>
+									</p>
+								</div>
+							</a>
+						</li>
+					{%if forloop.last%}
+					</ul>
+					{%endif%}
+					{%empty%}
+					<div class="well">
+					{%if parent_warehouse%}
+					{%trans '还未创建'%}{{warehouse_display_name}},<a href="{%url 'shelf_new' org.pk parent_warehouse.pk%}">{%trans '立即创建'%}</a>
+					{%else%}
+					{%trans '还未创建仓库'%},<a href="{%url 'warehouses_new' org.pk%}">{%trans '立即创建'%}</a>
+					{%endif%}
+					
+					</div>
+					{%endfor%}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/main_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+</div>
+{%endblock%}
+
+{%block endrel%}
+<style>
+.dl-horizontal dt  {
+	width: 60px;
+}
+.dl-horizontal dd  {
+	margin-left: 70px;
+}
+.thumbnail {
+	width:200px;
+	position: relative;
+	text-decoration : none !important;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#li_cangkupandian').addClass('current');
+	$('#tab-warehouse').addClass('active');
+});
+</script>
+{%endblock%}

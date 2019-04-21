@@ -1,0 +1,60 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block title%}{%trans '银行账户管理'%}{%endblock%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">										
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '账户列表'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'add_bank_account' org.uid %}" class="btn btn-primary layer" width="800px" height="600px" title="{% trans '添加新账户' %}">{% trans '添加新账户' %}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<table class="table table-bordered">
+						<thead><th>{%trans '序号'%}</th><th>{%trans '账户名'%}</th><th>{%trans '账号'%}</th><th>{%trans '开户行'%}</th><th>{%trans '状态'%}</th><th>{%trans '操作'%}</th></thead>
+						<tbody>
+						{%for account in accounts%}
+						<tr><td>{{forloop.counter}}</td><td>{{account.account_name}}</td><td>{{account.account_num}}</td><td>{{account.bank_deposit}}</td><td>{{account.status|yesno:_("停用,启用")}}</td>
+						{%if account.status%}
+						<td><a href="{%url 'modify_bank_account' org.uid account.id%}" class="layer" width="800px" height="600px" title="{% trans '修改账户' %}">{% trans '修改' %}</a><a href="{%url 'change_account_status' org.uid account.id%}" style="margin-left: 30px">{% trans '启用' %}</a>
+						</td>
+						{% else%}
+						<td><a href="{%url 'modify_bank_account' org.uid account.id%}" class="layer" title="修改账户" width="800px" height="600px">{% trans '修改' %}</a><a href="{%url 'change_account_status' org.uid account.id%}" style="margin-left: 30px">{% trans '停用' %}</a></td>
+						{% endif %}
+						</tr>
+						{% endfor %}		
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	
+	
+</div>
+
+<script>
+$(document).ready(function(){
+	$('#tab-setting').addClass('active');
+	$('#settings_zhsz').addClass('current');
+});
+</script>
+{%endblock%}

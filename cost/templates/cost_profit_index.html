@@ -1,0 +1,73 @@
+{%load i18n%}
+{%load url from future%}
+{% load endless %}
+
+{% paginate 50 menuItems %}
+{% get_pages %}
+
+<div class="row-fluid">
+	<div class="span12">
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<input type="hidden" id="sort" name="sort" value="{{sort|default:'pk'}}"></input>
+<table class="table table-hover table-condensed">
+  <thead><tr>
+  	<th style="min-width: 70px"><a href="?sort=item_name&order=1" class="sort_th" tag="item_name" title="{%trans '点击按'%}{%trans '菜品名称'%}{%trans '排序'%}" >{%trans '菜品名称'%}</a></th>
+  	<th width="70px"><a href="?sort=nlu&order=1" class="sort_th" tag="nlu" title="{%trans '点击按'%}{%trans 'nlu'%}{%trans '排序'%}" >{%trans 'nlu'%}</a></th>
+  	<th width="70px">{%trans '规格'%}</th>
+  	<th width="70px"><a href="?sort=price&order=1" class="sort_th" tag="price" title="{%trans '点击按'%}{%trans '售价'%}{%trans '排序'%}" >{%trans '售价'%}</a></th>
+  	<th width="70px"><a href="?sort=cost&order=1" class="sort_th" tag="cost" title="{%trans '点击按'%}{%trans '成本价'%}{%trans '排序'%}" >{%trans '成本价'%}</a></th>
+  	<th width="70px"><a href="?sort=percent1&order=1" class="sort_th" tag="percent1" title="{%trans '点击按'%}{%trans '成本价'%}{%trans '排序'%}" >{%trans '成本利润'%}</a></th>
+  	<th width="75px"><a href="?sort=percent2&order=1" class="sort_th" tag="percent2" title="{%trans '点击按'%}{%trans '销售利润'%}{%trans '排序'%}" >{%trans '销售利润'%}</a></th>
+  	<th width="120px"><a href="?sort=update_time&order=1" class="sort_th" tag="update_time" title="{%trans '点击按'%}{%trans '更新时间'%}{%trans '排序'%}" >{%trans '更新时间'%}</a></th>
+  	<th width="50px"></th>
+  	</thead>
+  <tbody>
+  	{%for menuItem in menuItems%}
+  		<tr id="menu{{menuItem.pk}}"><td>{{menuItem.item_name}}</td><td>{{menuItem.nlu}}</td><td>{{menuItem.unit}}</td><td>{{menuItem.price}}</td><td>{{menuItem.cost|default:'-'}}</td><td>{{menuItem.percent1|floatformat:'-2'|default:'-'}}%</td><td>{{menuItem.percent2|floatformat:'-2'|default:'-'}}%</td><td>{{menuItem.update_time|date:'Y-m-d H:i'}}</td><td><img tag="{{menuItem.pk}}" class="delete" style="display: none" src="/static/images/delete.png" /><td></tr>
+  	{%endfor%}
+  </tbody>
+</table>
+
+
+
+<div class="row-fluid">
+	<div class="span12">
+		{% get_pages %}
+		<div class="pager">
+			<div class="pull-left">
+				{%trans '本页显示第'%}
+				{{ pages.current_start_index }}-{{ pages.current_end_index }} {%trans '条，共'%}
+				{{ pages.total_count }} {%trans '条记录'%}
+			</div>
+			<div class="pull-right">
+				
+				{% if pages.paginated %}
+				{{ pages }} {%trans '当前第'%} {% show_current_number %} {%trans '页'%}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{%block endrel%}
+<script type="text/javascript">
+var request_url="{{request.get_full_path|safe}}";
+
+</script>
+{%endblock%}

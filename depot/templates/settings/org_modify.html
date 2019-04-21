@@ -1,0 +1,308 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">
+			<form class="form-horizontal" action="." method="post">{%csrf_token%}
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '编辑分部信息'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'org_branch' org.pk%}" class="btn btn-primary">{%trans '返回分部列表'%}</a>
+						{%if mod_org%}
+						<a href="javascript:void(0)" tag="{{mod_org.pk}}" id="del_org" class="btn btn-warning">{%trans '删除'%}</a>
+						{%endif%}
+					</div>
+				</div>
+				<div class="widget-content">
+					<table class="table table-striped noborderd" style="width:auto;">
+						<tr>
+							<td>
+								<div class="control-group {%if org_form.org_name.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.org_name.auto_id}}">{{org_form.org_name.label}}</label>
+									 <div class="controls">
+										{{org_form.org_name}}
+										<span class="help-block">{{org_form.org_name.help_text}}</span>
+										<span class="help-block">{{org_form.org_name.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_form.org_group.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.org_group.auto_id}}">{{org_form.org_group.label}}</label>
+									 <div class="controls">
+										{{org_form.org_group}}	
+										<span class="help-block">{{org_form.org_group.help_text}}</span>
+										<span class="help-block">{{org_form.org_group.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_form.pos_ip.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.pos_ip.auto_id}}">{{org_form.pos_ip.label}}</label>
+									 <div class="controls">
+										{{org_form.pos_ip}}
+										<span class="help-block">{{org_form.pos_ip.help_text}}</span>
+										<span class="help-block">{{org_form.pos_ip.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_form.org_guid.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.org_guid.auto_id}}">{{org_form.org_guid.label}}</label>
+									 <div class="controls">
+										{{org_form.org_guid}}
+										<span class="help-block">{{org_form.org_guid.help_text}}</span>
+										<span class="help-block">{{org_form.org_guid.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_form.orgs_type.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.orgs_type.auto_id}}">{{org_form.orgs_type.label}}</label>
+									 <div class="controls">
+										{{org_form.orgs_type}}
+										<span class="help-block">{{org_form.orgs_type.help_text}}</span>
+										<span class="help-block">{{org_form.orgs_type.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_form.industry.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.industry.auto_id}}">{{org_form.industry.label}}</label>
+									 <div class="controls">
+										{{org_form.industry}}
+										<span class="help-block">{{org_form.industry.help_text}}</span>
+										<span class="help-block">{{org_form.industry.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_form.phone.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.phone.auto_id}}">{{org_form.phone.label}}</label>
+									 <div class="controls">
+										{{org_form.phone}}
+										<span class="help-block">{{org_form.phone.help_text}}</span>
+										<span class="help-block">{{org_form.phone.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_form.url.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.url.auto_id}}">{{org_form.url.label}}</label>
+									 <div class="controls">
+										{{org_form.url}}
+										<span class="help-block">{{org_form.url.help_text}}</span>
+										<span class="help-block">{{org_form.url.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_form.post_code.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.post_code.auto_id}}">{{org_form.post_code.label}}</label>
+									 <div class="controls">
+										{{org_form.post_code}}
+										<span class="help-block">{{org_form.post_code.help_text}}</span>
+										<span class="help-block">{{org_form.post_code.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_form.fax.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.fax.auto_id}}">{{org_form.fax.label}}</label>
+									 <div class="controls">
+										{{org_form.fax}}
+										<span class="help-block">{{org_form.fax.help_text}}</span>
+										<span class="help-block">{{org_form.fax.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="control-group {%if org_form.stores_address.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.stores_address.auto_id}}">{{org_form.stores_address.label}}</label>
+									 <div class="controls">
+										{{org_form.stores_address}}
+										<span class="help-block">{{org_form.stores_address.help_text}}</span>
+										<span class="help-block">{{org_form.stores_address.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="control-group {%if org_form.remark.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.remark.auto_id}}">{{org_form.remark.label}}</label>
+									 <div class="controls">
+										{{org_form.remark}}
+										<span class="help-block">{{org_form.remark.help_text}}</span>
+										<span class="help-block">{{org_form.remark.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						
+					</table>
+				</div>
+				
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '分部设置信息'%}</h5>
+				</div>
+				<div class="widget-content">
+					<table class="table table-striped noborderd" style="width:auto;">
+						<tr>
+							<td>
+								<div class="control-group {%if org_profile_form.neg_inv.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.neg_inv.auto_id}}">{{org_profile_form.neg_inv.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.neg_inv}}
+										<span class="help-block">{{org_profile_form.neg_inv.help_text}}</span>
+										<span class="help-block">{{org_profile_form.neg_inv.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_profile_form.warn_day.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.warn_day.auto_id}}">{{org_profile_form.warn_day.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.warn_day}}
+										<span class="help-block">{{org_profile_form.warn_day.help_text}}</span>
+										<span class="help-block">{{org_profile_form.warn_day.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_profile_form.send_email.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.send_email.auto_id}}">{{org_profile_form.send_email.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.send_email}}
+										<span class="help-block">{{org_profile_form.send_email.help_text}}</span>
+										<span class="help-block">{{org_profile_form.send_email.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_profile_form.email.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.email.auto_id}}">{{org_profile_form.email.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.email}}
+										<span class="help-block">{{org_profile_form.email.help_text}}</span>
+										<span class="help-block">{{org_profile_form.email.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_profile_form.cengji.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.cengji.auto_id}}">{{org_profile_form.cengji.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.cengji}}
+										<span class="help-block">{{org_profile_form.cengji.help_text}}</span>
+										<span class="help-block">{{org_profile_form.cengji.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								
+							</td>
+						</tr>
+						
+					</table>
+				</div>
+			</div>			
+			
+			<div class="form-actions">
+				<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+				<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+			</div>
+							
+			</form>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+</div>
+{%endblock%}
+
+{%block rel%}
+<script src="/static/js/layer/layer.min.js"></script>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_gb').addClass('current');
+	$('#tab-setting').addClass('active');
+	
+	layer.use('extend/layer.ext.js') 
+	
+	$('#del_org').click(function(){
+		if(!confirm("{%trans '确定要删除本分部，如果分部已有数据，将禁止删除？'%}")){
+			return false;
+		}
+		$.ajax({
+			url:"{%url 'org_delete' org.pk %}",
+			type:'POST',
+			data:{'del_org_id':$(this).attr('tag')},
+			error:function(){
+				alert("{%trans '操作失败'%}");
+			},
+			success:function(text){
+				if(parseInt(text)){
+					location.href="{%url 'org_branch' org.pk%}";
+				}else{
+					alert(text);
+				}
+			}
+		});
+	});
+
+	$('#{{org_form.pos_ip.auto_id}}').blur(function(){
+		var ip=$.trim($(this).val());
+		if(ip){
+			if(verify_reg(ip,'ip')){
+				load_id=layer.load("{%trans '与收银尝试通信中...'%}");
+				$.ajax({
+					url:"{%url 'test_pos_ip'%}?pos_ip="+ip,
+					error:function(){
+						layer.close(load_id);
+						alert("{%trans '操作失败'%}");
+					},
+					success:function(json){
+						layer.close(load_id);
+						if(json.fetch_status){
+							$('#{{org_form.org_guid.auto_id}}').val(json.res_id);
+						}else{
+							alert("{%trans '不能获取收银系统的餐厅ID'%}");
+						}
+					}
+				});
+			}else{
+				alert("{%trans 'IP地址格式不正确'%}");
+			}
+		}
+	});
+});
+</script>
+{%endblock%}

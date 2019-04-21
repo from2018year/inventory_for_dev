@@ -1,0 +1,371 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">
+			<form class="form-horizontal form-horizontal-min" action="." method="post">{%csrf_token%}
+			<div class="widget-box">
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '分部基本信息'%}</h5>
+					<div class="widget-title-option">
+						<a href="{%url 'settings_org' org.uid%}" class="btn btn-primary">{%trans '返回分部信息'%}</a>
+					</div>
+				</div>
+				<div class="widget-content">
+					<table class="table table-striped noborderd" style="width:auto;">
+						<tr>
+							<td>
+								<div class="control-group {%if org_form.org_name.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.org_name.auto_id}}">{{org_form.org_name.label}}</label>
+									 <div class="controls">
+										{{org_form.org_name}}
+										<span class="help-block">{{org_form.org_name.help_text}}</span>
+										<span class="help-block">{{org_form.org_name.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_form.org_group.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.org_group.auto_id}}">{{org_form.org_group.label}}</label>
+									 <div class="controls">
+										{{org_form.org_group}}&nbsp;<abbr title="{%trans '点击新增新组'%}"><i id="new_org_group" class="icon-plus"></i></abbr>	
+										<span class="help-block">{{org_form.org_group.help_text}}</span>
+										<span class="help-block">{{org_form.org_group.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="control-group {%if org_form.org_guid.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.org_guid.auto_id}}">{%if INDUSTRY == 'restaurant'%}{{org_form.org_guid.label}}{%else%}{%trans '商铺ID'%}{%endif%}</label>
+									 <div class="controls">
+										{{org_form.org_guid}}
+										<span class="help-block">{{org_form.org_guid.help_text}}</span>
+										<span class="help-block">{{org_form.org_guid.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<div class="control-group {%if org_form.stores_address.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.stores_address.auto_id}}">{{org_form.stores_address.label}}</label>
+									 <div class="controls">
+									 	<div class="row-fluid" style="margin-bottom:10px;">
+									 		<select id="{{org_form.province.auto_id}}" class="span4" name="{{org_form.province.html_name}}"></select>
+						    				<select id="{{org_form.city.auto_id}}" class="span4" name="{{org_form.city.html_name}}"></select>
+						    				<select id="{{org_form.district.auto_id}}" class="span4" name="{{org_form.district.html_name}}"></select>
+									 	</div>
+									 	
+										{{org_form.stores_address}}
+										<span class="help-block">{{org_form.stores_address.help_text}}</span>
+										<span class="help-block">{{org_form.stores_address.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_form.phone.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.phone.auto_id}}">{{org_form.phone.label}}</label>
+									 <div class="controls">
+										{{org_form.phone}}
+										<span class="help-block">{{org_form.phone.help_text}}</span>
+										<span class="help-block">{{org_form.phone.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_form.url.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.url.auto_id}}">{{org_form.url.label}}</label>
+									 <div class="controls">
+										{{org_form.url}}
+										<span class="help-block">{{org_form.url.help_text}}</span>
+										<span class="help-block">{{org_form.url.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_form.post_code.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.post_code.auto_id}}">{{org_form.post_code.label}}</label>
+									 <div class="controls">
+										{{org_form.post_code}}
+										<span class="help-block">{{org_form.post_code.help_text}}</span>
+										<span class="help-block">{{org_form.post_code.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_form.fax.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_form.fax.auto_id}}">{{org_form.fax.label}}</label>
+									 <div class="controls">
+										{{org_form.fax}}
+										<span class="help-block">{{org_form.fax.help_text}}</span>
+										<span class="help-block">{{org_form.fax.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+
+						
+					</table>
+				</div>
+				
+				<div class="widget-title">
+					<span class="icon"><i class="icon-th-list"></i></span>
+					<h5>{%trans '分部设置信息'%}</h5>
+				</div>
+				<div class="widget-content">
+					<table class="table table-striped noborderd" style="width:auto;">
+						<tr>
+							<td>
+								<div class="control-group {%if org_profile_form.neg_inv.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.neg_inv.auto_id}}">{{org_profile_form.neg_inv.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.neg_inv}}
+										<span class="help-block">{{org_profile_form.neg_inv.help_text}}</span>
+										<span class="help-block">{{org_profile_form.neg_inv.errors}}</span>
+									</div>
+								</div>
+							</td> {% trans '保质期' %}<td style="display: none;">
+								<div class="control-group {%if org_profile_form.warn_day.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.warn_day.auto_id}}">{{org_profile_form.warn_day.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.warn_day}}
+										<span class="help-block">{{org_profile_form.warn_day.help_text}}</span>
+										<span class="help-block">{{org_profile_form.warn_day.errors}}</span>
+									</div>
+								</div>
+							</td>						</tr>
+						<tr>
+							<td>
+								<div class="control-group {%if org_profile_form.send_email.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.send_email.auto_id}}">{{org_profile_form.send_email.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.send_email}}
+										<span class="help-block">{{org_profile_form.send_email.help_text}}</span>
+										<span class="help-block">{{org_profile_form.send_email.errors}}</span>
+									</div>
+								</div>
+							</td><td>
+								<div class="control-group {%if org_profile_form.email.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.email.auto_id}}">{{org_profile_form.email.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.email}}
+										<span class="help-block">{{org_profile_form.email.help_text}}</span>
+										<span class="help-block">{{org_profile_form.email.errors}}</span>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr class="hide">
+							<td>
+								<div class="control-group {%if org_profile_form.cengji.errors%}error{%endif%}">
+									<label class="control-label" for="{{org_profile_form.cengji.auto_id}}">{{org_profile_form.cengji.label}}</label>
+									 <div class="controls">
+										{{org_profile_form.cengji}}
+										<span class="help-block">{{org_profile_form.cengji.help_text}}</span>
+										<span class="help-block">{{org_profile_form.cengji.errors}}</span>
+									</div>
+								</div>
+								{{org_profile_form.auto_out_stock_mode}}
+							</td>
+						</tr>
+						
+					</table>
+				</div>
+			</div>			
+			
+			<div class="form-actions">
+				<input type="submit"  class="btn btn-primary" value="{%trans '确定'%}"/>
+				<input type="reset" class="btn btn-warning" value="{%trans '重置'%}" />
+			</div>
+							
+			</form>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+</div>
+{%endblock%}
+
+{%block rel%}
+<script src="/static/js/layer/layer.min.js"></script>
+<style>
+<!--
+body {
+	min-width: 900px;
+}
+.form-horizontal .control-label {
+	width:80px;
+}
+.form-horizontal .controls {
+	margin-left:100px;
+}
+.controls input {
+	width:190px;
+}
+.controls input[type='file'] {
+	width:265px;
+}
+.controls input[type='checkbox'] {
+	width:auto;
+}
+.controls select {
+	width:190px;
+}
+-->
+</style>
+{%endblock%}
+
+{%block endrel%}
+<script type="text/javascript" src="/static/js/helper/tdist_py.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#settings_org').addClass('current');
+	$('#tab-setting').addClass('active');
+	
+	//网络模式下，不允许修改餐厅ID
+	{%if SITE_MARK == 'online' %}
+	$('#{{org_form.org_guid.auto_id}}').attr("readonly", true);
+	{%endif%}
+	
+	layer.use('extend/layer.ext.js') 
+	
+	$('#new_org_group').click(function(){
+		layer.prompt({'title':"{%trans '请输入新的组名'%}"},function(val){
+			if($.trim(val)){
+				$.ajax({
+					url:"{%url 'org_add_group' org.pk%}",
+					data:{'group_name':val},
+					type:'POST',
+					success:function(json){
+						$('#{{org_form.org_group.auto_id}}').append("<option value='"+json.id+"'>"+json.name+"</option>").val(json.id);
+					},
+					error:function(){
+						alert("{%trans '添加失败'%}");
+					}
+				});
+			}else{
+				alert("{%trans '请输入新的组名'%}");
+			}
+		});
+
+		$('#xubox_prompt').focus();
+	});
+
+	$('#{{org_form.pos_ip.auto_id}}').blur(function(){
+		var ip=$.trim($(this).val());
+		if(ip){
+			if(verify_reg(ip,'ip')){
+				load_id=layer.load("{%trans '与收银尝试通信中...'%}");
+				$.ajax({
+					url:"{%url 'test_pos_ip'%}?pos_ip="+ip,
+					timeout:5000,
+					error:function(){
+						layer.close(load_id);
+						alert("{%trans '操作失败'%}");
+					},
+					success:function(json){
+						layer.close(load_id);
+						if(json.fetch_status){
+							$('#{{org_form.org_guid.auto_id}}').val(json.res_id);
+						}else{
+							alert("{%trans '不能获取收银系统的餐厅ID'%}");
+						}
+					}
+				});
+			}else{
+				alert("{%trans 'IP地址格式不正确'%}");
+			}
+		}
+	});
+
+	//初始化城市选择
+	$('#{{org_form.district.auto_id}}').change(function(){
+		var citys=getlist_select($(this).val());
+		$('#{{org_form.area.auto_id}}').empty().append(citys).change();
+
+		if(citys){
+			$('#{{org_form.area.auto_id}}').show();
+		}else{
+			$('#{{org_form.area.auto_id}}').hide();
+		}
+	});
+	
+	$('#{{org_form.city.auto_id}}').change(function(){
+		var citys=getlist_select($(this).val());
+		$('#{{org_form.district.auto_id}}').empty().append(citys).change();
+
+		if(citys){
+			$('#{{org_form.district.auto_id}}').show();
+		}else{
+			$('#{{org_form.district.auto_id}}').hide();
+		}
+	});
+	
+	provices=getlist_select("1");
+	$('#{{org_form.province.auto_id}}').change(function(){
+		if($(this).val()=="990000"){
+			var citys=getlist_select("0");
+		}else{
+			var citys=getlist_select($(this).val());
+		}
+		
+		$('#{{org_form.city.auto_id}}').empty().append(citys).change();
+	}).empty().append(provices);
+
+
+	{%if org_form.instance.pk%}
+	$('#{{org_form.province.auto_id}}').val("{{org_form.instance.province.pk}}").change();
+	$('#{{org_form.city.auto_id}}').val("{{org_form.instance.city.pk}}").change();
+
+	{%if org_form.instance.district%}
+	$('#{{org_form.district.auto_id}}').val("{{org_form.instance.district.pk}}");
+	{%endif%}
+
+	
+	{%else%}
+	$('#{{org_form.province.auto_id}}').change();
+	{%endif%}
+});
+
+function getlist(key){
+	var clist=[];
+	for(var _key in tdist_all){
+		if(tdist_all[_key][1]==key){
+			clist.append(tdist_all[_key][0],_key);
+		}
+	}
+	return clist;
+}
+
+function getlist_select(key){
+	var clist="";
+	for(var _key in tdist_all){
+		if(tdist_all[_key][1]==key){
+			if(_key!=1){
+				clist+="<option value='"+_key+"'>"+tdist_all[_key][0]+(key=="0"?tdist_all[_key][2]:"")+"</option>";
+			}
+		}
+	}
+	return clist;
+}
+</script>
+{%endblock%}

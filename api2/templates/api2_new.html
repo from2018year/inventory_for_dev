@@ -1,0 +1,180 @@
+{%extends 'api2_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block body%}
+<div class="container content">
+	
+		<form id="add_new_form" method="POST" class="form-horizontal">{%csrf_token%}
+			<div class="form-group">
+				<label for="username" class="col-xs-3 control-label">{%trans '登陆用户名'%}</label>
+				<div class="col-xs-9">
+					<input class="form-control" id="username" name="username" placeholder="登陆用户名,3-20个字符，仅允许数字、字母和下划线" type="text">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="password" class="col-xs-3 control-label">{%trans '登陆密码'%}</label>
+				<div class="col-xs-9">
+					<input class="form-control" id="password" name="password" placeholder="登陆密码，3-20个字符，建议和密码一致" type="text">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="org_name" class="col-xs-3 control-label">{%trans '商家名称'%}</label>
+				<div class="col-xs-9">
+					<input class="form-control" id="org_name" name="org_name" placeholder="商家名称" type="text">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="org_slug" class="col-xs-3 control-label">{%trans '商家二级域名'%}</label>
+				<div class="col-xs-9">
+					<input class="form-control" id="org_slug" name="org_slug" placeholder="商家二级域名，3-6个字符，仅允许字母和数字" type="text">
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label for="sites" class="col-xs-3 control-label">{%trans '开通仓库数量'%}</label>
+				<div class="col-xs-9">
+					<input class="form-control" id="sites" name="sites" placeholder="开通仓库数量，整数" type="text" value="1">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="nyear" class="col-xs-3 control-label">{%trans '授权年数'%}</label>
+				<div class="col-xs-9">
+					<input class="form-control" id="nyear" name="nyear" placeholder="授权年数，整数" type="text" value="1">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label for="style" class="col-xs-3 control-label">{%trans '界面风格'%}</label>
+				<div class="col-xs-9">
+					<select class="form-control" name="style">
+						<option value="gicater">{%trans '聚客'%}</option>
+						<option value="member">{%trans '通用'%}</option>
+					</select>
+				</div>
+			</div>
+			
+			
+			<div class="form-group text-muted">
+				<label for="org_address" class="col-xs-3 control-label">{%trans '商家地址'%}</label>
+				<div class="col-xs-9">
+					<input class="form-control" id="org_address" name="org_address" placeholder="商家地址" type="text">
+				</div>
+			</div>
+			
+			<div class="form-group text-muted">
+				<label for="org_phone" class="col-xs-3 control-label">{%trans '联系人电话'%}</label>
+				<div class="col-xs-9">
+					<input class="form-control" id="org_phone" name="org_phone" placeholder="联系人电话" type="text">
+				</div>
+			</div>
+			
+			<div class="modal-footer">
+	        	<button type="button" id="close_modal"  class="btn btn-default" data-dismiss="modal">{%trans '取消'%}</button>
+	        	<button type="submit" class="btn btn-primary">{%trans '确定'%}</button>
+	      	</div>
+		</form>
+	
+</div>
+{%endblock%}
+
+{%block rel%}
+<link rel="stylesheet" href="/static/formvalidate/css/formValidation.min.css">
+{%endblock%}
+
+{%block endrel%}
+<script src="/static/formvalidate/js/formValidation.min.js"></script>
+<script src="/static/formvalidate/js/framework/bootstrap.min.js"></script>
+<script src="/static/formvalidate/js/language/zh_CN.js"></script>
+<script>
+$(document).ready(function(){
+	$('#close_modal').click(function(){
+		window.parent.postMessage("{'message':'','action':'close_modal'}",'*');
+	});
+	
+	$('#add_new_form').formValidation({
+		icon: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+    	},
+    	fields:{
+    		username:{
+    			validators:{
+    				notEmpty:{message:"{%trans '请填入用户登陆名称'%}"},
+           			stringLength:{min:3,max:20,message:"{%trans '用户名至少3个字符，不多于20个字符'%}"},
+           			regexp:{regexp:/^[a-zA-Z0-9_]+$/,message:"{%trans '用户名仅包含0-9的数字或字母或下划线'%}"},
+           			remote:{url:''}
+    			}
+    		},
+    		password:{
+    			validators:{
+    				notEmpty:{message:"{%trans '请填入用户登陆密码'%}"},
+           			stringLength:{min:3,max:20,message:"{%trans '密码至少3个字符，不多于20个字符'%}"},
+           			regexp:{regexp:/^[a-zA-Z0-9_]+$/,message:"{%trans '密码仅包含0-9的数字或字母或下划线'%}"},
+    			}
+    		},
+    		org_name:{
+    			validators:{
+    				notEmpty:{message:"{%trans '请填入商家名称'%}"},
+           			stringLength:{max:20,message:"{%trans '商家名称不多于20个字符'%}"},
+    			}
+    		},
+    		org_slug:{
+    			validators:{
+    				notEmpty:{message:"{%trans '请填入商家二级域名'%}"},
+           			stringLength:{min:3,max:6,message:"{%trans '商家二级域名3-6个字符'%}"},
+           			regexp:{regexp:/^[a-z0-9]+$/,message:"{%trans '商家二级域名仅包含0-9的数字或小写字母'%}"},
+           			remote:{url:''}
+    			}
+    		},
+    		nyear:{
+    			validators:{
+    				notEmpty:{message:"{%trans '请填入授权时间'%}"},
+    				integer:{message:"{%trans '授权时间为整数'%}"},
+    				between:{min:0,max:10,message:"{%trans '不能为负数年'%}"},
+    			}
+    		},
+    		sites:{
+    			validators:{
+    				notEmpty:{message:"{%trans '请填入授权分店数'%}"},
+    				integer:{message:"{%trans '授权分店数为整数'%}"},
+    				between:{min:1,max:50,message:"{%trans '至少有一个分店'%}"},
+    			}
+    		},
+    		org_phone:{
+    			validators:{
+    				stringLength:{max:20,message:"{%trans '联系人电话不超过20个字符'%}"},
+    			}
+    		},
+    		org_address:{
+    			validators:{
+    				stringLength:{max:50,message:"{%trans '联系人电话不超过50个字符'%}"},
+    			}
+    		},
+    	}
+	}).on("success.form.fv",function(e){
+		e.preventDefault();
+		var $form = $(e.target);
+		var fv = $form.data('formValidation');
+		
+		$.post($form.attr('action'),$form.serialize(),function(json){
+			if(json.error){
+				alert(json.error);
+			}else{
+				json.action="close_modal";
+				window.parent.postMessage(JSON.stringify(json),'*');
+			}
+			$('#add_new_form').data('formValidation').resetForm();
+		});
+		
+		
+	});
+})
+</script>
+{%endblock%}

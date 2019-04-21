@@ -1,0 +1,98 @@
+{%extends 'main_base.html'%}
+{%load i18n%}
+{%load url from future%}
+
+{%block content%}
+<div class="container-fluid">
+	<div class="f-main">
+		<div class="main-wrap-no-right">	
+			
+			<div style="position: relative;width: 760px;margin:0 auto;margin-top: 40px;">
+				<a href="{%url 'goods_unit' org.pk%}">
+				<img style="position: absolute;top:10px;left:20px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/1.png">
+				</a>
+				
+				<img style="position: absolute;top:10px;left:113px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/2.png">
+				
+				<a href="{%url 'goods_brand' org.pk%}">
+				<img style="position: absolute;top:10px;left:153px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/3.png">
+				</a>
+				
+				<img style="position: absolute;top:10px;left:252px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/4.png">
+				
+				<a href="{%url 'goods_and_category' org.pk%}">
+				<img style="position: absolute;top:10px;left:290px;" alt="" height="100px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/5.png">
+				</a>
+				
+				
+				<img style="position: absolute;top:25px;left:393px;" alt="" width="50px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/6.png">
+				
+				<a href="{%url 'suppliers' org.pk%}">
+				<img style="position: absolute;top:110px;left:20px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/7.png">
+				</a>
+				
+				<img style="position: absolute;top:110px;left:112px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/2.png">
+				
+				<a href="{%url 'departments' org.pk%}">
+				<img style="position: absolute;top:110px;left:153px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/8.png">
+				</a>
+				
+				<img style="position: absolute;top:110px;left:252px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/4.png">
+				
+				<a href="{%url 'customers' org.pk%}">
+				<img style="position: absolute;top:110px;left:290px;" alt="" height="105px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/9.png">
+				</a>
+				
+				<a href="{%url 'main' org.pk%}">
+				<img style="position: absolute;top:55px;left:452px;" alt="" width="110px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/10.png">
+				</a>
+				
+				<!--img style="position: absolute;top:270px;left:0px;" alt="" width="750px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/5/11.png"-->
+				
+				
+				
+				<a href="{%url 'settings_org' org.pk%}">
+				<img style="position: absolute;top:3px;left:590px;" alt="" width="194px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/6/1.png">
+				</a>
+				
+				<img style="position: absolute;top:50px;left:590px;" alt="" height="30px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/6/2.png">
+				
+				<a href="{%url 'warehouses_list' org.pk%}">
+				<img style="position: absolute;top:90px;left:590px;" alt="" width="194px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/6/3.png">
+				</a>
+				<img style="position: absolute;top:140px;left:600px;" alt="" height="30px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/6/4.png">
+				
+				<!--
+				<a href="{%url 'orgs_users' org.pk%}">
+				<img style="position: absolute;top:170px;left:590px;" alt="" width="194px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/6/7.png">
+				</a>
+				<img style="position: absolute;top:230px;left:530px;" alt="" height="30px" src="/static/images/flow/{{LANGUAGE_CODE|default:'zh-cn'}}/6/8.png">
+				-->
+			</div>
+			
+		
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	
+	<div class="f-left">
+		<div class="left-wrap">
+			{%include 'parts/settings_left_nav.html'%}
+		</div>
+	</div>
+
+	<!--div class="f-right">
+		<div class="right-wrap">
+			
+		</div>
+	</div-->
+	
+</div>
+<script type="text/javascript" src="/static/js/charts/highcharts.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#tab-setting').addClass('active');
+});
+</script>
+{%endblock%}
